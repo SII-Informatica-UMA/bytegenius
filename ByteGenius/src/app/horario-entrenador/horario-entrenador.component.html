@@ -7,18 +7,9 @@
 </head>
 <body>
     <table>
-        <tr>
-            <th>Lunes</th>
-            <th>Martes</th>
-            <th>Miércoles</th>
-            <th>Jueves</th>
-            <th>Viernes</th>
-            <th>Sabado</th>
-            <th>Domingo</th>
+        <tr *ngFor = "let Dia of dias">
+            <th>{{Dia.nombre}}</th>
         </tr>
-        <tbody>
-
-        </tbody>
     </table>
 </body>
 </html>
