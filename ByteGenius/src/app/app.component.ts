@@ -14,6 +14,6 @@ import { HorarioClienteComponent } from './horario-cliente/horario-cliente.compo
 })
 export class AppComponent {
   title = 'ByteGenius';
-  user = 'Ramona';
+  user = 'Lui';
   isTrainer = true;
 }
