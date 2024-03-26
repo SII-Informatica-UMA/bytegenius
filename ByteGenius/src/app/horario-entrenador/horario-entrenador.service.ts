@@ -2,6 +2,12 @@ import { Usuario } from "../Usuario";
 import { Hora } from "../Hora";
 import { Dia } from "../Dia";
 import { HashMap } from "../HashMap";
+import { Injectable } from '@angular/core';
+
+
+@Injectable({
+  providedIn: 'root'
+})
 
 export class UsuarioService {
     private usuarios: Usuario [] = [

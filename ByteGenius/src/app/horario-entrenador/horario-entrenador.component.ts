@@ -4,6 +4,7 @@ import {UsuarioService } from './horario-entrenador.service';
 import { Dia } from '../Dia';
 import { CommonModule } from '@angular/common';
 import { NgFor } from '@angular/common';
+import { Hora } from '../Hora';
 
 @Component({
   selector: 'app-horario-entrenador',
@@ -14,12 +15,13 @@ import { NgFor } from '@angular/common';
 })
 export class HorarioEntrenadorComponent {
   dias: Dia [] = [];
+  horas: Hora [] = [];
 
-  constructor(private usuariosService:UsuarioService) { }
+  constructor(private usuariosservice: UsuarioService) { }
 
 
   ngOnInit(): void {
-    this.dias = this.usuariosService.getDias();
+    this.dias = this.usuariosservice.getDias();
   }
 
 

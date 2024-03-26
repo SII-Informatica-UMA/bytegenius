@@ -7,10 +7,15 @@
 </head>
 <body>
     <table>
-        <tr *ngFor = "let Dia of dias">
-            <th>{{Dia.nombre}}</th>
-        </tr>
-    </table>
+        <thead>
+          <tr>
+            <th *ngFor="let Dia of dias">{{ Dia.nombre }}</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+      
 </body>
 </html>
 
