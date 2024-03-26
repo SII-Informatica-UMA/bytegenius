@@ -6,15 +6,27 @@
     <title>Document</title>
 </head>
 <body>
-    <table>
+    <table class="table table-bordered">
         <thead>
           <tr>
-            <th *ngFor="let Dia of dias">{{ Dia.nombre }}</th>
+            <th scope="col">Horas</th>
+            <th scope="col" *ngFor="let Dia of dias">{{ Dia.nombre }}</th>
           </tr>
         </thead>
-        <tbody>
+        <tbody class="table-group-divider">
+          <tr>
+            <td>9:00</td>
+            <td>10:00</td>
+            <td>11:00</td>
+            <td></td>
+          </tr>
         </tbody>
-      </table>
+    </table>
+    
+    <select>
+        <p>Desde:</p>
+        <option value="9:00">9:00</option>
+    </select>
       
 </body>
 </html>
