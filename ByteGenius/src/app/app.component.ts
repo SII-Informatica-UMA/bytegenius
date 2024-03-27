@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-
 import { HorarioEntrenadorComponent } from './horario-entrenador/horario-entrenador.component';
 import { HorarioClienteComponent } from './horario-cliente/horario-cliente.component';
 

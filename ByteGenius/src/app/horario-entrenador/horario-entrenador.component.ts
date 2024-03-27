@@ -20,6 +20,7 @@ export class HorarioEntrenadorComponent {
 
   ngOnInit(): void {
     this.dias = this.usuariosservice.getDias();
+    this.horas = this.usuariosservice.getHoras();
   }
 
 }
