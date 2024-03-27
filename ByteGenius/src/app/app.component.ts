@@ -11,8 +11,10 @@ import { HorarioClienteComponent } from './horario-cliente/horario-cliente.compo
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
+
 export class AppComponent {
   title = 'ByteGenius';
   user = 'Lui';
   isTrainer = true;
+
 }

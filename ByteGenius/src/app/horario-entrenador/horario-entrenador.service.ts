@@ -3,6 +3,7 @@ import { Hora } from "../Hora";
 import { Dia } from "../Dia";
 import { HashMap } from "../HashMap";
 import { Injectable } from '@angular/core';
+import { AppComponentService } from "../app.component.service";
 
 
 @Injectable({
@@ -10,11 +11,7 @@ import { Injectable } from '@angular/core';
 })
 
 export class UsuarioService {
-    private usuarios: Usuario [] = [
-        {id:1, nombre: 'Pablo', apellidos:'Muñoz', rol:'Entrenador'},
-        {id:2, nombre: 'Victor', apellidos:'Rueda', rol:'Cliente'}
-    ];
-
+  
     private horas: Hora[] = [
         {id:1,franjaHoraria:'9:00-10:00'},
         {id:2,franjaHoraria:'10:00-11:00'},
@@ -44,10 +41,10 @@ export class UsuarioService {
       {id:7, nombre:'Domingo'}
       ]
 
-    constructor() { }
+    constructor(private usuario: AppComponentService ) { }
 
     getUsuarios(): Usuario [] {
-      return this.usuarios;
+      return this.usuario.getUsuarios();
     }
 
     getasignaciones(): HashMap {
