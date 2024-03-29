@@ -23,4 +23,8 @@ export class HorarioEntrenadorComponent {
     this.horas = this.usuariosservice.getHoras();
   }
 
+  
+
+
+
 }

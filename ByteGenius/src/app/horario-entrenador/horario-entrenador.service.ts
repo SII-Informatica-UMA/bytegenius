@@ -62,4 +62,12 @@ export class UsuarioService {
       return this.dias;
     }
     
+    añadirFranja(clave: number, idTrainer:number): void {
+      if (!this.asignaciones[clave]) {
+        // Si la clave no existe, crear un nuevo objeto para esa clave
+        this.asignaciones[clave] = {};
+      }
+      // Agregar la nueva asignación
+      this.asignaciones[clave][clave] = { idTrainer };    }
+
 }
