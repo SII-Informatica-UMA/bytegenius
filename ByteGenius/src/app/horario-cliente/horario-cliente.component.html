@@ -17,21 +17,22 @@
     <div class="tarjetas">
         <div class="tarjeta L">
             <h1>
-               Lunes
+               Lunes {{ getDayClass(1)}}
             </h1>    
     
             <p *ngFor = "let Entrenador of Entrenadores">
                 Entrenadores: {{Entrenador.nombre}}
             </p>
     
-            <button class="boton">
+            <button class="boton" (click)="toggleCalendario(1)" >
                 Reservar
             </button>
+
         </div>
     
         <div class="tarjeta M">
             <h1>
-               Martes
+               Martes {{ getDayClass(2)}}
             </h1>    
     
             
@@ -40,81 +41,92 @@
             </p>
             
     
-            <button class="boton">
+            <button class="boton" (click)="toggleCalendario(2)">
                 Reservar
             </button>
         </div>
     
         <div class="tarjeta X">
             <h1>
-               Miercoles
+               Miercoles {{ getDayClass(3)}}
             </h1>    
     
             <p *ngFor = "let Entrenador of Entrenadores">
                 Entrenadores: {{Entrenador.nombre}}
             </p>
     
-            <button class="boton">
+            <button class="boton" (click)="toggleCalendario(3)">
                 Reservar
             </button>
         </div>
     
         <div class="tarjeta J">
             <h1>
-               Jueves
+               Jueves {{ getDayClass(4)}}
             </h1>    
     
             <p *ngFor = "let Entrenador of Entrenadores">
             Entrenadores: {{Entrenador.nombre}}
             </p>
     
-            <button class="boton">
+            <button class="boton" (click)="toggleCalendario(4)">
                 Reservar
             </button>
         </div>
     
         <div class="tarjeta V">
             <h1>
-               Viernes
+               Viernes {{ getDayClass(5)}}
             </h1>    
     
             <p *ngFor = "let Entrenador of Entrenadores">
             Entrenadores: {{Entrenador.nombre}}
             </p>
     
-            <button class="boton">
+            <button class="boton" (click)="toggleCalendario(5)">
                 Reservar
             </button>
         </div>
     
         <div class="tarjeta S">
             <h1>
-               Sabado
+               Sabado {{ getDayClass(6)}}
             </h1>    
     
             <p *ngFor = "let Entrenador of Entrenadores">
             Entrenadores: {{Entrenador.nombre}}
             </p>
     
-            <button class="boton">
+            <button class="boton" (click)="toggleCalendario(6)">
                 Reservar
             </button>
         </div>
     
         <div class="tarjeta D">
             <h1>
-               Domingo
+               Domingo {{ getDayClass(7)}}
             </h1>    
     
             <p *ngFor = "let Entrenador of Entrenadores">
             Entrenadores: {{Entrenador.nombre}}
             </p>
     
-            <button class="boton">
+            <button class="boton" (click)="toggleCalendario(7)">
                 Reservar
             </button>
         </div>
     </div>
+
+    @if(mostrarCalendarioFlag){
+        <div class="calendario-container">
+            <ejs-schedule></ejs-schedule>
+        </div>
+        
+    }
+    
+      
+
+
 
     
 
