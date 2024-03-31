@@ -1,15 +1,17 @@
 import { Component, OnInit } from '@angular/core';
-import { ScheduleModule, RecurrenceEditorModule, DayService, WeekService, WorkWeekService, MonthService, MonthAgendaService} from '@syncfusion/ej2-angular-schedule';
+import {  EventSettingsModel, View, TimelineViewsService, ScheduleModule, DayService, MonthAgendaService, MonthService, WeekService, WorkWeekService} from '@syncfusion/ej2-angular-schedule';
 import { CommonModule } from '@angular/common';
 import { NgFor } from '@angular/common';
 import { UsuariosService } from './horario-cliente.service'; 
 import { Usuario } from "../Usuario";
+import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
+
 
 @Component({
   selector: 'app-horario-cliente',
   standalone: true,
-  imports: [ScheduleModule, RecurrenceEditorModule, NgFor, CommonModule],
-  providers: [DayService, WeekService, WorkWeekService, MonthService, MonthAgendaService, UsuariosService],
+  imports: [ScheduleModule, NgFor, CommonModule, DatePickerModule],
+  providers: [DayService, WeekService, WorkWeekService, MonthService, MonthAgendaService, UsuariosService, TimelineViewsService],
   templateUrl: './horario-cliente.component.html',
   styleUrl: './horario-cliente.component.css'
 })
@@ -24,6 +26,11 @@ export class HorarioClienteComponent implements OnInit {
     this.currentDay = currentDate.getDay();
     this.entrenadores = this.UsuariosService.getUsuarios().filter(usuario => usuario.rol === 'Entrenador');
   }
+
+  //SyncFussion
+  public selectedDate: Date = new Date;
+  public currentView: View = 'TimelineDay';
+  public workDays: number[] = [0, 1, 2, 3, 4, 5];
 
 
 getDayClass(dayNumber: number): number {
@@ -51,3 +58,7 @@ getCurrentDay(): number {
 
 
 }
+function extend(arg0: never[], arg1: any, arg2: null, arg3: boolean): Record<string, any>[] {
+  throw new Error('Function not implemented.');
+}
+
