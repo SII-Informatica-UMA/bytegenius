@@ -3,7 +3,7 @@ import { Hora } from "../Hora";
 import { Dia } from "../Dia";
 import { HashMap } from "../HashMap";
 
-export class UsuarioService {
+export class UsuariosService {
     private usuarios: Usuario [] = [
         {id:1, nombre: 'Pablo', apellidos:'Muñoz', rol:'Entrenador'},
         {id:2, nombre: 'Victor', apellidos:'Rueda', rol:'Cliente'}
