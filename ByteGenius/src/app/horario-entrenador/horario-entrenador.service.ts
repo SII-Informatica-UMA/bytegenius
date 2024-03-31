@@ -30,6 +30,7 @@ export class UsuarioService {
 
     private asignaciones: HashMap = {
       1: { 1: { idTrainer: 1 } },
+      4: { 1: { idTrainer: 3 } },
       2: { 2: { idTrainer: 1 } },
       3: { 3: { idTrainer: 1 } }
     };
