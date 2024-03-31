@@ -8,7 +8,7 @@ import { Usuario } from "../Usuario";
 @Component({
   selector: 'app-horario-cliente',
   standalone: true,
-  imports: [ScheduleModule, RecurrenceEditorModule, NgFor],
+  imports: [ScheduleModule, RecurrenceEditorModule, NgFor, CommonModule],
   providers: [DayService, WeekService, WorkWeekService, MonthService, MonthAgendaService],
   templateUrl: './horario-cliente.component.html',
   styleUrl: './horario-cliente.component.css'
@@ -18,7 +18,7 @@ export class HorarioClienteComponent implements OnInit {
   currentDay!: number;
   mostrarCalendarioFlag: boolean = false;
   entrenadores: Usuario[] = [];
-  constructor() { }
+  constructor(private UsuarioService:UsuarioService) { }
   ngOnInit(): void {
     this.currentDay = new Date().getDate();
     this.entrenadores = this.UsuarioService.getUsuarios().filter(usuario => usuario.rol === 'Entrenador');
@@ -47,8 +47,6 @@ getCurrentDay(): number {
   return currentDate.getDay(); // Esto devuelve un número entre 0 (Domingo) y 6 (Sábado)
 }
 
-getEntrenadores(): void {
-  this.entrenadores = this.usuarioService.getUsuarios().filter(usuario => usuario.rol === 'Entrenador');
-}
+
 
 }
