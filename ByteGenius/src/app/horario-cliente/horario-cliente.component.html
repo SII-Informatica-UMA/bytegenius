@@ -17,7 +17,7 @@
     <div class="tarjetas">
         <div class="tarjeta L">
             <h1>
-               Lunes {{ getDayClass(1)}}
+               Lunes {{ getDayClass(1) }}
             </h1>    
     
             <strong class="ent">Entrenadores: </strong>
@@ -31,7 +31,7 @@
     
         <div class="tarjeta M">
             <h1>
-               Martes {{ getDayClass(2)}}
+               Martes {{ getDayClass(2) }}
             </h1>    
     
             <strong class="ent">Entrenadores: </strong>
@@ -96,7 +96,7 @@
                 Reservar
             </button>
         </div>
-    
+
         <div class="tarjeta D">
             <h1>
                Domingo {{ getDayClass(7)}}
@@ -106,10 +106,11 @@
             <p *ngFor="let Entrenador of entrenadores" class="entrenador">{{ Entrenador.nombre }}</p>
     
             <br>
-            <button class="boton" (click)="toggleCalendario(7)">
+            <button class="boton" (click)="toggleCalendario(6)">
                 Reservar
             </button>
         </div>
+    
     </div>
 
     @if(mostrarCalendarioFlag){

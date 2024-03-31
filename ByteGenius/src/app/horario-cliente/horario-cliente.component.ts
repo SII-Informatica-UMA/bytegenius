@@ -17,14 +17,16 @@ import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
 })
 
 export class HorarioClienteComponent implements OnInit {
-  currentDay!: number;
+  currentDay: number = new Date().getDay(); // Obtener el día actual
   mostrarCalendarioFlag: boolean = false;
   entrenadores: Usuario[] = [];
+
   constructor(private UsuariosService:UsuariosService) { }
   ngOnInit(): void {
     const currentDate = new Date();
     this.currentDay = currentDate.getDay();
     this.entrenadores = this.UsuariosService.getUsuarios().filter(usuario => usuario.rol === 'Entrenador');
+    
   }
 
   //SyncFussion
@@ -33,27 +35,24 @@ export class HorarioClienteComponent implements OnInit {
   public workDays: number[] = [0, 1, 2, 3, 4, 5];
 
 
-getDayClass(dayNumber: number): number {
-  switch (dayNumber) {
-    case 1: return this.currentDay-5;
-    case 2: return this.currentDay-4;
-    case 3: return this.currentDay-3;
-    case 4: return this.currentDay-2;
-    case 5: return this.currentDay-1;
-    case 6: return this.currentDay;
-    case 7: return this.currentDay+1;
-    default: return 0;
+getCurrentDay(): number {
+  return (this.currentDay === 0) ? 7 : this.currentDay;
+}
+
+getDayClass(dayNumber: number): string {
+  const currentDayOfWeek = new Date().getDay(); // 0 (Domingo) a 6 (Sábado)
+  let targetDay = currentDayOfWeek + dayNumber;
+  if (targetDay > 7) {
+    targetDay -= 7;
   }
+  return targetDay.toString();
 }
 
 toggleCalendario(day: number): void {
   this.mostrarCalendarioFlag = !this.mostrarCalendarioFlag;
 }
 
-getCurrentDay(): number {
-  const currentDate = new Date();
-  return currentDate.getDay(); // Esto devuelve un número entre 0 (Domingo) y 6 (Sábado)
-}
+
 
 
 
