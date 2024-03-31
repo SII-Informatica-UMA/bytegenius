@@ -6,7 +6,18 @@ import { HashMap } from "../HashMap";
 export class UsuariosService {
     private usuarios: Usuario [] = [
         {id:1, nombre: 'Pablo', apellidos:'Muñoz', rol:'Entrenador'},
-        {id:2, nombre: 'Victor', apellidos:'Rueda', rol:'Cliente'}
+        {id:2, nombre: 'Victor', apellidos:'Rueda', rol:'Entrenador'},
+        {id:2, nombre: 'Victor', apellidos:'Rueda', rol:'Entrenador'},
+        {id:2, nombre: 'Victor', apellidos:'Rueda', rol:'Entrenador'},
+        {id:2, nombre: 'Victor', apellidos:'Rueda', rol:'Entrenador'},
+        {id:2, nombre: 'Victor', apellidos:'Rueda', rol:'Entrenador'},
+        {id:2, nombre: 'Victor', apellidos:'Rueda', rol:'Entrenador'},
+        {id:2, nombre: 'Victor', apellidos:'Rueda', rol:'Entrenador'},
+        
+   
+      
+
+
     ];
 
     private horas: Hora[] = [
