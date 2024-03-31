@@ -114,7 +114,12 @@
 
     @if(mostrarCalendarioFlag){
         <div class="calendario-container">
-            <ejs-schedule></ejs-schedule>
+            <ejs-schedule #schedule height='650px' [(selectedDate)]="selectedDate" 
+            [(currentView)]="currentView" [workDays]="workDays">
+        <e-views>
+            <e-view option="TimelineDay"></e-view>
+        </e-views>
+    </ejs-schedule>
         </div>
         
     }

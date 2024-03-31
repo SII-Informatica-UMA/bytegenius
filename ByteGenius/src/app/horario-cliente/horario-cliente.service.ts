@@ -15,9 +15,6 @@ export class UsuariosService {
         {id:2, nombre: 'Victor', apellidos:'Rueda', rol:'Entrenador'},
         
    
-      
-
-
     ];
 
     private horas: Hora[] = [
