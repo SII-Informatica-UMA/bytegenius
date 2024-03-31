@@ -1,12 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ScheduleModule, RecurrenceEditorModule, DayService, WeekService, WorkWeekService, MonthService, MonthAgendaService} from '@syncfusion/ej2-angular-schedule';
 import { CommonModule } from '@angular/common';
-
+import { NgFor } from '@angular/common';
+import {UsuarioService } from './horario-cliente.service';
+import { Usuario } from "../Usuario";
 
 @Component({
   selector: 'app-horario-cliente',
   standalone: true,
-  imports: [ScheduleModule, RecurrenceEditorModule],
+  imports: [ScheduleModule, RecurrenceEditorModule, NgFor],
   providers: [DayService, WeekService, WorkWeekService, MonthService, MonthAgendaService],
   templateUrl: './horario-cliente.component.html',
   styleUrl: './horario-cliente.component.css'
@@ -14,16 +16,13 @@ import { CommonModule } from '@angular/common';
 export class HorarioClienteComponent implements OnInit {
   currentDay!: number;
   mostrarCalendarioFlag: boolean = false;
+  entrenadores: Usuario[] = [];
   constructor() { }
   ngOnInit(): void {
     this.currentDay = new Date().getDate();
   }
   daysOfWeek = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
-  trainers = [
-  {name: 'Entrenador 1'},
-  {name: 'Entrenador 2'},
-  {name: 'Entrenador 3'},
-  // ...
+ 
 ];
 
 getDayClass(dayNumber: number): number {
@@ -42,5 +41,14 @@ getDayClass(dayNumber: number): number {
 toggleCalendario(day: number): void {
   this.mostrarCalendarioFlag = !this.mostrarCalendarioFlag;
 }
+
+getCurrentDay(): number {
+  const currentDate = new Date();
+  return currentDate.getDay(); // Esto devuelve un número entre 0 (Domingo) y 6 (Sábado)
+}
+
+getEntrenadores(): void {
+    this.entrenadores = this.usuarioService.getUsuarios().filter(usuario => usuario.rol === 'Entrenador');
+  }
 
 }
