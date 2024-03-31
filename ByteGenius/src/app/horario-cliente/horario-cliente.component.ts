@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ScheduleModule, RecurrenceEditorModule, DayService, WeekService, WorkWeekService, MonthService, MonthAgendaService} from '@syncfusion/ej2-angular-schedule';
 import { CommonModule } from '@angular/common';
 import { NgFor } from '@angular/common';
-import {UsuarioService } from './horario-cliente.service';
+import { UsuarioService } from './horario-cliente.service'; 
 import { Usuario } from "../Usuario";
 
 @Component({
@@ -13,6 +13,7 @@ import { Usuario } from "../Usuario";
   templateUrl: './horario-cliente.component.html',
   styleUrl: './horario-cliente.component.css'
 })
+
 export class HorarioClienteComponent implements OnInit {
   currentDay!: number;
   mostrarCalendarioFlag: boolean = false;
@@ -20,10 +21,9 @@ export class HorarioClienteComponent implements OnInit {
   constructor() { }
   ngOnInit(): void {
     this.currentDay = new Date().getDate();
+    this.entrenadores = this.UsuarioService.getUsuarios().filter(usuario => usuario.rol === 'Entrenador');
   }
-  daysOfWeek = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
- 
-];
+
 
 getDayClass(dayNumber: number): number {
   switch (dayNumber) {
@@ -48,7 +48,7 @@ getCurrentDay(): number {
 }
 
 getEntrenadores(): void {
-    this.entrenadores = this.usuarioService.getUsuarios().filter(usuario => usuario.rol === 'Entrenador');
-  }
+  this.entrenadores = this.usuarioService.getUsuarios().filter(usuario => usuario.rol === 'Entrenador');
+}
 
 }
