@@ -8,8 +8,8 @@ import { Usuario } from './Usuario';
 export class AppComponentService {
     
     private usuarios: Usuario [] = [
-        {id:1, nombre: 'Pablo', apellidos:'Muñoz', rol:'Entrenador'},
-        {id:2, nombre: 'Victor', apellidos:'Rueda', rol:'Cliente'}
+        {id:1, nombre: 'Pablo', apellidos:'Muñoz', rol:true},
+        {id:2, nombre: 'Victor', apellidos:'Rueda', rol:false}
     ];
 
     getUsuarios(): Usuario [] {

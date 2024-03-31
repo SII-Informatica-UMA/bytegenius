@@ -6,7 +6,12 @@
   <title>Calendario</title>
 </head>
 <body>
-  <h1>Bienvenido {{user}}</h1>
+  <form (ngSubmit)="elegirContacto(id1)">
+    <input type="number" [(ngModel)]="id1" name="id1" placeholder="Introduce el ID">
+    <button type="submit" class="btn btn-primary">Enviar</button>
+  </form>
+  <h1>Bienvenido {{usuario?.nombre}}</h1>
+
   @if(isTrainer){  
     <app-horario-entrenador></app-horario-entrenador>
   }

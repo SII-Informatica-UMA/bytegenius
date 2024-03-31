@@ -4,5 +4,5 @@ export interface Usuario{
     id: number;
     nombre: string;
     apellidos: string;
-    rol: string;
+    rol: boolean;
 }
