@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {  EventSettingsModel, View, TimelineViewsService, ScheduleModule, DayService, MonthAgendaService, MonthService, WeekService, WorkWeekService} from '@syncfusion/ej2-angular-schedule';
+import {  EventSettingsModel, View, TimelineViewsService, ScheduleModule, DayService, } from '@syncfusion/ej2-angular-schedule';
 import { CommonModule } from '@angular/common';
 import { NgFor } from '@angular/common';
 import { UsuariosService } from './horario-cliente.service'; 
@@ -11,7 +11,7 @@ import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
   selector: 'app-horario-cliente',
   standalone: true,
   imports: [ScheduleModule, NgFor, CommonModule, DatePickerModule],
-  providers: [DayService, WeekService, WorkWeekService, MonthService, MonthAgendaService, UsuariosService, TimelineViewsService],
+  providers: [DayService, UsuariosService, TimelineViewsService],
   templateUrl: './horario-cliente.component.html',
   styleUrl: './horario-cliente.component.css'
 })
