@@ -8,8 +8,10 @@
 </head>
 <body>
     <h1 class="titulo">
-        Horario reservas
+        Horario reservas semana: {{ startDateOfWeek | date: 'dd/MM/yyyy' }} - {{ endDateOfWeek | date: 'dd/MM/yyyy' }};
     </h1>
+
+
 
     <br>
     <p class="texto"> Elige el día y pulsa sobre reservar para ver los horarios.</p>
@@ -17,7 +19,7 @@
     <div class="tarjetas">
         <div class="tarjeta L">
             <h1>
-               Lunes {{ getDayClass(1) }}
+               Lunes
             </h1>    
     
             <strong class="ent">Entrenadores: </strong>
@@ -31,7 +33,7 @@
     
         <div class="tarjeta M">
             <h1>
-               Martes {{ getDayClass(2) }}
+               Martes 
             </h1>    
     
             <strong class="ent">Entrenadores: </strong>
@@ -45,7 +47,7 @@
     
         <div class="tarjeta X">
             <h1>
-               Miercoles {{ getDayClass(3)}}
+               Miercoles 
             </h1>    
     
             <strong class="ent">Entrenadores: </strong>
@@ -58,7 +60,7 @@
     
         <div class="tarjeta J">
             <h1>
-               Jueves {{ getDayClass(4)}}
+               Jueves 
             </h1>    
     
             <strong class="ent">Entrenadores: </strong>
@@ -71,7 +73,7 @@
     
         <div class="tarjeta V">
             <h1>
-               Viernes {{ getDayClass(5)}}
+               Viernes 
             </h1>    
     
             <strong class="ent">Entrenadores: </strong>
@@ -85,7 +87,7 @@
     
         <div class="tarjeta S">
             <h1>
-               Sabado {{ getDayClass(6)}}
+               Sabado
             </h1>    
     
             <strong class="ent">Entrenadores: </strong>
@@ -99,7 +101,7 @@
 
         <div class="tarjeta D">
             <h1>
-               Domingo {{ getDayClass(7)}}
+               Domingo
             </h1>    
     
             <strong class="ent">Entrenadores: </strong>
@@ -113,18 +115,7 @@
     
     </div>
 
-    @if(mostrarCalendarioFlag){
-        <div class="calendario-container">
-            <ejs-schedule #schedule height='650px' [(selectedDate)]="selectedDate" 
-            [(currentView)]="currentView" [workDays]="workDays">
-        <e-views>
-            <e-view option="TimelineDay"></e-view>
-        </e-views>
-    </ejs-schedule>
-        </div>
-        
-    }
-    
+      
       
 </body>
 </html>
