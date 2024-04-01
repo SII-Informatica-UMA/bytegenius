@@ -25,7 +25,7 @@
             <strong class="ent">Entrenadores: </strong>
             <p *ngFor="let Entrenador of entrenadores" class="entrenador">{{ Entrenador.nombre }}</p>
             <br>
-            <button class="boton" (click)="toggleCalendario(1)" >
+            <button class="boton" (click)="mostrarTablaLunes()" >
                 Reservar
             </button>
 
@@ -40,7 +40,7 @@
             <p *ngFor="let Entrenador of entrenadores" class="entrenador">{{ Entrenador.nombre }}</p>
             
             <br>
-            <button class="boton" (click)="toggleCalendario(2)">
+            <button class="boton" (click)="">
                 Reservar
             </button>
         </div>
@@ -53,7 +53,7 @@
             <strong class="ent">Entrenadores: </strong>
             <p *ngFor="let Entrenador of entrenadores" class="entrenador">{{ Entrenador.nombre }}</p>
             <br>
-            <button class="boton" (click)="toggleCalendario(3)">
+            <button class="boton" (click)="">
                 Reservar
             </button>
         </div>
@@ -66,7 +66,7 @@
             <strong class="ent">Entrenadores: </strong>
             <p *ngFor="let Entrenador of entrenadores" class="entrenador">{{ Entrenador.nombre }}</p>
             <br>
-            <button class="boton" (click)="toggleCalendario(4)">
+            <button class="boton" (click)="">
                 Reservar
             </button>
         </div>
@@ -80,7 +80,7 @@
             <p *ngFor="let Entrenador of entrenadores" class="entrenador">{{ Entrenador.nombre }}</p>
     
             <br>
-            <button class="boton" (click)="toggleCalendario(5)">
+            <button class="boton" (click)="">
                 Reservar
             </button>
         </div>
@@ -94,7 +94,7 @@
             <p *ngFor="let Entrenador of entrenadores" class="entrenador">{{ Entrenador.nombre }}</p>
     
             <br>
-            <button class="boton" (click)="toggleCalendario(6)">
+            <button class="boton" (click)="">
                 Reservar
             </button>
         </div>
@@ -108,14 +108,30 @@
             <p *ngFor="let Entrenador of entrenadores" class="entrenador">{{ Entrenador.nombre }}</p>
     
             <br>
-            <button class="boton" (click)="toggleCalendario(6)">
+            <button class="boton" (click)="">
                 Reservar
             </button>
         </div>
     
     </div>
 
-      
+
+    <table  *ngIf="mostrarTablaLunes">
+        <thead>
+          <tr>
+            <th scope="col">Hora</th>
+            <th scope="col" *ngFor="let entrenador of entrenadores">{{ entrenador.nombre }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let hora of horasLunes">
+            <td>{{ hora.franjaHoraria }}</td>
+            <td *ngFor="let entrenador of entrenadores">
+              {{ obtenerIdTrainer(asignaciones, diaLunes.id, hora.id)? 'Disponible' : 'No Disponible' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
       
 </body>
 </html>

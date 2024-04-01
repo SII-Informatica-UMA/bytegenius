@@ -14,19 +14,20 @@ import { startOfWeek, endOfWeek } from 'date-fns';
   imports: [ScheduleModule, NgFor, CommonModule, DatePickerModule],
   providers: [DayService, UsuariosService, TimelineViewsService],
   templateUrl: './horario-cliente.component.html',
-  styleUrl: './horario-cliente.component.css'
+  styleUrls: ['./horario-cliente.component.css']
 })
 
 export class HorarioClienteComponent implements OnInit {
-  currentDay: number = new Date().getDay(); // Obtener el día actual
-  mostrarCalendarioFlag: boolean = false;
+  currentDay: number = new Date().getDay(); 
   entrenadores: Usuario[] = [];
   public startDateOfWeek: Date = new Date();
   public endDateOfWeek: Date = new Date();
+  mostrarTablaLunes = false;
+
   constructor(private UsuariosService:UsuariosService) { }
   ngOnInit(): void {
    
-    this.entrenadores = this.UsuariosService.getUsuarios().filter(usuario => usuario.rol === 'Entrenador');
+    this.entrenadores = this.UsuariosService.getUsuarios().filter(usuario => usuario.rol === true);
     this.updateDates();
     setInterval(() => {
       this.updateDates();
@@ -35,20 +36,13 @@ export class HorarioClienteComponent implements OnInit {
 
   public selectedDate: Date = new Date;
 
-
-updateDates(): void {
+  updateDates(): void {
     this.startDateOfWeek = startOfWeek(new Date(), { weekStartsOn: 1 });
     this.endDateOfWeek = endOfWeek(new Date(), { weekStartsOn: 1 });
-}
+  }
 
-
-toggleCalendario(day: number): void {
-  this.mostrarCalendarioFlag = !this.mostrarCalendarioFlag;
-}
-
+  mostrarTablaLunes() {
+    this.mostrarTablaLunes = !this.mostrarTablaLunes;
+  }
 
 }
-function extend(arg0: never[], arg1: any, arg2: null, arg3: boolean): Record<string, any>[] {
-  throw new Error('Function not implemented.');
-}
-
