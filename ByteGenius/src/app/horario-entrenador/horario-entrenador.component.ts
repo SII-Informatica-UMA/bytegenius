@@ -1,27 +1,39 @@
 import { Component } from '@angular/core';
-import { AppComponent } from '../app.component';
+import { CommonModule } from '@angular/common';
 import {UsuarioService } from './horario-entrenador.service';
 import { Dia } from '../Dia';
-import { CommonModule } from '@angular/common';
-import { NgFor } from '@angular/common';
+import { Hora } from '../Hora';
+import { HashMap } from '../HashMap';
+import { Usuario } from '../Usuario';
 
 @Component({
   selector: 'app-horario-entrenador',
   standalone: true,
-  imports: [CommonModule,NgFor],
+  imports: [CommonModule],
   templateUrl: './horario-entrenador.component.html',
   styleUrl: './horario-entrenador.component.css'
 })
+
 export class HorarioEntrenadorComponent {
   dias: Dia [] = [];
+  horas: Hora [] = [];
+  asignaciones: HashMap = [];
+  usuarios: Usuario [] = [];
 
-  constructor(private usuariosService:UsuarioService) { }
-
+  constructor(private usuariosservice: UsuarioService) { }
 
   ngOnInit(): void {
-    this.dias = this.usuariosService.getDias();
+    this.dias = this.usuariosservice.getDias();
+    this.horas = this.usuariosservice.getHoras();
+    this.asignaciones = this.usuariosservice.getasignaciones();
+    this.usuarios = this.usuariosservice.getUsuarios();
   }
 
-
-
+  obtenerIdTrainer(hashMap: HashMap, idDia: number, idHora: number): number {
+    if (hashMap[idDia] && hashMap[idDia][idHora]) {
+      return hashMap[idDia][idHora].idTrainer;
+    } else {
+      return 0;
+    }
+  }
 }
