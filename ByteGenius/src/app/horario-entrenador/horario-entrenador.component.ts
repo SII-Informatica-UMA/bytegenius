@@ -4,6 +4,7 @@ import {UsuarioService } from './horario-entrenador.service';
 import { Dia } from '../Dia';
 import { Hora } from '../Hora';
 import { HashMap } from '../HashMap';
+import { Usuario } from '../Usuario';
 
 @Component({
   selector: 'app-horario-entrenador',
@@ -17,6 +18,7 @@ export class HorarioEntrenadorComponent {
   dias: Dia [] = [];
   horas: Hora [] = [];
   asignaciones: HashMap = [];
+  usuarios: Usuario [] = [];
 
   constructor(private usuariosservice: UsuarioService) { }
 
@@ -24,6 +26,7 @@ export class HorarioEntrenadorComponent {
     this.dias = this.usuariosservice.getDias();
     this.horas = this.usuariosservice.getHoras();
     this.asignaciones = this.usuariosservice.getasignaciones();
+    this.usuarios = this.usuariosservice.getUsuarios();
   }
 
   obtenerIdTrainer(hashMap: HashMap, idDia: number, idHora: number): number {
