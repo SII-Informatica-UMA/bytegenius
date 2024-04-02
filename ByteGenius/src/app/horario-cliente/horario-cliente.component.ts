@@ -20,6 +20,8 @@ export class HorarioClienteComponent implements OnInit {
   currentDay: number = new Date().getDay(); // Obtener el día actual
   mostrarCalendarioFlag: boolean = false;
   entrenadores: Usuario[] = [];
+
+  
   public startDateOfWeek: Date = new Date();
   public endDateOfWeek: Date = new Date();
   horas:Hora[]=[];

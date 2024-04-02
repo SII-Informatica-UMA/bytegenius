@@ -12,9 +12,9 @@ export class UsuarioService {
     
   private usuarios: Usuario[]= [
     {id:1, nombre:'Jaime', apellidos:'Garfia', rol: true},
-    {id:1, nombre:'Jaime', apellidos:'Garfia', rol: true},
-    {id:1, nombre:'Jaime', apellidos:'Garfia', rol: true},
-    {id:1, nombre:'Jaime', apellidos:'Garfia', rol: true}
+    {id:2, nombre:'Jaime', apellidos:'Garfia', rol: true},
+    {id:3, nombre:'Jaime', apellidos:'Garfia', rol: true},
+    {id:4, nombre:'Jaime', apellidos:'Garfia', rol: true}
 
   ]
 
@@ -56,8 +56,8 @@ export class UsuarioService {
 
       constructor(private usuario: AppComponentService) { }
 
-      getUsuarios(): Usuario [] {
-        return this.usuario.getUsuarios();
+      getUsuarios(): Usuario[] {
+        return this.usuarios;
       }
   
       getasignaciones(): HashMap {
