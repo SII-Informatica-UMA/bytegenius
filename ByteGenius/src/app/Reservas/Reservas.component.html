@@ -1,1 +1,15 @@
-<p> hola</p>
+<div class="container">
+    <table>
+        <thead>
+          <tr>
+            <th>Entrenador / Hora</th>
+            <th *ngFor="let Hora of horas">{{Hora.franjaHoraria}}</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let Entrenador of entrenadores">
+            <th>{{Entrenador.nombre}}</th>
+          </tr>
+        </tbody>
+      </table>
+</div>

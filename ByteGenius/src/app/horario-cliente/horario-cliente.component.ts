@@ -31,6 +31,7 @@ export class HorarioClienteComponent implements OnInit {
   horas:Hora[]=[];
   constructor(private usuariosservice: UsuarioService) { 
     this.horas = this.usuariosservice.getHoras();
+    this.entrenadores = this.usuariosservice.getUsuarios().filter(usuario => usuario.rol === true);
     
   }
   ngOnInit(): void {
