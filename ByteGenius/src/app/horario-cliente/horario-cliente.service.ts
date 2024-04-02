@@ -2,8 +2,10 @@ import { Usuario } from "../Usuario";
 import { Hora } from "../Hora";
 import { Dia } from "../Dia";
 import { HashMap } from "../HashMap";
+import { AppComponentService } from "../app.component.service";
 
-export class UsuariosService {
+
+export class UsuarioService {
     
 
     private horas: Hora[] = [
