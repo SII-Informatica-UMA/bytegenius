@@ -1,18 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import {  EventSettingsModel, View, TimelineViewsService, ScheduleModule, DayService, MonthAgendaService, MonthService, WeekService, WorkWeekService} from '@syncfusion/ej2-angular-schedule';
 import { CommonModule } from '@angular/common';
 import { NgFor } from '@angular/common';
 import { UsuarioService } from './horario-cliente.service'; 
 import { Usuario } from "../Usuario";
-import { DatePickerModule } from '@syncfusion/ej2-angular-calendars';
 import { startOfWeek, endOfWeek } from 'date-fns';
 
 
 @Component({
   selector: 'app-horario-cliente',
   standalone: true,
-  imports: [ScheduleModule, NgFor, CommonModule, DatePickerModule],
-  providers: [DayService, UsuariosService, TimelineViewsService],
+  imports: [ NgFor, CommonModule],
+  providers: [ UsuarioService],
   templateUrl: './horario-cliente.component.html',
   styleUrl: './horario-cliente.component.css'
 })
@@ -26,7 +24,7 @@ export class HorarioClienteComponent implements OnInit {
   constructor(private usuariosservice: UsuarioService) { }
   ngOnInit(): void {
    
-    this.entrenadores = this.UsuarioService.getUsuarios().filter(usuario => usuario.rol === true);
+    this.entrenadores = this.usuariosservice.getUsuarios().filter(usuario => usuario.rol === true);
     this.updateDates();
     setInterval(() => {
       this.updateDates();

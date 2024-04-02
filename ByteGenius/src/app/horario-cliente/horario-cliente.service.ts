@@ -3,8 +3,11 @@ import { Hora } from "../Hora";
 import { Dia } from "../Dia";
 import { HashMap } from "../HashMap";
 import { AppComponentService } from "../app.component.service";
+import { Injectable } from "@angular/core";
 
-
+@Injectable({
+  providedIn: 'root'
+})
 export class UsuarioService {
     
 
