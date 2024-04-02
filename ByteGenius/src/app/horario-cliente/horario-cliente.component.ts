@@ -20,10 +20,11 @@ import { ReservasComponent } from '../Reservas/Reservas.component';
 })
 
 export class HorarioClienteComponent implements OnInit {
-  currentDay: number = new Date().getDay(); 
+  currentDay: number = new Date().getDay();
   mostrarCalendarioFlag: boolean = false;
   entrenadores: Usuario[] = [];
-  diaElegido: string = "";
+  diaElegido: number = 0;
+  entrenadoresPorDia: Usuario[]=[];
 
   
   public startDateOfWeek: Date = new Date();
@@ -45,9 +46,17 @@ export class HorarioClienteComponent implements OnInit {
 
   public selectedDate: Date = new Date;
 
-elegirDia(dia: string): void {
+elegirDia(dia: number): void {
     this.diaElegido = dia;
 }  
+
+entrenadoresPD(dia:number):Usuario[]{
+  return this.entrenadoresPorDia=this.usuariosservice.getEntrenadoresPorDia(dia);
+}
+
+
+
+
 
 
 updateDates(): void {
@@ -67,6 +76,9 @@ toggleCalendario(day: number): void {
 function extend(arg0: never[], arg1: any, arg2: null, arg3: boolean): Record<string, any>[] {
   throw new Error('Function not implemented.');
 }
+
+
+
 
 
 

@@ -23,9 +23,9 @@
             </h1>    
     
             <strong class="ent">Entrenadores: </strong>
-            <p *ngFor="let Entrenador of entrenadores" class="entrenador">{{ Entrenador.nombre }}</p>
+            <p *ngFor="let Entrenador of entrenadoresPD(1)" class="entrenador">{{ Entrenador.nombre }}</p>
             <br>
-            <button class="boton" (click)="elegirDia('Lunes')" >
+            <button class="boton" (click)="elegirDia(1)" >
                 Reservar
             </button>
 
@@ -37,10 +37,10 @@
             </h1>    
     
             <strong class="ent">Entrenadores: </strong>
-            <p *ngFor="let Entrenador of entrenadores" class="entrenador">{{ Entrenador.nombre }}</p>
+            <p *ngFor="let Entrenador of entrenadoresPD(2)" class="entrenador">{{ Entrenador.nombre }}</p>
             
             <br>
-            <button class="boton" (click)="elegirDia('Martes')">
+            <button class="boton" (click)="elegirDia(2)">
                 Reservar
             </button>
         </div>
@@ -51,9 +51,9 @@
             </h1>    
     
             <strong class="ent">Entrenadores: </strong>
-            <p *ngFor="let Entrenador of entrenadores" class="entrenador">{{ Entrenador.nombre }}</p>
+            <p *ngFor="let Entrenador of entrenadoresPD(3)" class="entrenador">{{ Entrenador.nombre }}</p>
             <br>
-            <button class="boton" (click)="elegirDia('Miercoles')">
+            <button class="boton" (click)="elegirDia(3)">
                 Reservar
             </button>
         </div>
@@ -64,9 +64,9 @@
             </h1>    
     
             <strong class="ent">Entrenadores: </strong>
-            <p *ngFor="let Entrenador of entrenadores" class="entrenador">{{ Entrenador.nombre }}</p>
+            <p *ngFor="let Entrenador of entrenadoresPD(4)" class="entrenador">{{ Entrenador.nombre }}</p>
             <br>
-            <button class="boton" (click)="elegirDia('Jueves')">
+            <button class="boton" (click)="elegirDia(4)">
                 Reservar
             </button>
         </div>
@@ -77,10 +77,10 @@
             </h1>    
     
             <strong class="ent">Entrenadores: </strong>
-            <p *ngFor="let Entrenador of entrenadores" class="entrenador">{{ Entrenador.nombre }}</p>
+            <p *ngFor="let Entrenador of entrenadoresPD(5)" class="entrenador">{{ Entrenador.nombre }}</p>
     
             <br>
-            <button class="boton" (click)="elegirDia('Viernes')">
+            <button class="boton" (click)="elegirDia(5)">
                 Reservar
             </button>
         </div>
@@ -91,10 +91,10 @@
             </h1>    
     
             <strong class="ent">Entrenadores: </strong>
-            <p *ngFor="let Entrenador of entrenadores" class="entrenador">{{ Entrenador.nombre }}</p>
+            <p *ngFor="let Entrenador of entrenadoresPD(6)" class="entrenador">{{ Entrenador.nombre }}</p>
     
             <br>
-            <button class="boton" (click)="elegirDia('Sabado')">
+            <button class="boton" (click)="elegirDia(6)">
                 Reservar
             </button>
         </div>
@@ -105,35 +105,123 @@
             </h1>    
     
             <strong class="ent">Entrenadores: </strong>
-            <p *ngFor="let Entrenador of entrenadores" class="entrenador">{{ Entrenador.nombre }}</p>
+            <p *ngFor="let Entrenador of entrenadoresPD(7)" class="entrenador">{{ Entrenador.nombre }}</p>
     
             <br>
-            <button class="boton" (click)="elegirDia('Domingo')">
+            <button class="boton" (click)="elegirDia(7)">
                 Reservar
             </button>
         </div>
+        <br>
+    
+    </div>
 
-        <div class="container">
+    <div class= 'tablas' [ngSwitch]="diaElegido">
+        <div *ngSwitchCase="1"> 
             <table>
                 <thead>
-                    <tr></tr>
-                        <th>Horarios</th>
-                        <th *ngFor="let Hora of horas" > {{Hora.franjaHoraria }} </th>
-
+                  <tr>
+                    <th>Entrenador / Hora</th>
+                    <th *ngFor="let Hora of horas">{{Hora.franjaHoraria}}</th>
+                  </tr>
                 </thead>
                 <tbody>
-                    <th> Entrenador 1  </th>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                        
+                  <tr *ngFor="let Entrenador of entrenadoresPD(1)">
+                    <th>{{Entrenador.nombre}}</th>
+                  </tr>
                 </tbody>
-            </table>
-            
+              </table>
         </div>
-    
+        <div *ngSwitchCase="2">
+            <table>
+                <thead>
+                  <tr>
+                    <th>Entrenador / Hora</th>
+                    <th *ngFor="let Hora of horas">{{Hora.franjaHoraria}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let Entrenador of entrenadoresPD(2)">
+                    <th>{{Entrenador.nombre}}</th>
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+        <div *ngSwitchCase="3">
+            <table>
+                <thead>
+                  <tr>
+                    <th>Entrenador / Hora</th>
+                    <th *ngFor="let Hora of horas">{{Hora.franjaHoraria}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let Entrenador of entrenadoresPD(3)">
+                    <th>{{Entrenador.nombre}}</th>
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+        <div *ngSwitchCase="4">
+            <table>
+                <thead>
+                  <tr>
+                    <th>Entrenador / Hora</th>
+                    <th *ngFor="let Hora of horas">{{Hora.franjaHoraria}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let Entrenador of entrenadoresPD(4)">
+                    <th>{{Entrenador.nombre}}</th>
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+        <div *ngSwitchCase="5">
+            <table>
+                <thead>
+                  <tr>
+                    <th>Entrenador / Hora</th>
+                    <th *ngFor="let Hora of horas">{{Hora.franjaHoraria}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let Entrenador of entrenadoresPD(5)">
+                    <th>{{Entrenador.nombre}}</th>
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+        <div *ngSwitchCase="6">
+            <table>
+                <thead>
+                  <tr>
+                    <th>Entrenador / Hora</th>
+                    <th *ngFor="let Hora of horas">{{Hora.franjaHoraria}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let Entrenador of entrenadoresPD(6)">
+                    <th>{{Entrenador.nombre}}</th>
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+        <div *ngSwitchCase="7">
+            <table>
+                <thead>
+                  <tr>
+                    <th>Entrenador / Hora</th>
+                    <th *ngFor="let Hora of horas">{{Hora.franjaHoraria}}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let Entrenador of entrenadoresPD(7)">
+                    <th>{{Entrenador.nombre}}</th>
+                  </tr>
+                </tbody>
+              </table>
+        </div>
     </div>
 
       

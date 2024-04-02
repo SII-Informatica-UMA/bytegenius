@@ -37,9 +37,11 @@ export class UsuarioService {
     private asignaciones: HashMap = {
       1: { 1: { idTrainer: 1 } },
       4: { 1: { idTrainer: 3 } },
-      2: { 2: { idTrainer: 1 } },
-      3: { 3: { idTrainer: 1 } }
+      2: { 2: { idTrainer: 2 } },
+      3: { 3: { idTrainer: 4 } },
     };
+
+      //Dia - Hora - Entrenador
 
     private dias: Dia [] = [
       {id:1, nombre:'Lunes'},
@@ -63,6 +65,22 @@ export class UsuarioService {
       getasignaciones(): HashMap {
         return this.asignaciones;
       }
+
+      getEntrenadoresPorDia(dia: number): Usuario[] {
+        const entrenadoresPorDia: Usuario[] = [];
+        const asignacionesParaDia = this.asignaciones[dia];
+        if (asignacionesParaDia) {
+          for (let key in asignacionesParaDia) {
+            const idTrainer = asignacionesParaDia[key].idTrainer;
+            const entrenador = this.usuarios.find(u => u.id === idTrainer);
+            if (entrenador) {
+              entrenadoresPorDia.push(entrenador);
+            }
+          }
+        }
+        return entrenadoresPorDia;
+      }
+    
       
       getHoras(): Hora []{
         return this.horas;

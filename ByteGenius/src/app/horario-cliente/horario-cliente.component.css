@@ -171,3 +171,8 @@ body{
   th{
     padding: 1rem;
   }
+
+  .tablas{
+    text-align: center;
+    font-size: large;
+  }
