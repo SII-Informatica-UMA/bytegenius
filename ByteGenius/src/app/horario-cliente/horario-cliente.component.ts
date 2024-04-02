@@ -4,22 +4,26 @@ import { NgFor } from '@angular/common';
 import { UsuarioService } from './horario-cliente.service'; 
 import { Usuario } from "../Usuario";
 import { Hora } from '../Hora';
+import { FormsModule } from '@angular/forms';
 import { startOfWeek, endOfWeek } from 'date-fns';
+import { ReservasComponent } from '../Reservas/Reservas.component';
+
 
 
 @Component({
   selector: 'app-horario-cliente',
   standalone: true,
-  imports: [ NgFor, CommonModule],
+  imports: [ NgFor, CommonModule, FormsModule, ReservasComponent],
   providers: [ UsuarioService],
   templateUrl: './horario-cliente.component.html',
   styleUrl: './horario-cliente.component.css'
 })
 
 export class HorarioClienteComponent implements OnInit {
-  currentDay: number = new Date().getDay(); // Obtener el día actual
+  currentDay: number = new Date().getDay(); 
   mostrarCalendarioFlag: boolean = false;
   entrenadores: Usuario[] = [];
+  diaElegido: string = "";
 
   
   public startDateOfWeek: Date = new Date();
@@ -40,6 +44,10 @@ export class HorarioClienteComponent implements OnInit {
 
   public selectedDate: Date = new Date;
 
+elegirDia(dia: string): void {
+    this.diaElegido = dia;
+}  
+
 
 updateDates(): void {
     this.startDateOfWeek = startOfWeek(new Date(), { weekStartsOn: 1 });
@@ -53,6 +61,8 @@ toggleCalendario(day: number): void {
 
 
 }
+
+
 function extend(arg0: never[], arg1: any, arg2: null, arg3: boolean): Record<string, any>[] {
   throw new Error('Function not implemented.');
 }
