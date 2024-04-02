@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { NgFor } from '@angular/common';
 import { UsuarioService } from './horario-cliente.service'; 
 import { Usuario } from "../Usuario";
+import { Hora } from '../Hora';
 import { startOfWeek, endOfWeek } from 'date-fns';
 
 
@@ -21,7 +22,11 @@ export class HorarioClienteComponent implements OnInit {
   entrenadores: Usuario[] = [];
   public startDateOfWeek: Date = new Date();
   public endDateOfWeek: Date = new Date();
-  constructor(private usuariosservice: UsuarioService) { }
+  horas:Hora[]=[];
+  constructor(private usuariosservice: UsuarioService) { 
+    this.horas = this.usuariosservice.getHoras();
+    
+  }
   ngOnInit(): void {
    
     this.entrenadores = this.usuariosservice.getUsuarios().filter(usuario => usuario.rol === true);

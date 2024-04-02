@@ -156,3 +156,21 @@ body{
     font-weight: bold;
     font-size: 14px;
   }
+
+  
+  table{
+    border: solid 1px black;
+    font-size: medium;
+    table-layout: fixed;
+    border-collapse: collapse;
+    margin: auto;
+  }
+
+  td{
+    border: solid 1px black;
+    padding: 1rem;
+  }
+  th{
+    border: solid 1px black;
+    padding: 1rem;
+  }

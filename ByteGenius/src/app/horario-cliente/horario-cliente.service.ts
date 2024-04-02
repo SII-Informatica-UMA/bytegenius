@@ -10,6 +10,13 @@ import { Injectable } from "@angular/core";
 })
 export class UsuarioService {
     
+  private usuarios: Usuario[]= [
+    {id:1, nombre:'Jaime', apellidos:'Garfia', rol: true},
+    {id:1, nombre:'Jaime', apellidos:'Garfia', rol: true},
+    {id:1, nombre:'Jaime', apellidos:'Garfia', rol: true},
+    {id:1, nombre:'Jaime', apellidos:'Garfia', rol: true}
+
+  ]
 
     private horas: Hora[] = [
         {id:1,franjaHoraria:'9:00'},
@@ -66,3 +73,5 @@ export class UsuarioService {
       }
     
 }
+export { Hora, Usuario };
+
