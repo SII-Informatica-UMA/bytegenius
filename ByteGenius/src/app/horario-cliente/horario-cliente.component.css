@@ -159,7 +159,6 @@ body{
 
   
   table{
-    border: solid 1px black;
     font-size: medium;
     table-layout: fixed;
     border-collapse: collapse;
@@ -171,6 +170,5 @@ body{
     padding: 1rem;
   }
   th{
-    border: solid 1px black;
     padding: 1rem;
   }
