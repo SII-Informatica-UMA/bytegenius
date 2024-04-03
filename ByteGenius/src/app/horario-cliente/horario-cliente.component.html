@@ -133,8 +133,16 @@
                     <th>{{Entrenador.nombre}}</th>
                     <td *ngFor="let hora of horas">
                         <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id).includes(hora)">
+                          
+                          <ng-container *ngIf="existeReserva(1,1,hora.id)">
+                            X
+                          </ng-container>
+   
+                          <ng-container *ngIf="!existeReserva(1,1,hora.id)">
                             <button class="button" (click)="aniadirReserva()"> Reservar</button>
-                        </ng-container>
+                          </ng-container>
+   
+                         </ng-container>
                     </td>
                   </tr>
                 </tbody>
@@ -173,7 +181,15 @@
                     <th>{{Entrenador.nombre}}</th>
                     <td *ngFor="let hora of horas">
                       <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id).includes(hora)">
+
+                      <ng-container *ngIf="existeReserva(1,3,1)">
+                         X
+                      </ng-container>
+
+                      <ng-container *ngIf="!existeReserva(1,3,1)">
                         <button class="button" (click)="aniadirReserva()"> Reservar</button>
+                      </ng-container>
+
                       </ng-container>
                   </td>
                   </tr>

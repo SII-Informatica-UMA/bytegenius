@@ -34,17 +34,17 @@ export class HorarioClienteComponent implements OnInit {
   public endDateOfWeek: Date = new Date();
   horas:Hora[]=[];
   reservas:HashMapReservas={};
-
+  id: number = 1;
 
 
   constructor(private usuariosservice: UsuarioService, private modalService: NgbModal) { 
     this.horas = this.usuariosservice.getHoras();
     this.entrenadores = this.usuariosservice.getUsuarios().filter(usuario => usuario.rol === true);
-    
   }
   ngOnInit(): void {
    
     this.entrenadores = this.usuariosservice.getUsuarios().filter(usuario => usuario.rol === true);
+    this.reservas = this.usuariosservice.getReservasUsuarios();
     this.updateDates();
     setInterval(() => {
       this.updateDates();
@@ -84,10 +84,13 @@ aniadirReserva():void{
   throw new Error('Method not implemented.');
 }
 
+existeReserva(idUsuario: number, idDia: number, idHora: number): boolean {
+    return !!(this.reservas[idUsuario] && this.reservas[idUsuario][idDia] && this.reservas[idUsuario][idDia][idHora]);
 }
 
 
 
+}
 
 function extend(arg0: never[], arg1: any, arg2: null, arg3: boolean): Record<string, any>[] {
   throw new Error('Function not implemented.');
