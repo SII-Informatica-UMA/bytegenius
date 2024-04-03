@@ -7,6 +7,7 @@ import { Hora } from '../Hora';
 import { FormsModule } from '@angular/forms';
 import { startOfWeek, endOfWeek } from 'date-fns';
 import { ReservasComponent } from '../Reservas/Reservas.component';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 
 
@@ -25,12 +26,13 @@ export class HorarioClienteComponent implements OnInit {
   entrenadores: Usuario[] = [];
   diaElegido: number = 0;
   entrenadoresPorDia: Usuario[]=[];
+  mostrarReservas: boolean = false;
 
   
   public startDateOfWeek: Date = new Date();
   public endDateOfWeek: Date = new Date();
   horas:Hora[]=[];
-  constructor(private usuariosservice: UsuarioService) { 
+  constructor(private usuariosservice: UsuarioService, private modalService: NgbModal) { 
     this.horas = this.usuariosservice.getHoras();
     this.entrenadores = this.usuariosservice.getUsuarios().filter(usuario => usuario.rol === true);
     
@@ -55,10 +57,6 @@ entrenadoresPD(dia:number):Usuario[]{
 }
 
 
-
-
-
-
 updateDates(): void {
     this.startDateOfWeek = startOfWeek(new Date(), { weekStartsOn: 1 });
     this.endDateOfWeek = endOfWeek(new Date(), { weekStartsOn: 1 });
@@ -67,6 +65,10 @@ updateDates(): void {
 
 toggleCalendario(day: number): void {
   this.mostrarCalendarioFlag = !this.mostrarCalendarioFlag;
+}
+
+MostrarReservas(): void {
+  let ref = this.modalService.open(ReservasComponent);
 }
 
 
