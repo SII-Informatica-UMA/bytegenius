@@ -6,7 +6,7 @@ import { UsuarioService } from '../horario-cliente/horario-cliente.service';
 import { Usuario } from "../Usuario";
 import { Hora } from '../Hora';
 import { FormsModule } from '@angular/forms';
-import { startOfWeek, endOfWeek } from 'date-fns';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-reservas',
@@ -23,7 +23,7 @@ export class ReservasComponent implements OnInit {
   entrenadores: Usuario[] = [];
   horas:Hora[]=[];
 
-  constructor(private usuariosservice: UsuarioService) { 
+  constructor(private usuariosservice: UsuarioService, public modal: NgbActiveModal) { 
     this.horas = this.usuariosservice.getHoras();
     this.entrenadores = this.usuariosservice.getUsuarios().filter(usuario => usuario.rol === true);
   }
