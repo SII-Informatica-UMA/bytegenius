@@ -8,6 +8,7 @@ import { FormsModule } from '@angular/forms';
 import { startOfWeek, endOfWeek } from 'date-fns';
 import { ReservasComponent } from '../Reservas/Reservas.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import { HashMapReservas } from '../HashMapReservas';
 
 
 
@@ -21,6 +22,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 })
 
 export class HorarioClienteComponent implements OnInit {
+
   currentDay: number = new Date().getDay();
   mostrarCalendarioFlag: boolean = false;
   entrenadores: Usuario[] = [];
@@ -28,12 +30,13 @@ export class HorarioClienteComponent implements OnInit {
   entrenadoresPorDia: Usuario[]=[];
   horarioEntrenadoresPorDia: Hora[]=[];
   mostrarReservas: boolean = false;
-
-
-  
   public startDateOfWeek: Date = new Date();
   public endDateOfWeek: Date = new Date();
   horas:Hora[]=[];
+  reservas:HashMapReservas={};
+
+
+
   constructor(private usuariosservice: UsuarioService, private modalService: NgbModal) { 
     this.horas = this.usuariosservice.getHoras();
     this.entrenadores = this.usuariosservice.getUsuarios().filter(usuario => usuario.rol === true);
@@ -77,8 +80,13 @@ MostrarReservas(): void {
   let ref = this.modalService.open(ReservasComponent);
 }
 
+aniadirReserva():void{
+  throw new Error('Method not implemented.');
+}
 
 }
+
+
 
 
 function extend(arg0: never[], arg1: any, arg2: null, arg3: boolean): Record<string, any>[] {

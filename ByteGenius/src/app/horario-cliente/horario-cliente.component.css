@@ -50,7 +50,6 @@ body{
     background-color: rgb(223, 139, 218);
     color: purple;
     min-height: 150px;
-  
     max-width: 200px;
     margin: 20px;
     padding: 21px;
@@ -164,7 +163,6 @@ body{
     width: 100%;
     margin: 0 auto;
     border-collapse: collapse;
-    font-size: 5rem;
   }
   
   .tablas table {
@@ -176,7 +174,7 @@ body{
     border-collapse: collapse;
     margin: auto;
     overflow: hidden;
-    font-size: 2rem;
+    font-size: 1.3rem;
   }
   
   .tablas th, .tablas td {
