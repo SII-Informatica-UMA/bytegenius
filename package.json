@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "@angular/common": "^17.3.2",
-    "@angular/core": "^17.3.2"
+    "@angular/core": "^17.3.2",
+    "@ng-bootstrap/ng-bootstrap": "^16.0.0",
+    "date-fns": "^3.6.0"
   }
 }
