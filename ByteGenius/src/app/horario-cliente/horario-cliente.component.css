@@ -207,5 +207,13 @@ body{
     margin: 15px;
   }
 
+  .button{
+    color: #5466ca;
+    overflow: hidden;
+    border-radius: 10px;
+    background-color: lightgray;
+    border: none;
+  }
+
   
  
