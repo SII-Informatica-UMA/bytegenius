@@ -52,7 +52,6 @@ export class HorarioEntrenadorComponent {
   }
   onSelectAll(items: any) {
     console.log(items);
-    this.id = this.usuariosservice.getId();
   }
 
   obtenerIdTrainer(hashMap: HashMap, idDia: number, idHora: number): number[] {
