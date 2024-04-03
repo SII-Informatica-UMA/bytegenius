@@ -131,6 +131,11 @@
                 <tbody>
                   <tr *ngFor="let Entrenador of entrenadoresPD(1)">
                     <th>{{Entrenador.nombre}}</th>
+                    <td *ngFor="let hora of horas">
+                        <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id).includes(hora)">
+                            {{ hora.franjaHoraria }}
+                        </ng-container>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -146,6 +151,11 @@
                 <tbody>
                   <tr *ngFor="let Entrenador of entrenadoresPD(2)">
                     <th>{{Entrenador.nombre}}</th>
+                    <td *ngFor="let hora of horas">
+                      <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id).includes(hora)">
+                          {{ hora.franjaHoraria }}
+                      </ng-container>
+                  </td>
                   </tr>
                 </tbody>
               </table>
@@ -161,6 +171,11 @@
                 <tbody>
                   <tr *ngFor="let Entrenador of entrenadoresPD(3)">
                     <th>{{Entrenador.nombre}}</th>
+                    <td *ngFor="let hora of horas">
+                      <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id).includes(hora)">
+                          {{ hora.franjaHoraria }}
+                      </ng-container>
+                  </td>
                   </tr>
                 </tbody>
               </table>
@@ -176,6 +191,11 @@
                 <tbody>
                   <tr *ngFor="let Entrenador of entrenadoresPD(4)">
                     <th>{{Entrenador.nombre}}</th>
+                    <td *ngFor="let hora of horas">
+                      <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id).includes(hora)">
+                          {{ hora.franjaHoraria }}
+                      </ng-container>
+                  </td>
                   </tr>
                 </tbody>
               </table>
@@ -191,6 +211,11 @@
                 <tbody>
                   <tr *ngFor="let Entrenador of entrenadoresPD(5)">
                     <th>{{Entrenador.nombre}}</th>
+                    <td *ngFor="let hora of horas">
+                      <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id).includes(hora)">
+                          {{ hora.franjaHoraria }}
+                      </ng-container>
+                  </td>
                   </tr>
                 </tbody>
               </table>
@@ -206,6 +231,11 @@
                 <tbody>
                   <tr *ngFor="let Entrenador of entrenadoresPD(6)">
                     <th>{{Entrenador.nombre}}</th>
+                    <td *ngFor="let hora of horas">
+                      <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id).includes(hora)">
+                          {{ hora.franjaHoraria }}
+                      </ng-container>
+                  </td>
                   </tr>
                 </tbody>
               </table>
@@ -221,6 +251,11 @@
                 <tbody>
                   <tr *ngFor="let Entrenador of entrenadoresPD(7)">
                     <th>{{Entrenador.nombre}}</th>
+                    <td *ngFor="let hora of horas">
+                      <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id).includes(hora)">
+                          {{ hora.franjaHoraria }}
+                      </ng-container>
+                  </td>
                   </tr>
                 </tbody>
               </table>

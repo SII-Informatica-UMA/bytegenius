@@ -26,7 +26,11 @@ export class HorarioClienteComponent implements OnInit {
   entrenadores: Usuario[] = [];
   diaElegido: number = 0;
   entrenadoresPorDia: Usuario[]=[];
+<<<<<<< HEAD
+  horarioEntrenadoresPorDia: Hora[]=[];
+=======
   mostrarReservas: boolean = false;
+>>>>>>> 4dd621908f21e0dd3fa033cf326cc65d943d77a8
 
   
   public startDateOfWeek: Date = new Date();
@@ -54,6 +58,10 @@ elegirDia(dia: number): void {
 
 entrenadoresPD(dia:number):Usuario[]{
   return this.entrenadoresPorDia=this.usuariosservice.getEntrenadoresPorDia(dia);
+}
+
+horarioEntrenadoresPD(idEntrenador:number):Hora[]{
+  return this.horarioEntrenadoresPorDia=this.usuariosservice.getHorasPorEntrenador(idEntrenador);
 }
 
 
