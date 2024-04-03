@@ -39,12 +39,11 @@ export class HorarioEntrenadorComponent {
   
     this.dropdownSettings= {
       singleSelection: false,
-      idField: 'dias',
-      textField: 'dias',
+      idField: 'id',
+      textField: 'nombre',
       selectAllText: 'Select All',
       unSelectAllText: 'UnSelect All',
-      itemsShowLimit: 3,
-      allowSearchFilter: true
+      itemsShowLimit: 7,
     };
   }
 
