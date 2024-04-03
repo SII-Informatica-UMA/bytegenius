@@ -76,8 +76,8 @@ export class UsuarioService {
       }
 
   };
-
-      //Dia - Hora - Entrenador
+  
+//Dia - Hora - Entrenador
 
     private dias: Dia [] = [
       {id:1, nombre:'Lunes'},
@@ -146,8 +146,8 @@ export class UsuarioService {
       getDias(): Dia  []{
         return this.dias;
       }
-
-      obtenerIdDias(idUsuario: number): number[] {
+    
+obtenerIdDias(idUsuario: number): number[] {
         const usuario = this.reservas[idUsuario];
         return usuario ? Object.keys(usuario).map(Number) : [];
       }
