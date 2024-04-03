@@ -29,11 +29,21 @@ export class HorarioEntrenadorComponent {
     this.usuarios = this.usuariosservice.getUsuarios();
   }
 
-  obtenerIdTrainer(hashMap: HashMap, idDia: number, idHora: number): number {
-    if (hashMap[idDia] && hashMap[idDia][idHora]) {
-      return hashMap[idDia][idHora].idTrainer;
+  obtenerIdTrainer(hashMap: HashMap, idDia: number, idHora: number): number[] {
+    if (hashMap[idDia] && hashMap[idDia][idHora] && hashMap[idDia][idHora].idTrainers) {
+        return hashMap[idDia][idHora].idTrainers;
     } else {
-      return 0;
+        return [];
     }
-  }
+}
+
+obtenerNombres(ids: number[]): string[] {
+  return ids.map(id => {
+      const usuario = this.usuarios.find(u => u.id === id);
+      return usuario ? usuario.nombre : '';
+  });
+}
+
+
+
 }

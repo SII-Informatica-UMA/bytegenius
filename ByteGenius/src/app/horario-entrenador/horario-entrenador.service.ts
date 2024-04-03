@@ -29,11 +29,19 @@ export class UsuarioService {
     ]
 
     private asignaciones: HashMap = {
-      1: { 1: { idTrainer: 1 } },
-      4: { 1: { idTrainer: 3 } },
-      2: { 2: { idTrainer: 1 } },
-      3: { 3: { idTrainer: 1 } }
-    };
+      1: {
+          1: { idTrainers: [1,3] }
+      },
+      4: {
+          1: { idTrainers: [1] }
+      },
+      2: {
+          2: { idTrainers: [1] }
+      },
+      3: {
+          3: { idTrainers: [1] }
+      }
+  };
 
     private dias: Dia [] = [
       {id:1, nombre:'Lunes'},
@@ -63,12 +71,4 @@ export class UsuarioService {
       return this.dias;
     }
     
-    añadirFranja(clave: number, idTrainer:number): void {
-      if (!this.asignaciones[clave]) {
-        // Si la clave no existe, crear un nuevo objeto para esa clave
-        this.asignaciones[clave] = {};
-      }
-      // Agregar la nueva asignación
-      this.asignaciones[clave][clave] = { idTrainer };    }
-
 }
