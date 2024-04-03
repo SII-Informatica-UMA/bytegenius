@@ -4,10 +4,14 @@
 </div>
 <div class="modal-body">
   <div class="form-group">
-    <p *ngFor="let dias of getdiasPorUsuario(1)">
-        
-    </p>
+    <ul>
+      <div *ngFor="let idDia of getdiasPorUsuario(1)">
+        Día: {{ idDia }}
+        <div *ngFor="let idHora of getHorasPorUsuario(1, idDia)">
+          Hora: {{ idHora }}
+          Entrenador: {{ getEntrenadorPorUsuario(1, idDia, idHora)[0] }}
+        </div>
+      </div>
+    </ul>
   </div>
 </div>
-
-

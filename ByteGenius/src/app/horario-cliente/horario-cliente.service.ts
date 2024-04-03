@@ -12,7 +12,7 @@ import { Injectable } from "@angular/core";
 export class UsuarioService {
     
   private usuarios: Usuario[]= [
-    {id:1, nombre:'Jaime', apellidos:'Garfia', rol: true},
+    {id:5, nombre:'Jaime', apellidos:'Garfia', rol: true},
     {id:2, nombre:'Victor', apellidos:'Rueda', rol: true},
     {id:3, nombre:'Pablo', apellidos:'Muñoz', rol: true},
     {id:4, nombre:'Juan Diego', apellidos:'Alba', rol: true}
@@ -35,15 +35,12 @@ export class UsuarioService {
         {id:13,franjaHoraria:'21:00'},        
     ]
 
-    private reservas: HashMapReservas = {
+    private ReservasUsuarios: HashMapReservas = {
       1: { // idUsuario
         1: { // idDia
           1: { // idHora
-            idEntrenador: 1
+            idEntrenador: 5
           },
-          2: { // otra idHora
-            idEntrenador: 2
-          }
         },
         2: { // otro idDia
           1: { // idHora
@@ -51,7 +48,8 @@ export class UsuarioService {
           }
         }
       },
-      2: { // otro idUsuario
+
+      6: { // otro idUsuario
         1: { // idDia
           1: { // idHora
             idEntrenador: 4
@@ -148,18 +146,22 @@ export class UsuarioService {
       }
 
       obtenerIdDias(idUsuario: number): number[] {
-        const usuario = this.reservas[idUsuario];
+        const usuario = this.ReservasUsuarios[idUsuario];
         return usuario ? Object.keys(usuario).map(Number) : [];
       }
     
       obtenerIdHoras(idUsuario: number, idDia: number): number[] {
-        const dia = this.reservas[idUsuario] ? this.reservas[idUsuario][idDia] : null;
+        const dia = this.ReservasUsuarios[idUsuario] ? this.ReservasUsuarios[idUsuario][idDia] : null;
         return dia ? Object.keys(dia).map(Number) : [];
       }
     
       obtenerIdEntrenadores(idUsuario: number, idDia: number, idHora: number): number[] {
-        const hora = this.reservas[idUsuario] && this.reservas[idUsuario][idDia] ? this.reservas[idUsuario][idDia][idHora] : null;
+        const hora = this.ReservasUsuarios[idUsuario] && this.ReservasUsuarios[idUsuario][idDia] ? this.ReservasUsuarios[idUsuario][idDia][idHora] : null;
         return hora ? [hora.idEntrenador] : [];
+      }
+
+      getReservasUsuarios():HashMapReservas{
+        return this.ReservasUsuarios;
       }
     
 }
