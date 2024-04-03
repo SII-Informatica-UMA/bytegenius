@@ -164,16 +164,19 @@ body{
     width: 100%;
     margin: 0 auto;
     border-collapse: collapse;
+    font-size: 5rem;
   }
   
   .tablas table {
-    
+    border-radius: 10px;
     border: 1px solid #ddd;
     margin-bottom: 20px;
     font-size: medium;
     table-layout: fixed;
     border-collapse: collapse;
     margin: auto;
+    overflow: hidden;
+    font-size: 2rem;
   }
   
   .tablas th, .tablas td {
@@ -206,11 +209,5 @@ body{
     margin: 15px;
   }
 
-  .boton:hover {
-    background-color: rgba(172, 186, 187, 0.5);
-    color: white;
-  }
   
-  ::ng-deep .modal-content {
-    border-radius: 15px;
-  }
+ 
