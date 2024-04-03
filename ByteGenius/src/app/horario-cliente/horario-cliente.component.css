@@ -50,7 +50,7 @@ body{
     background-color: rgb(223, 139, 218);
     color: purple;
     min-height: 150px;
-    max-width: 200px;
+    max-width: 250px;
     margin: 20px;
     padding: 21px;
     text-align: center;
@@ -158,21 +158,37 @@ body{
   }
 
   
-  table{
+
+  .tablas {
+    width: 100%;
+    margin: 0 auto;
+    border-collapse: collapse;
+  }
+  
+  .tablas table {
+    
+    border: 1px solid #ddd;
+    margin-bottom: 20px;
     font-size: medium;
     table-layout: fixed;
     border-collapse: collapse;
     margin: auto;
   }
-
-  td{
-    padding: 1rem;
+  
+  .tablas th, .tablas td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
   }
-  th{
-    padding: 1rem;
+  
+  .tablas tr:nth-child(even) {
+    background-color: #f2f2f2;
   }
-
-  .tablas{
-    text-align: center;
-    font-size: large;
+  
+  .tablas th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #5466ca;
+    color: white;
   }
