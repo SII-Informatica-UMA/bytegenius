@@ -25,6 +25,7 @@ export class HorarioClienteComponent implements OnInit {
   entrenadores: Usuario[] = [];
   diaElegido: number = 0;
   entrenadoresPorDia: Usuario[]=[];
+  horarioEntrenadoresPorDia: Hora[]=[];
 
   
   public startDateOfWeek: Date = new Date();
@@ -52,6 +53,10 @@ elegirDia(dia: number): void {
 
 entrenadoresPD(dia:number):Usuario[]{
   return this.entrenadoresPorDia=this.usuariosservice.getEntrenadoresPorDia(dia);
+}
+
+horarioEntrenadoresPD(idEntrenador:number):Hora[]{
+  return this.horarioEntrenadoresPorDia=this.usuariosservice.getHorasPorEntrenador(idEntrenador);
 }
 
 
