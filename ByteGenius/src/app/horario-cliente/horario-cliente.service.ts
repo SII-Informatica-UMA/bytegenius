@@ -1,6 +1,7 @@
 import { Usuario } from "../Usuario";
 import { Hora } from "../Hora";
 import { Dia } from "../Dia";
+import { HashMapReservas } from "../HashMapReservas";
 import { HashMap } from "../HashMap";
 import { AppComponentService } from "../app.component.service";
 import { Injectable } from "@angular/core";
@@ -33,6 +34,31 @@ export class UsuarioService {
         {id:12,franjaHoraria:'20:00'},
         {id:13,franjaHoraria:'21:00'},        
     ]
+
+    private reservas: HashMapReservas = {
+      1: { // idUsuario
+        1: { // idDia
+          1: { // idHora
+            idEntrenador: 1
+          },
+          2: { // otra idHora
+            idEntrenador: 2
+          }
+        },
+        2: { // otro idDia
+          1: { // idHora
+            idEntrenador: 3
+          }
+        }
+      },
+      2: { // otro idUsuario
+        1: { // idDia
+          1: { // idHora
+            idEntrenador: 4
+          }
+        }
+      }
+    };
 
     private asignaciones: HashMap = {
       1: {
@@ -119,6 +145,21 @@ export class UsuarioService {
   
       getDias(): Dia  []{
         return this.dias;
+      }
+
+      obtenerIdDias(idUsuario: number): number[] {
+        const usuario = this.reservas[idUsuario];
+        return usuario ? Object.keys(usuario).map(Number) : [];
+      }
+    
+      obtenerIdHoras(idUsuario: number, idDia: number): number[] {
+        const dia = this.reservas[idUsuario] ? this.reservas[idUsuario][idDia] : null;
+        return dia ? Object.keys(dia).map(Number) : [];
+      }
+    
+      obtenerIdEntrenadores(idUsuario: number, idDia: number, idHora: number): number[] {
+        const hora = this.reservas[idUsuario] && this.reservas[idUsuario][idDia] ? this.reservas[idUsuario][idDia][idHora] : null;
+        return hora ? [hora.idEntrenador] : [];
       }
     
 }

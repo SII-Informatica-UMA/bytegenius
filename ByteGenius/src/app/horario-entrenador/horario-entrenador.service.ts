@@ -42,6 +42,7 @@ export class UsuarioService {
           3: { idTrainers: [1] }
       }
   };
+
     private dias: Dia [] = [
       {id:1, nombre:'Lunes'},
       {id:2, nombre:'Martes'},
@@ -70,6 +71,6 @@ export class UsuarioService {
       return this.dias;
     }
     
-
+    
 
 }
