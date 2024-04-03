@@ -145,24 +145,60 @@ export class UsuarioService {
         return this.dias;
       }
 
-      obtenerIdDias(idUsuario: number): number[] {
+      obtenerDiasPorUsuario(idUsuario: number): Dia[] {
         const usuario = this.ReservasUsuarios[idUsuario];
-        return usuario ? Object.keys(usuario).map(Number) : [];
+        const dias: Dia[] = [];
+        if (usuario) {
+          for (const idDia in usuario) {
+            if (usuario.hasOwnProperty(idDia)) {
+              const diaId = parseInt(idDia);
+              const dia = this.dias.find(d => d.id === diaId);
+              if (dia) {
+                dias.push(dia);
+              }
+            }
+          }
+        }
+        return dias;
       }
+      
     
-      obtenerIdHoras(idUsuario: number, idDia: number): number[] {
+      obtenerHorasPorUsuario(idUsuario: number, idDia: number): Hora[] {
         const dia = this.ReservasUsuarios[idUsuario] ? this.ReservasUsuarios[idUsuario][idDia] : null;
-        return dia ? Object.keys(dia).map(Number) : [];
+        const horas: Hora[] = [];
+        if (dia) {
+          for (const idHora in dia) {
+            if (dia.hasOwnProperty(idHora)) {
+              const horaId = parseInt(idHora);
+              const hora = this.horas.find(h => h.id === horaId);
+              if (hora) {
+                horas.push(hora);
+              }
+            }
+          }
+        }
+        return horas;
       }
+      
     
-      obtenerIdEntrenadores(idUsuario: number, idDia: number, idHora: number): number[] {
+      obtenerEntrenadoresPorUsuario(idUsuario: number, idDia: number, idHora: number): Usuario[] {
         const hora = this.ReservasUsuarios[idUsuario] && this.ReservasUsuarios[idUsuario][idDia] ? this.ReservasUsuarios[idUsuario][idDia][idHora] : null;
-        return hora ? [hora.idEntrenador] : [];
+        const entrenadores: Usuario[] = [];
+        if (hora && hora.idEntrenador) {
+          const entrenador = this.usuarios.find(usuario => usuario.id === hora.idEntrenador);
+          if (entrenador) {
+            entrenadores.push(entrenador);
+          }
+        }
+        return entrenadores;
       }
+      
 
       getReservasUsuarios():HashMapReservas{
         return this.ReservasUsuarios;
       }
+
+      
     
 }
 export { Hora, Usuario };

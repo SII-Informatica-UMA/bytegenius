@@ -3,6 +3,8 @@
     "@angular/common": "^17.3.2",
     "@angular/core": "^17.3.2",
     "@ng-bootstrap/ng-bootstrap": "^16.0.0",
-    "date-fns": "^3.6.0"
+    "date-fns": "^3.6.0",
+    "@angular-devkit/build-angular": "^6.0.1"
+
   }
 }

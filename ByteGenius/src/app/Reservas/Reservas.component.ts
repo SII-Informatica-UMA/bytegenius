@@ -8,6 +8,7 @@ import { Hora } from '../Hora';
 import { FormsModule } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { HashMapReservas } from "../HashMapReservas";
+import { Dia } from '../Dia';
 
 @Component({
   selector: 'app-reservas',
@@ -20,17 +21,12 @@ import { HashMapReservas } from "../HashMapReservas";
   styleUrl: './Reservas.component.css',
 })
 
-export class ReservasComponent implements OnInit {
-  entrenadores: Usuario[] = [];
+export class ReservasComponent implements OnInit { entrenadores: Usuario[] = [];
   horas:Hora[]=[];
-
-  diasPorUsuario:number[] = [];
-  horaPorUsuario:number[] = [];
-  entrenadorPorUsuario:number[] = [];
+  dias:Dia[]=[];
   reservas:HashMapReservas={};
   constructor(private usuariosservice: UsuarioService, public modal: NgbActiveModal) { 
     this.horas = this.usuariosservice.getHoras();
-    this.entrenadores = this.usuariosservice.getUsuarios().filter(usuario => usuario.rol === true);
     this.reservas = this.usuariosservice.getReservasUsuarios();
   }
 
@@ -39,19 +35,16 @@ export class ReservasComponent implements OnInit {
 
    }
 
-   getdiasPorUsuario(idUsuario: number): number[] {
-    const usuario = this.reservas[idUsuario];
-    return usuario ? Object.keys(usuario).map(Number) : [];
+   getDiasPorUsuario(idUsuario:number):Dia[]{
+      return this.usuariosservice.obtenerDiasPorUsuario(idUsuario);
+   }
+  
+  getHorasPorUsuario(idUsuario: number, idDia: number): Hora[]{
+      return this.usuariosservice.obtenerHorasPorUsuario(idUsuario, idDia);
   }
   
-  getHorasPorUsuario(idUsuario: number, idDia: number): number[] {
-    const dia = this.reservas[idUsuario] ? this.reservas[idUsuario][idDia] : null;
-    return dia ? Object.keys(dia).map(Number) : [];
-  }
-  
-  getEntrenadorPorUsuario(idUsuario: number, idDia: number, idHora: number): number[] {
-    const hora = this.reservas[idUsuario] && this.reservas[idUsuario][idDia] ? this.reservas[idUsuario][idDia][idHora] : null;
-    return hora ? [hora.idEntrenador] : [];
+  getEntrenadorPorUsuario(idUsuario: number, idDia: number, idHora: number) :Usuario[]{
+    return this.usuariosservice.obtenerEntrenadoresPorUsuario(idUsuario, idDia, idHora);
   }
 
 }

@@ -5,12 +5,22 @@
 <div class="modal-body">
   <div class="form-group">
     <ul>
-      <div *ngFor="let idDia of getdiasPorUsuario(1)">
-        Día: {{ idDia }}
-        <div *ngFor="let idHora of getHorasPorUsuario(1, idDia)">
-          Hora: {{ idHora }}
-          Entrenador: {{ getEntrenadorPorUsuario(1, idDia, idHora)[0] }}
-        </div>
+      <div *ngFor="let dia of getDiasPorUsuario(1)">
+        <li>
+          Día: {{ dia.nombre }}
+          <ul>
+            <div *ngFor="let hora of getHorasPorUsuario(1, dia.id)">
+              <li>
+                Hora: {{ hora.franjaHoraria }}
+                <ul>
+                  <div *ngFor=" let entrenador of getEntrenadorPorUsuario(1, dia.id, hora.id)">
+                     Entrenador: {{entrenador.nombre}}
+                  </div>
+                </ul>
+              </li>
+            </div>
+          </ul>
+        </li>
       </div>
     </ul>
   </div>
