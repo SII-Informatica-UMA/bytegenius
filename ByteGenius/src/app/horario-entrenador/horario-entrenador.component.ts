@@ -29,7 +29,6 @@ export class HorarioEntrenadorComponent {
   dropdownSettings: IDropdownSettings = {};
   
   constructor(private usuariosservice: UsuarioService) {
-    this.id = this.usuariosservice.getId();
    }
 
   ngOnInit(): void {
@@ -54,11 +53,12 @@ export class HorarioEntrenadorComponent {
   }
   onSelectAll(items: any) {
     console.log(items);
+    this.id = this.usuariosservice.getId();
   }
 
   obtenerIdTrainer(hashMap: HashMap, idDia: number, idHora: number): number[] {
-    if (hashMap[idDia] && hashMap[idDia][idHora] && hashMap[idDia][idHora].idTrainers) {
-        return hashMap[idDia][idHora].idTrainers;
+    if (this.asignaciones[idDia] && this.asignaciones[idDia][idHora] && this.asignaciones[idDia][idHora].idTrainers) {
+        return this.asignaciones[idDia][idHora].idTrainers;
     } else {
         return [];
     }
