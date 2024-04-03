@@ -16,9 +16,8 @@
     <tbody class="table-group-divider">
       <tr *ngFor="let Hora of horas">
         <td>{{ Hora.franjaHoraria }}</td>
-        <td *ngFor="let Dia of dias" [ngStyle]="{'background-color': obtenerIdTrainer(asignaciones, Dia.id, Hora.id) !== 0 ? 'red' : 'green'}">
-          {{ obtenerIdTrainer(asignaciones, Dia.id, Hora.id) }}
-          <button class="small-button">Activar</button>
+        <td *ngFor="let Dia of dias" [ngStyle]="{'background-color': obtenerIdTrainer(asignaciones, Dia.id, Hora.id).length > 0 ? 'red' : 'green'}">
+          {{ obtenerNombres(obtenerIdTrainer(asignaciones, Dia.id, Hora.id)).join(', ') }}
         </td>
       </tr>
     </tbody>

@@ -35,11 +35,21 @@ export class UsuarioService {
     ]
 
     private asignaciones: HashMap = {
-      1: { 1: { idTrainer: 1 } },
-      4: { 1: { idTrainer: 3 } },
-      2: { 2: { idTrainer: 2 } },
-      3: { 3: { idTrainer: 4 } },
-    };
+      1: {
+          1: { idTrainers: [1, 2 ,3] }, 
+          2: {idTrainers: [4]}
+      },
+      4: {
+          1: { idTrainers: [3] }
+      },
+      2: {
+          2: { idTrainers: [2, 4] }
+      },
+      3: {
+          3: { idTrainers: [1, 3, 2] }
+      }
+      
+  };
 
       //Dia - Hora - Entrenador
 
@@ -71,15 +81,19 @@ export class UsuarioService {
         const asignacionesParaDia = this.asignaciones[dia];
         if (asignacionesParaDia) {
           for (let key in asignacionesParaDia) {
-            const idTrainer = asignacionesParaDia[key].idTrainer;
-            const entrenador = this.usuarios.find(u => u.id === idTrainer);
-            if (entrenador) {
-              entrenadoresPorDia.push(entrenador);
-            }
+            const idTrainers = asignacionesParaDia[key].idTrainers; // Ahora es un array de IDs
+            // Itera sobre cada ID de entrenador en la lista
+            idTrainers.forEach(id => {
+              const entrenador = this.usuarios.find(u => u.id === id);
+              if (entrenador) {
+                entrenadoresPorDia.push(entrenador);
+              }
+            });
           }
         }
         return entrenadoresPorDia;
       }
+      
     
       
       getHoras(): Hora []{
