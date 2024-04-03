@@ -32,9 +32,15 @@
     
     <form>
       <label>Día</label>
-      <select>
-        <option *ngFor="let Dia of dias" [value] = "Dia.id">{{Dia.nombre}}</option>
-      </select>
+      <ng-multiselect-dropdown
+      [placeholder]="'custom placeholder'"
+      [settings]="dropdownSettings"
+      [data]="dias"
+      [(ngModel)]="selectedItems"
+      (onSelect)="onItemSelect($event)"
+      (onSelectAll)="onSelectAll($event)"
+      name="selectedDays">
+</ng-multiselect-dropdown>
       <label>Desde:</label>
       <select>
         <option *ngFor="let Hora of horas" [value] = "Hora.id">{{Hora.franjaHoraria}}</option>

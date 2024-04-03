@@ -6,11 +6,14 @@ import { Hora } from '../Hora';
 import { HashMap } from '../HashMap';
 import { Usuario } from '../Usuario';
 import { AppComponent } from '../app.component';
+import { FormsModule } from '@angular/forms';
+import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
+import { IDropdownSettings } from 'ng-multiselect-dropdown';
 
 @Component({
   selector: 'app-horario-entrenador',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule, NgMultiSelectDropDownModule],
   templateUrl: './horario-entrenador.component.html',
   styleUrl: './horario-entrenador.component.css'
 })
@@ -21,7 +24,10 @@ export class HorarioEntrenadorComponent {
   asignaciones: HashMap = [];
   usuarios: Usuario [] = [];
   id:number = 1;
+  selectedItems = []
 
+  dropdownSettings: IDropdownSettings = {};
+  
   constructor(private usuariosservice: UsuarioService) {
     this.id = this.usuariosservice.getId();
    }
@@ -31,7 +37,23 @@ export class HorarioEntrenadorComponent {
     this.horas = this.usuariosservice.getHoras();
     this.asignaciones = this.usuariosservice.getasignaciones();
     this.usuarios = this.usuariosservice.getUsuarios();
+  
+    this.dropdownSettings= {
+      singleSelection: false,
+      idField: 'dias',
+      textField: 'dias',
+      selectAllText: 'Select All',
+      unSelectAllText: 'UnSelect All',
+      itemsShowLimit: 3,
+      allowSearchFilter: true
+    };
+  }
 
+  onItemSelect(item: any) {
+    console.log(item);
+  }
+  onSelectAll(items: any) {
+    console.log(items);
   }
 
   obtenerIdTrainer(hashMap: HashMap, idDia: number, idHora: number): number[] {
@@ -40,35 +62,35 @@ export class HorarioEntrenadorComponent {
     } else {
         return [];
     }
+  }  
+    obtenerNombres(ids: number[]): string[] {
+      return ids.map(id => {
+          const usuario = this.usuarios.find(u => u.id === id);
+          return usuario ? usuario.nombre : '';
+      });
+    }
+    
+    estaId(ids:number[],id:number){
+      return ids.includes(id);
+    }
+    
+    eliminarHora(dia: number, hora: number): void {
+      const index = this.asignaciones[dia][hora].idTrainers.indexOf(this.id);
+      if (index !== -1) {
+        this.asignaciones[dia][hora].idTrainers.splice(index, 1);
+      }
+    }
+
+    agregarHora(dia: number, hora: number): void {
+      if (!this.asignaciones[dia]) {
+        this.asignaciones[dia] = {};
+      }
+      if (!this.asignaciones[dia][hora]) {
+        this.asignaciones[dia][hora] = { idTrainers: [] };
+      }
+      this.asignaciones[dia][hora].idTrainers.push(this.id);
+    }
+    
 }
 
-obtenerNombres(ids: number[]): string[] {
-  return ids.map(id => {
-      const usuario = this.usuarios.find(u => u.id === id);
-      return usuario ? usuario.nombre : '';
-  });
-}
 
-estaId(ids:number[],id:number){
-  return ids.includes(id);
-}
-
-eliminarHora(dia: number, hora: number): void {
-  const index = this.asignaciones[dia][hora].idTrainers.indexOf(this.id);
-  if (index !== -1) {
-    this.asignaciones[dia][hora].idTrainers.splice(index, 1);
-  }
-}
-agregarHora(dia: number, hora: number): void {
-  if (!this.asignaciones[dia]) {
-    this.asignaciones[dia] = {};
-  }
-  if (!this.asignaciones[dia][hora]) {
-    this.asignaciones[dia][hora] = { idTrainers: [] };
-  }
-  this.asignaciones[dia][hora].idTrainers.push(this.id);
-}
-
-
-
-}

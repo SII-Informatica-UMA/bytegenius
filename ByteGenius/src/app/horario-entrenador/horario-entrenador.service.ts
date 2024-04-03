@@ -4,6 +4,7 @@ import { Dia } from "../Dia";
 import { HashMap } from "../HashMap";
 import { Injectable } from '@angular/core';
 import { AppComponentService } from "../app.component.service";
+import { FormsModule } from "@angular/forms";
 
 
 @Injectable({
