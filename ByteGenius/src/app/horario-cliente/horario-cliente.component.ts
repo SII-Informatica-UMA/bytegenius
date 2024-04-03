@@ -26,11 +26,9 @@ export class HorarioClienteComponent implements OnInit {
   entrenadores: Usuario[] = [];
   diaElegido: number = 0;
   entrenadoresPorDia: Usuario[]=[];
-<<<<<<< HEAD
   horarioEntrenadoresPorDia: Hora[]=[];
-=======
   mostrarReservas: boolean = false;
->>>>>>> 4dd621908f21e0dd3fa033cf326cc65d943d77a8
+
 
   
   public startDateOfWeek: Date = new Date();
