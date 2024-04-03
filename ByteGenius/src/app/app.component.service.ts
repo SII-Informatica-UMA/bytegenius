@@ -14,7 +14,16 @@ export class AppComponentService {
         {id:4, nombre: 'Jaime', apellidos:'Gar', rol:true}
     ];
 
+    private ids: number = 1;
+
     getUsuarios(): Usuario [] {
         return this.usuarios;
+    }
+    getIds(): number{
+        return this.ids;
+    }
+
+    setId(id:number):void{
+        this.ids = id;
     }
 }

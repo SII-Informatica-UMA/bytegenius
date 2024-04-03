@@ -3,6 +3,8 @@ import { RouterOutlet } from '@angular/router';
 import { HorarioEntrenadorComponent } from './horario-entrenador/horario-entrenador.component';
 import { HorarioClienteComponent } from './horario-cliente/horario-cliente.component';
 import { AppComponentService } from './app.component.service';
+import { UsuarioService } from './horario-entrenador/horario-entrenador.service';
+
 import { Usuario } from './Usuario';
 import { FormsModule } from '@angular/forms';
 
@@ -22,7 +24,9 @@ export class AppComponent {
 
 
 
-  constructor(private usuariosservice: AppComponentService) { }
+  constructor(private usuariosservice: AppComponentService, private EntrenadorService: UsuarioService) {
+    this.isTrainer = false;
+   }
 
   ngOnInit(): void{
     this.usuarios = this.usuariosservice.getUsuarios();
@@ -34,7 +38,8 @@ export class AppComponent {
   elegirContacto(id: number): void {
     this.usuario = this.usuarios.at(id-1);
     this.isTrainer = this.usuario?.rol;
-
+    this.usuariosservice.setId(id);
+    this.EntrenadorService.setId(id);
   }
 
 }
