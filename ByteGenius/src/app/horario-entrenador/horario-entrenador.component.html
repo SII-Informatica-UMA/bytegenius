@@ -24,7 +24,6 @@
           <ng-container *ngIf="!estaId(obtenerIdTrainer(asignaciones, Dia.id, Hora.id), id)">
             <button (click)="agregarHora(Dia.id, Hora.id)">&plus;</button>
           </ng-container>
-          
         </td>
       </tr>
     </tbody>
@@ -42,16 +41,16 @@
       name="selectedDays">
       </ng-multiselect-dropdown>
       <label>Desde:</label>
-      <select>
+      <select id = "desde">
         <option *ngFor="let Hora of horas" [value] = "Hora.id">{{Hora.franjaHoraria}}</option>
       </select>
       <label>Hasta:</label>
-      <select>
+      <select id = "hasta">
         <option *ngFor="let Hora of horas" [value] = "Hora.id">{{Hora.franjaHoraria}}</option>
       </select>
     </form>
 
-    <button type="button" class="btn btn-primary">Guardar Disponibilidad</button>
+    <button type="button" class="btn btn-primary" (click)="guardarDisponibilidad()">Guardar Disponibilidad</button>
     <button type="button" class="btn btn-danger">Limpiar Disponibilidad</button>
   </body>
 </html>

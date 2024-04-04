@@ -24,19 +24,20 @@ export class HorarioEntrenadorComponent {
   asignaciones: HashMap = [];
   usuarios: Usuario [] = [];
   id:number = 1;
-  selectedItems = []
 
+  // Variables necesarias para el selector de los días en el formulario
+  selectedItems = []
   dropdownSettings: IDropdownSettings = {};
   
-  constructor(private usuariosservice: UsuarioService) {
-   }
+  constructor(private usuariosservice: UsuarioService) {}
 
   ngOnInit(): void {
     this.dias = this.usuariosservice.getDias();
     this.horas = this.usuariosservice.getHoras();
     this.asignaciones = this.usuariosservice.getasignaciones();
     this.usuarios = this.usuariosservice.getUsuarios();
-  
+    
+    // Configuración necesaria de la interfaz IDropdownSettings para el selector múltiple de la lista de días
     this.dropdownSettings= {
       singleSelection: false,
       idField: 'id',
@@ -52,6 +53,43 @@ export class HorarioEntrenadorComponent {
   }
   onSelectAll(items: any) {
     console.log(items);
+  }
+
+  // Función para el evento (click) del botón "Guardar Disponibilidad"
+  guardarDisponibilidad(): void {
+    // Obtener los días seleccionados del dropdown
+    const diasSeleccionados = this.selectedItems.map((item: Dia) => item.id);
+
+    // Obtener las horas seleccionadas desde y hasta
+    const desde = parseInt((<HTMLSelectElement>document.getElementById("desde")).value);
+    const hasta = parseInt((<HTMLSelectElement>document.getElementById("hasta")).value);
+
+    // Validar que haya días seleccionados y que la hora de inicio sea menor a la hora de fin
+    if (diasSeleccionados.length > 0 && desde < hasta) {
+      // Iterar sobre los días seleccionados
+      diasSeleccionados.forEach((dia: number) => {
+        // Iterar sobre las horas dentro del rango seleccionado
+        for (let i = desde; i <= hasta; i++) {
+          // Verificar si el entrenador ya tiene asignada esa hora en ese día
+          const idTrainers = this.obtenerIdTrainer(this.asignaciones, dia, i);
+          if (!this.estaId(idTrainers, this.id)) {
+            // Si el entrenador no tiene asignada esa hora, agregarla
+            this.agregarHora(dia, i);
+          }
+        }
+      });
+
+      // Limpiar la selección de días y horas en el formulario
+      this.selectedItems = [];
+      (<HTMLSelectElement>document.getElementById("desde")).selectedIndex = 0;
+      (<HTMLSelectElement>document.getElementById("hasta")).selectedIndex = 0;
+
+      // Notificar al usuario que la disponibilidad se ha guardado correctamente (puedes implementar una notificación específica aquí)
+      alert('La disponibilidad se ha guardado correctamente.');
+    } else {
+      // Si no hay días seleccionados o la hora de inicio es mayor o igual a la hora de fin, mostrar un mensaje de error
+      alert('Por favor, seleccione al menos un día y asegúrese de que la hora de inicio sea menor a la hora de fin.');
+    }
   }
 
   obtenerIdTrainer(hashMap: HashMap, idDia: number, idHora: number): number[] {
@@ -87,8 +125,7 @@ export class HorarioEntrenadorComponent {
         this.asignaciones[dia][hora] = { idTrainers: [] };
       }
       this.asignaciones[dia][hora].idTrainers.push(this.id);
-    }
-    
+    }  
 }
 
 
