@@ -33,6 +33,7 @@ export class ReservasComponent implements OnInit { entrenadores: Usuario[] = [];
   ngOnInit(): void {
     this.entrenadores = this.usuariosservice.getUsuarios().filter(usuario => usuario.rol === true);
     this.reservas = this.usuariosservice.getReservasUsuarios();
+    this.actualizarReservas();
    }
 
    getDiasPorUsuario(idUsuario:number):Dia[]{
@@ -46,5 +47,14 @@ export class ReservasComponent implements OnInit { entrenadores: Usuario[] = [];
   getEntrenadorPorUsuario(idUsuario: number, idDia: number, idHora: number) :Usuario[]{
     return this.usuariosservice.obtenerEntrenadoresPorUsuario(idUsuario, idDia, idHora);
   }
+
+  actualizarReservas(): void {
+    this.reservas = this.usuariosservice.getReservasUsuarios();
+  }
+
+  cerrarModal(): void {
+    this.modal.close('actualizar');
+  }
+
 
 }

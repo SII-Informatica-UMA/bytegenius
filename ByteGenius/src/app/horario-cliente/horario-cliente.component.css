@@ -191,7 +191,7 @@ body{
   .tablas th {
     padding-top: 12px;
     padding-bottom: 12px;
-    text-align: left;
+    text-align: center;
     background-color: #5466ca;
     color: white;
   }
@@ -220,6 +220,11 @@ body{
     margin: auto;
     text-align: center;
   }
+
+  .noReservado{
+    color: red;
+  }
+
 
   
  

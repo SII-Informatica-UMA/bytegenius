@@ -132,17 +132,14 @@
                   <tr *ngFor="let Entrenador of entrenadoresPD(1)">
                     <th>{{Entrenador.nombre}}</th>
                     <td *ngFor="let hora of horas">
+                        
                         <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id).includes(hora)">
-                          
-                          <ng-container *ngIf="existeReserva(1,1,hora.id)">
-                              <p class="reserva"> Ya reservado</p>
-                          </ng-container>
-   
-                          <ng-container *ngIf="!existeReserva(1,1,hora.id)">
-                            <button class="button" (click)="aniadirReserva(1,1,1,1)"> Reservar</button>
-                          </ng-container>
-   
-                         </ng-container>
+                          @if(!existeReserva(1,1,hora.id)){
+                            <button class="button" (click)="aniadirReserva(1,1,hora.id, Entrenador.id)"> Reservar</button>
+                          }@else{
+                            <p class="reserva"> Ya reservado </p>
+                          }
+                        </ng-container>
                     </td>
                   </tr>
                 </tbody>
@@ -161,8 +158,12 @@
                     <th>{{Entrenador.nombre}}</th>
                     <td *ngFor="let hora of horas">
                       <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id).includes(hora)">
-                        <button class="button" (click)="aniadirReserva(1,1,1,1)"> Reservar</button>
+                        <button class="button" (click)="aniadirReserva(1,2,hora.id, Entrenador.id)"> Reservar</button>
                       </ng-container>
+                      <div *ngIf="reservas">
+                        <p>Contenido del HashMapReservas:</p>
+                        <pre>{{ reservas | json }}</pre>
+                      </div>
                   </td>
                   </tr>
                 </tbody>
@@ -187,7 +188,7 @@
                       </ng-container>
 
                       <ng-container *ngIf="!existeReserva(1,3,1)">
-                        <button class="button" (click)="aniadirReserva(1,1,1,1)"> Reservar</button>
+                        <button class="button" (click)="aniadirReserva(1,3,hora.id, Entrenador.id)"> Reservar</button>
                       </ng-container>
 
                       </ng-container>
@@ -209,7 +210,7 @@
                     <th>{{Entrenador.nombre}}</th>
                     <td *ngFor="let hora of horas">
                       <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id).includes(hora)">
-                        <button class="button" (click)="aniadirReserva(1,1,1,1)"> Reservar</button>
+                        <button class="button" (click)="aniadirReserva(1,4,hora.id, Entrenador.id)"> Reservar</button>
                       </ng-container>
                   </td>
                   </tr>
@@ -229,7 +230,7 @@
                     <th>{{Entrenador.nombre}}</th>
                     <td *ngFor="let hora of horas">
                       <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id).includes(hora)">
-                        <button class="button" (click)="aniadirReserva(1,1,1,1)"> Reservar</button>
+                        <button class="button" (click)="aniadirReserva(1,5,hora.id, Entrenador.id)"> Reservar</button>
                       </ng-container>
                   </td>
                   </tr>
@@ -249,7 +250,7 @@
                     <th>{{Entrenador.nombre}}</th>
                     <td *ngFor="let hora of horas">
                       <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id).includes(hora)">
-                        <button class="button" (click)="aniadirReserva(1,1,1,1)"> Reservar</button>
+                        <button class="button" (click)="aniadirReserva(1,6,hora.id, Entrenador.id)"> Reservar</button>
                       </ng-container>
                   </td>
                   </tr>
@@ -269,7 +270,7 @@
                     <th>{{Entrenador.nombre}}</th>
                     <td *ngFor="let hora of horas">
                       <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id).includes(hora)">
-                        <button class="button" (click)="aniadirReserva(1,1,1,1)"> Reservar</button>
+                        <button class="button" (click)="aniadirReserva(1,7,hora.id, Entrenador.id)"> Reservar</button>
                       </ng-container>
                   </td>
                   </tr>
@@ -277,7 +278,6 @@
               </table>
         </div>
     </div>
-
       
       
 </body>

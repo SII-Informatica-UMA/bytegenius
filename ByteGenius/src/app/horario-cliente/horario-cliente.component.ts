@@ -25,8 +25,6 @@ import { Dia } from '../Dia';
 export class HorarioClienteComponent implements OnInit {
 
   currentDay: number = new Date().getDay();
-  mostrarCalendarioFlag: boolean = false;
-  entrenadores: Usuario[] = [];
   diaElegido: number = 0;
   entrenadoresPorDia: Usuario[]=[];
   horarioEntrenadoresPorDia: Hora[]=[];
@@ -34,6 +32,8 @@ export class HorarioClienteComponent implements OnInit {
   public startDateOfWeek: Date = new Date();
   public endDateOfWeek: Date = new Date();
   horas:Hora[]=[];
+  dias:Dia[]=[];
+  entrenadores:Usuario[]=[];
   reservas:HashMapReservas={};
   id: number = 1;
   botonPulsado:boolean=false;
@@ -74,10 +74,6 @@ updateDates(): void {
 }
 
 
-toggleCalendario(day: number): void {
-  this.mostrarCalendarioFlag = !this.mostrarCalendarioFlag;
-}
-
 MostrarReservas(): void {
   let ref = this.modalService.open(ReservasComponent);
 }
@@ -102,6 +98,15 @@ onBotonPulsado() {
 getDiasPorUsuario(idUsuario:number):Dia[]{
   return this.usuariosservice.obtenerDiasPorUsuario(idUsuario);
 }
+
+getHorasPorUsuario(idUsuario:number, idDia:number){
+  return this.usuariosservice.obtenerHorasPorUsuario(idUsuario,idDia);
+}
+
+getEntrenadoresPorUsuario(idUsuario:number, idDia:number, idHora:number){
+  return this.usuariosservice.obtenerEntrenadoresPorUsuario(idUsuario, idDia, idHora);
+}
+
 
 
 }
