@@ -32,7 +32,7 @@ export class ReservasComponent implements OnInit { entrenadores: Usuario[] = [];
 
   ngOnInit(): void {
     this.entrenadores = this.usuariosservice.getUsuarios().filter(usuario => usuario.rol === true);
-
+    this.reservas = this.usuariosservice.getReservasUsuarios();
    }
 
    getDiasPorUsuario(idUsuario:number):Dia[]{

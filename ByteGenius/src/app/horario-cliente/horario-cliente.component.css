@@ -163,6 +163,7 @@ body{
     width: 100%;
     margin: 0 auto;
     border-collapse: collapse;
+    margin-bottom: 50px;
   }
   
   .tablas table {
@@ -213,6 +214,11 @@ body{
     border-radius: 10px;
     background-color: lightgray;
     border: none;
+  }
+
+  .reserva{
+    margin: auto;
+    text-align: center;
   }
 
   

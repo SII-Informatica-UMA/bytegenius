@@ -10,12 +10,17 @@ import { Injectable } from "@angular/core";
   providedIn: 'root'
 })
 export class UsuarioService {
+
+  private reservasRealizadas: HashMapReservas = {};
     
   private usuarios: Usuario[]= [
-    {id:5, nombre:'Jaime', apellidos:'Garfia', rol: true},
+    {id:1, nombre:'Jaime', apellidos:'Garfia', rol: true},
     {id:2, nombre:'Victor', apellidos:'Rueda', rol: true},
     {id:3, nombre:'Pablo', apellidos:'Muñoz', rol: true},
-    {id:4, nombre:'Juan Diego', apellidos:'Alba', rol: true}
+    {id:4, nombre:'Juan Diego', apellidos:'Alba', rol: true},
+    {id:5, nombre: 'Roberto', apellidos: 'Brasero', rol:true},
+    {id:6, nombre: 'Leo', apellidos: 'Messi', rol:true},
+    {id:7, nombre: 'Cristiano', apellidos:'Ronaldo', rol:true}
 
   ]
 
@@ -35,28 +40,28 @@ export class UsuarioService {
         {id:13,franjaHoraria:'21:00'},        
     ]
 
-    private ReservasUsuarios: HashMapReservas = {
-      1: { // idUsuario
-        1: { // idDia
-          1: { // idHora
-            idEntrenador: 5
-          },
-        },
-        2: { // otro idDia
-          1: { // idHora
-            idEntrenador: 3
-          }
-        }
-      },
+    // private ReservasUsuarios: HashMapReservas = {
+    //   1: { // idUsuario
+    //     2: { // idDia
+    //       1: { // idHora
+    //         idEntrenador: 5
+    //       },
+    //     },
+    //     3: { // otro idDia
+    //       1: { // idHora
+    //         idEntrenador: 3
+    //       }
+    //     }
+    //   },
 
-      6: { // otro idUsuario
-        1: { // idDia
-          1: { // idHora
-            idEntrenador: 4
-          }
-        }
-      }
-    };
+    //   6: { // otro idUsuario
+    //     1: { // idDia
+    //       1: { // idHora
+    //         idEntrenador: 4
+    //       }
+    //     }
+    //   }
+    // };
 
     private asignaciones: HashMap = {
       1: {
@@ -64,13 +69,21 @@ export class UsuarioService {
           2: {idTrainers: [4]}
       },
       4: {
-          1: { idTrainers: [3] }
+          1: { idTrainers: [3,5,6] }
       },
       2: {
           2: { idTrainers: [2, 4] }
       },
       3: {
           3: { idTrainers: [1, 3, 2] }
+      },
+      5: {
+        4:{idTrainers: [3, 4]},
+        5:{idTrainers: [6, 1]}
+      },
+      6:{
+        2:{idTrainers:[1,2,3]},
+        7:{idTrainers:[4,6]}
       }
 
   };
@@ -146,7 +159,7 @@ export class UsuarioService {
       }
 
       obtenerDiasPorUsuario(idUsuario: number): Dia[] {
-        const usuario = this.ReservasUsuarios[idUsuario];
+        const usuario = this.reservasRealizadas[idUsuario];
         const dias: Dia[] = [];
         if (usuario) {
           for (const idDia in usuario) {
@@ -164,7 +177,7 @@ export class UsuarioService {
       
     
       obtenerHorasPorUsuario(idUsuario: number, idDia: number): Hora[] {
-        const dia = this.ReservasUsuarios[idUsuario] ? this.ReservasUsuarios[idUsuario][idDia] : null;
+        const dia = this.reservasRealizadas[idUsuario] ? this.reservasRealizadas[idUsuario][idDia] : null;
         const horas: Hora[] = [];
         if (dia) {
           for (const idHora in dia) {
@@ -182,7 +195,7 @@ export class UsuarioService {
       
     
       obtenerEntrenadoresPorUsuario(idUsuario: number, idDia: number, idHora: number): Usuario[] {
-        const hora = this.ReservasUsuarios[idUsuario] && this.ReservasUsuarios[idUsuario][idDia] ? this.ReservasUsuarios[idUsuario][idDia][idHora] : null;
+        const hora = this.reservasRealizadas[idUsuario] && this.reservasRealizadas[idUsuario][idDia] ? this.reservasRealizadas[idUsuario][idDia][idHora] : null;
         const entrenadores: Usuario[] = [];
         if (hora && hora.idEntrenador) {
           const entrenador = this.usuarios.find(usuario => usuario.id === hora.idEntrenador);
@@ -192,10 +205,32 @@ export class UsuarioService {
         }
         return entrenadores;
       }
+
+      aniadirReserva(usuario: number, dia: number, hora: number, entrenador: number): void {
+        // Inicializa la entrada del usuario si no existe
+        if (!(usuario in this.reservasRealizadas)) {
+          this.reservasRealizadas[usuario] = {};
+        }
+        // Inicializa la entrada del día si no existe
+        if (!(dia in this.reservasRealizadas[usuario])) {
+          this.reservasRealizadas[usuario][dia] = {};
+        }
+        // Agrega la información de la reserva
+        this.reservasRealizadas[usuario][dia][hora] = { idEntrenador: entrenador };
+      }
+
+      existeReserva(idUsuario: number, idDia: number, idHora: number): boolean {
+        return !!(this.reservasRealizadas[idUsuario] && this.reservasRealizadas[idUsuario][idDia] && this.reservasRealizadas[idUsuario][idDia][idHora]);
+      }
+    
       
 
       getReservasUsuarios():HashMapReservas{
-        return this.ReservasUsuarios;
+        return this.reservasRealizadas;
+      }
+
+      setReservas(reservas: HashMapReservas): void {
+        this.reservasRealizadas = reservas;
       }
 
       

@@ -9,6 +9,7 @@ import { startOfWeek, endOfWeek } from 'date-fns';
 import { ReservasComponent } from '../Reservas/Reservas.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { HashMapReservas } from '../HashMapReservas';
+import { Dia } from '../Dia';
 
 
 
@@ -35,6 +36,7 @@ export class HorarioClienteComponent implements OnInit {
   horas:Hora[]=[];
   reservas:HashMapReservas={};
   id: number = 1;
+  botonPulsado:boolean=false;
 
 
   constructor(private usuariosservice: UsuarioService, private modalService: NgbModal) { 
@@ -80,14 +82,26 @@ MostrarReservas(): void {
   let ref = this.modalService.open(ReservasComponent);
 }
 
-aniadirReserva():void{
-  throw new Error('Method not implemented.');
+aniadirReserva(usuario: number, dia: number, hora: number, entrenador: number): void {
+  this.usuariosservice.aniadirReserva(usuario, dia, hora, entrenador); 
+  const nuevasReservas = this.usuariosservice.getReservasUsuarios();
+  this.usuariosservice.setReservas(nuevasReservas);
 }
+
+
+
 
 existeReserva(idUsuario: number, idDia: number, idHora: number): boolean {
-    return !!(this.reservas[idUsuario] && this.reservas[idUsuario][idDia] && this.reservas[idUsuario][idDia][idHora]);
+  return this.usuariosservice.existeReserva(idUsuario, idDia, idHora); 
 }
 
+onBotonPulsado() {
+  this.botonPulsado = true;
+}
+
+getDiasPorUsuario(idUsuario:number):Dia[]{
+  return this.usuariosservice.obtenerDiasPorUsuario(idUsuario);
+}
 
 
 }
