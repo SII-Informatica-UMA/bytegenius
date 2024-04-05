@@ -18,8 +18,10 @@
         <td>{{ Hora.franjaHoraria }}</td>
         <td *ngFor="let Dia of dias" [ngStyle]="{'background-color': obtenerIdTrainer(asignaciones, Dia.id, Hora.id).length > 0 ? 'yellow' : 'green'}">
           {{ obtenerNombres(obtenerIdTrainer(asignaciones, Dia.id, Hora.id)).join(', ') }}
+           <!-- Si el entrenador está asignado en esa hora y día, mostrar checkbox -->
           <ng-container *ngIf="estaId(obtenerIdTrainer(asignaciones, Dia.id, Hora.id), id)">
             <button (click)="eliminarHora(Dia.id, Hora.id)">-</button>
+            <input type="checkbox" (change)="mostrarBoton($event)">
           </ng-container>
           <ng-container *ngIf="!estaId(obtenerIdTrainer(asignaciones, Dia.id, Hora.id), id)">
             <button (click)="agregarHora(Dia.id, Hora.id)">&plus;</button>
@@ -51,7 +53,8 @@
     </form>
 
     <button type="button" class="btn btn-primary" (click)="guardarDisponibilidad()">Guardar Disponibilidad</button>
-    <button type="button" class="btn btn-danger">Limpiar Disponibilidad</button>
+    <!-- Botón de eliminar disponibilidad -->
+    <button type="button" class ="btn btn-danger" *ngIf="!sinCbMarcado">Eliminar Disponibilidad</button>
   </body>
 </html>
 
