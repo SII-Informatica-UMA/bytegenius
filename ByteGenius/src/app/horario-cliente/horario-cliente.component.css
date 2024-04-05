@@ -216,6 +216,11 @@ body{
     border: none;
   }
 
+  .button:hover{
+    color: white;
+    background-color: grey;
+  }
+
   .reserva{
     margin: auto;
     text-align: center;
