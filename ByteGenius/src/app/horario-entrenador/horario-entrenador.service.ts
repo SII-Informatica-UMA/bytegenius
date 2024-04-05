@@ -4,6 +4,7 @@ import { Dia } from "../Dia";
 import { HashMap } from "../HashMap";
 import { Injectable } from '@angular/core';
 import { AppComponentService } from "../app.component.service";
+import { FormsModule } from "@angular/forms";
 
 
 @Injectable({
@@ -12,6 +13,8 @@ import { AppComponentService } from "../app.component.service";
 
 export class UsuarioService {
   
+    private id: number = 3;
+
     private horas: Hora[] = [
         {id:1,franjaHoraria:'9:00'},
         {id:2,franjaHoraria:'10:00'},
@@ -30,16 +33,16 @@ export class UsuarioService {
 
     private asignaciones: HashMap = {
       1: {
-          1: { idTrainers: [1] }
+          1: { idTrainers: [1,3] }
       },
       4: {
-          1: { idTrainers: [3] }
+          1: { idTrainers: [1] }
       },
       2: {
           2: { idTrainers: [1] }
       },
       3: {
-          3: { idTrainers: [1] }
+          3: { idTrainers: [1,4] }
       }
   };
 
@@ -53,7 +56,8 @@ export class UsuarioService {
       {id:7, nombre:'Domingo'}
       ]
 
-    constructor(private usuario: AppComponentService ) { }
+    constructor(private usuario: AppComponentService) {
+     }
 
     getUsuarios(): Usuario [] {
       return this.usuario.getUsuarios();
@@ -70,7 +74,12 @@ export class UsuarioService {
     getDias(): Dia  []{
       return this.dias;
     }
-    
-    
 
+    getId(): number {
+      return this.id;
+    }
+    setId(ids:number): void{
+      this.id = ids;
+    }
+    
 }
