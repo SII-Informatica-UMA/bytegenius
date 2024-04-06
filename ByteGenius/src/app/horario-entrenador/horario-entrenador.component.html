@@ -21,7 +21,7 @@
            <!-- Si el entrenador está asignado en esa hora y día, mostrar checkbox -->
           <ng-container *ngIf="estaId(obtenerIdTrainer(asignaciones, Dia.id, Hora.id), id)">
             <button (click)="eliminarHora(Dia.id, Hora.id)">-</button>
-            <input type="checkbox" (change)="mostrarBoton($event)">
+            <input type="checkbox" id="checkbox_{{ Dia.id }}_{{ Hora.id }}" (change)= "mostrarBoton(Dia.id, Hora.id, $event)">
           </ng-container>
           <ng-container *ngIf="!estaId(obtenerIdTrainer(asignaciones, Dia.id, Hora.id), id)">
             <button (click)="agregarHora(Dia.id, Hora.id)">&plus;</button>
@@ -54,7 +54,7 @@
 
     <button type="button" class="btn btn-primary" (click)="guardarDisponibilidad()">Guardar Disponibilidad</button>
     <!-- Botón de eliminar disponibilidad -->
-    <button type="button" class ="btn btn-danger" *ngIf="!sinCbMarcado">Eliminar Disponibilidad</button>
+    <button type="button" class ="btn btn-danger" *ngIf="cbMarcado" (click)="eliminarHorasMarcadas()">Eliminar Disponibilidad</button>
   </body>
 </html>
 
