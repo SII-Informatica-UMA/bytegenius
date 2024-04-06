@@ -1,45 +1,52 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-import { HorarioEntrenadorComponent } from './horario-entrenador/horario-entrenador.component';
-import { HorarioClienteComponent } from './horario-cliente/horario-cliente.component';
-import { AppComponentService } from './app.component.service';
-import { UsuarioService } from './horario-entrenador/horario-entrenador.service';
-
-import { Usuario } from './Usuario';
+import { CommonModule, TitleCasePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { RouterOutlet, RouterLink, Router } from '@angular/router';
+import { UsuariosService } from './services/usuarios.service';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet,HorarioClienteComponent, HorarioEntrenadorComponent,FormsModule],
+  imports: [RouterOutlet, CommonModule, RouterLink, FormsModule, TitleCasePipe],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-
 export class AppComponent {
-  usuarios: Usuario[] = []
-  usuario?: Usuario;
-  isTrainer?: boolean;
-  id1: number = 1;
+  _rolIndex: number = 0
 
-
-
-  constructor(private usuariosservice: AppComponentService, private EntrenadorService: UsuarioService) {
-    this.isTrainer = false;
-   }
-
-  ngOnInit(): void{
-    this.usuarios = this.usuariosservice.getUsuarios();
-    this.elegirContacto(1);
-    this.isTrainer = this.usuario?.rol;
-
+  constructor(private usuarioService: UsuariosService, private router: Router) {
+    this.actualizarRol()
   }
 
-  elegirContacto(id: number): void {
-    this.usuario = this.usuarios.at(id-1);
-    this.isTrainer = this.usuario?.rol;
-    this.usuariosservice.setId(id);
-    this.EntrenadorService.setId(id);
+  get rolIndex() {
+    return this._rolIndex;
   }
 
+  set rolIndex(i: number) {
+    this._rolIndex = i;
+    this.actualizarRol();
+  }
+
+  actualizarRol() {
+    let u = this.usuarioSesion;
+    if (u) {
+      this.usuarioService.rolCentro = u.roles[this.rolIndex];
+    } else {
+      this.usuarioService.rolCentro = undefined;
+    }
+  }
+
+  get rol() {
+    return this.usuarioService.rolCentro;
+  }
+
+  get usuarioSesion() {
+    return this.usuarioService.getUsuarioSesion();
+  }
+
+  logout() {
+    this.usuarioService.doLogout();
+    this.actualizarRol();
+    this.router.navigateByUrl('/login');
+  }
 }
