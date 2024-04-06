@@ -22,7 +22,13 @@ export class LoginComponent {
   login() {
     this.usuarioService.doLogin(this.loginInfo).subscribe({
       next: (usuario) => {
-        this.router.navigateByUrl('/');
+        if (usuario.roles[0].rol === 'administrador') {
+;          this.router.navigateByUrl('entrenador');
+        } else if (usuario.roles[0].rol === 'cliente') {
+          this.router.navigateByUrl('cliente');
+        } else {
+          this.router.navigateByUrl('/');
+        }
       },
       error: (error) => {
         this.loginInfo = {email: '', password: ''};
@@ -31,7 +37,6 @@ export class LoginComponent {
         } else {
           this.error = error.statusText;
         }
-
       }
     });
   }

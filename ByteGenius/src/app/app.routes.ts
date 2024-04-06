@@ -4,6 +4,8 @@ import { ForgottenPasswordComponent } from './forgotten-password/forgotten-passw
 import { ResetPasswordComponent } from './reset-password/reset-password.component';
 import { ListadoUsuarioComponent } from './listado-usuario/listado-usuario.component';
 import { PrincipalComponent } from './principal/principal.component';
+import { HorarioEntrenadorComponent } from './horario-entrenador/horario-entrenador.component';
+import { HorarioClienteComponent } from './horario-cliente/horario-cliente.component';
 
 export const routes: Routes = [
   {
@@ -25,5 +27,13 @@ export const routes: Routes = [
   {
     path: '',
     component: PrincipalComponent
+  },
+  {
+    path: 'entrenador',
+    component: HorarioEntrenadorComponent
+  },
+  {
+    path: 'cliente',
+    component: HorarioClienteComponent
   }
 ];

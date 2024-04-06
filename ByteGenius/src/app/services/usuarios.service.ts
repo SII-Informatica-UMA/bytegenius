@@ -21,13 +21,19 @@ export class UsuariosService {
     let usuarioObs = jwtObs.pipe(concatMap(jwt=>this.backend.getUsuario(this.getUsuarioIdFromJwt(jwt))));
     let join = forkJoin({jwt: jwtObs, usuario: usuarioObs});
     let usuarioSesion = join.pipe(map(obj => {
+      let roles = [];
+      if (obj.usuario.administrador) {
+        roles.push({rol: Rol.ADMINISTRADOR});
+      } else {
+        roles.push({rol: Rol.CLIENTE});
+      }
       return {
         id: obj.usuario.id,
         nombre: obj.usuario.nombre,
         apellido1: obj.usuario.apellido1,
         apellido2: obj.usuario.apellido2,
         email: obj.usuario.email,
-        roles: obj.usuario.administrador?[{rol: Rol.ADMINISTRADOR}]:[],
+        roles: roles,
         jwt: obj.jwt
       };
     }));

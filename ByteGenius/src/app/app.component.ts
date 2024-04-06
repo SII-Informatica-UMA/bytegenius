@@ -3,13 +3,15 @@ import { CommonModule, TitleCasePipe } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterOutlet, RouterLink, Router } from '@angular/router';
 import { UsuariosService } from './services/usuarios.service';
+import { HorarioClienteComponent } from "./horario-cliente/horario-cliente.component";
+import { HorarioEntrenadorComponent } from "./horario-entrenador/horario-entrenador.component";
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet, CommonModule, RouterLink, FormsModule, TitleCasePipe],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+    selector: 'app-root',
+    standalone: true,
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.css',
+    imports: [RouterOutlet, CommonModule, RouterLink, FormsModule, TitleCasePipe, HorarioClienteComponent, HorarioEntrenadorComponent]
 })
 export class AppComponent {
   _rolIndex: number = 0
