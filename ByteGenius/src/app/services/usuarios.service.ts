@@ -52,9 +52,30 @@ export class UsuariosService {
   }
 
   private completarConRoles(usuarioSesion: UsuarioSesion): Observable<UsuarioSesion> {
-    // TODO: acceder a lo sotros servicios (o simular) para completar con los roles necesarios
-    return of(usuarioSesion);
-  }
+  const roles = usuarioSesion.roles.map(rolCentro => {
+    if (rolCentro.rol === Rol.ENTRENADOR) {
+      return this.backend.getUsuario(usuarioSesion.id).pipe(
+        map(entrenador => {
+          return {rol: Rol.ENTRENADOR};
+        })
+      );
+    } else if (rolCentro.rol === Rol.CLIENTE) {
+      return this.backend.getUsuario(usuarioSesion.id).pipe(
+        map(cliente => {
+          return {rol: Rol.CLIENTE};
+        })
+      );
+    } else {
+      return of(rolCentro);
+    }
+  });
+  return forkJoin(roles).pipe(
+    map(roles => {
+      usuarioSesion.roles = roles;
+      return usuarioSesion;
+    })
+  );
+}
 
   private getUsuarioIdFromJwt(jwt: string): number {
     let payload = jose.decodeJwt(jwt);
