@@ -1,3 +1,7 @@
+body{
+  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
 .small-button {
     padding: 5px 10px;
     font-size: 14px;
@@ -15,7 +19,7 @@
 
 .table th,td{
   background-color:#5466ca;
-  color: black;
+  color: white;
   text-align: center;
 }
 .boton-eliminar{
@@ -48,3 +52,7 @@
   border-radius: 5px;
 }
 
+.table{
+  overflow: hidden;
+  border-radius: 10px ;
+}
