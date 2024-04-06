@@ -13,3 +13,38 @@
     background-color: #0056b3;
   }
 
+.table th,td{
+  background-color:#5466ca;
+  color: black;
+  text-align: center;
+}
+.boton-eliminar{
+  overflow: hidden;
+  color:black;
+  background-color: white;
+  border: none;
+  border-radius: 5px;
+}
+
+.boton-eliminar:hover{
+  overflow: hidden;
+  color:white;
+  border: none;
+  background-color: black;
+  border-radius: 5px;
+}
+
+.boton-añadir:hover{
+  overflow: hidden;
+  color:white;
+  background-color: black;
+  border: none;
+  border-radius: 5px;
+}
+.boton-añadir{
+  overflow: hidden;
+  color:black;
+  border: none;
+  border-radius: 5px;
+}
+
