@@ -69,11 +69,8 @@ export class HorarioEntrenadorComponent {
     }
   }
 
-  obtenerNombres(ids: number[]): string[] {
-    return ids.map(id => {
-        const usuario = this.usuarios.find(u => u.id === id);
-        return usuario ? usuario.nombre : '';
-    });
+  obtenerNombres(ids: number[]): boolean {
+    return ids.includes(this.id);
   }
     
   estaId(ids:number[],id:number){
