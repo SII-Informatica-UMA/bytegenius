@@ -214,38 +214,39 @@ export class HorarioEntrenadorComponent {
   rellenarSemana() {
 		const dia: NgbDate = new NgbDate(this.date.year, this.date.month, this.today.day);
 		// Hacer algo con 'dia'
-	  }
+	}
 
-	  ngMode(){
+	ngMode(){
 
-	  }
+	}
 	
-	  onDateSelection(event: any) {
+	onDateSelection(event: any) {
 		// Extrae la fecha del evento
 		const selectedDate: NgbDate = event;
 		// Asigna el día seleccionado a 'di'
 		this.dia = selectedDate; 
     this.Semana();
-	  }
-    Semana():void {
-        const selectedDay = this.dia.day; // 0 = Domingo, 1 = Lunes, ..., 6 = Sábado
-        const startOfWeek = new Date(this.dia.day);
-        const endOfWeek = new Date(selectedDay);
-        
-        // Calcular el inicio de la semana (lunes)
-        startOfWeek.setDate(startOfWeek.getDate() - selectedDay + (selectedDay === 1 ? -7 : 1));
-        
-        // Calcular el final de la semana (domingo)
-        endOfWeek.setDate(endOfWeek.getDate() - selectedDay + (selectedDay === 0 ? 1 : 8));
-        
-        this.sol = startOfWeek.getDay().toString() + " --> " + endOfWeek.getDay().toString();
-    }
+	}
 
-    getDayOfWeek(date: NgbDateStruct): string {
-      const dayNames = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
-      let d = new Date(date.year, date.month - 1, date.day);
-      return dayNames[d.getDay()];
-    }
+  Semana():void {
+    const selectedDay = this.dia.day; // 0 = Domingo, 1 = Lunes, ..., 6 = Sábado
+    const startOfWeek = new Date(this.dia.day);
+    const endOfWeek = new Date(selectedDay);
+        
+    // Calcular el inicio de la semana (lunes)
+    startOfWeek.setDate(startOfWeek.getDate() - selectedDay + (selectedDay === 1 ? -7 : 1));
+        
+    // Calcular el final de la semana (domingo)
+    endOfWeek.setDate(endOfWeek.getDate() - selectedDay + (selectedDay === 0 ? 1 : 8));
+        
+    this.sol = startOfWeek.getDay().toString() + " --> " + endOfWeek.getDay().toString();
+  }
+
+  getDayOfWeek(date: NgbDateStruct): string {
+    const dayNames = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    let d = new Date(date.year, date.month - 1, date.day);
+    return dayNames[d.getDay()];
+  }
 
 
 }
