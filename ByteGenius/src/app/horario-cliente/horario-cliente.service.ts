@@ -1,28 +1,23 @@
-import { Usuario } from "../Usuario";
+import { Usuario } from "../entities/usuario";
 import { Hora } from "../Hora";
 import { Dia } from "../Dia";
 import { HashMapReservas } from "../HashMapReservas";
 import { HashMap } from "../HashMap";
 import { AppComponentService } from "../app.component.service";
 import { Injectable } from "@angular/core";
+import { BackendFakeService } from "../services/backend.fake.service";
 
 @Injectable({
   providedIn: 'root'
 })
-export class UsuarioService {
-
+export class UsuarioServiceCliente {
+  private usuarios: Usuario[]= [];
+  constructor(private usuario: AppComponentService, private backendService:BackendFakeService) {
+       this.usuarios=backendService.getArrayUsuarios();
+   }
   private reservasRealizadas: HashMapReservas = {};
     
-  private usuarios: Usuario[]= [
-    {id:1, nombre:'Jaime', apellidos:'Garfia', rol: true},
-    {id:2, nombre:'Victor', apellidos:'Rueda', rol: true},
-    {id:3, nombre:'Pablo', apellidos:'Muñoz', rol: true},
-    {id:4, nombre:'Juan Diego', apellidos:'Alba', rol: true},
-    {id:5, nombre: 'Roberto', apellidos: 'Brasero', rol:true},
-    {id:6, nombre: 'Leo', apellidos: 'Messi', rol:true},
-    {id:7, nombre: 'Cristiano', apellidos:'Ronaldo', rol:true}
-
-  ]
+  
 
     private horas: Hora[] = [
         {id:1,franjaHoraria:'9:00'},
@@ -65,8 +60,7 @@ export class UsuarioService {
 
     private asignaciones: HashMap = {
       1: {
-          1: { idTrainers: [1, 2 ,3] }, 
-          2: {idTrainers: [4]}
+          1: { idTrainers: [1, 2 ,3, 4, 5, 6, 7 , 8] }
       },
       4: {
           1: { idTrainers: [3,5,6] }
@@ -100,10 +94,6 @@ export class UsuarioService {
       {id:7, nombre:'Domingo'}
       ]
 
-
-    
-
-      constructor(private usuario: AppComponentService) { }
 
       getUsuarios(): Usuario[] {
         return this.usuarios;
@@ -226,6 +216,7 @@ export class UsuarioService {
       
 
       getReservasUsuarios():HashMapReservas{
+        console.log(this.reservasRealizadas);
         return this.reservasRealizadas;
       }
 
@@ -238,5 +229,5 @@ export class UsuarioService {
       
     
 }
-export { Hora, Usuario };
+export { Hora, Usuario , HashMapReservas};
 

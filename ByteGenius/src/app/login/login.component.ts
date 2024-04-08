@@ -44,5 +44,6 @@ export class LoginComponent {
   get usuario() {
     return this.usuarioService.getUsuarioSesion();
   }
+  
 
 }

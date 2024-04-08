@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgFor } from '@angular/common';
-import { UsuarioService } from './horario-cliente.service'; 
-import { Usuario } from "../Usuario";
+import { UsuarioServiceCliente } from './horario-cliente.service'; 
+import { Usuario } from '../entities/usuario';
 import { Hora } from '../Hora';
 import { FormsModule } from '@angular/forms';
 import { startOfWeek, endOfWeek } from 'date-fns';
@@ -10,6 +10,7 @@ import { ReservasComponent } from '../Reservas/Reservas.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { HashMapReservas } from '../HashMapReservas';
 import { Dia } from '../Dia';
+import { UsuariosService } from '../services/usuarios.service';
 
 
 
@@ -17,7 +18,7 @@ import { Dia } from '../Dia';
   selector: 'app-horario-cliente',
   standalone: true,
   imports: [ NgFor, CommonModule, FormsModule, ReservasComponent],
-  providers: [ UsuarioService],
+  providers: [ UsuarioServiceCliente],
   templateUrl: './horario-cliente.component.html',
   styleUrl: './horario-cliente.component.css'
 })
@@ -39,14 +40,13 @@ export class HorarioClienteComponent implements OnInit {
   botonPulsado:boolean=false;
 
 
-  constructor(private usuariosservice: UsuarioService, private modalService: NgbModal) { 
+  constructor(private usuariosservice: UsuarioServiceCliente, private modalService: NgbModal, private usuariosServiceLogin:UsuariosService) { 
     this.horas = this.usuariosservice.getHoras();
-    this.entrenadores = this.usuariosservice.getUsuarios().filter(usuario => usuario.rol === true);
+    this.entrenadores = this.usuariosServiceLogin.getArrayEntrenadores();
+    this.reservas = this.usuariosservice.getReservasUsuarios();
   }
   ngOnInit(): void {
-   
-    this.entrenadores = this.usuariosservice.getUsuarios().filter(usuario => usuario.rol === true);
-    this.reservas = this.usuariosservice.getReservasUsuarios();
+    
     this.updateDates();
     setInterval(() => {
       this.updateDates();
@@ -106,6 +106,8 @@ getHorasPorUsuario(idUsuario:number, idDia:number){
 getEntrenadoresPorUsuario(idUsuario:number, idDia:number, idHora:number){
   return this.usuariosservice.obtenerEntrenadoresPorUsuario(idUsuario, idDia, idHora);
 }
+
+
 
 
 

@@ -13,6 +13,7 @@ import { BackendService } from "./backend.service";
 })
 export class UsuariosService {
   _rolCentro?: RolCentro;
+  entrenadores:Usuario[]=[];
 
   constructor(private backend: BackendFakeService) {}
 
@@ -50,6 +51,9 @@ export class UsuariosService {
       usuarioSesion.roles.push({rol:Rol.CLIENTE});
     }else if(usuarioSesion.id==3 || usuarioSesion.id==4 || usuarioSesion.id==5 || usuarioSesion.id==6 || usuarioSesion.id==7 || usuarioSesion.id==8 ){
       usuarioSesion.roles.push({rol:Rol.ENTRENADOR});
+      this.entrenadores.push({id: usuarioSesion.id, nombre: usuarioSesion.nombre, apellido1: usuarioSesion.apellido1,
+        apellido2: usuarioSesion.apellido2, email:usuarioSesion.email, password:usuarioSesion.jwt, administrador:false
+      })
     }
     return of(usuarioSesion);
   }
@@ -105,6 +109,10 @@ export class UsuariosService {
 
   aniadirUsuario(usuario: Usuario): Observable<Usuario> {
     return this.backend.postUsuario(usuario);
+  }
+
+  getArrayEntrenadores():Usuario[]{
+    return this.entrenadores;
   }
 
 

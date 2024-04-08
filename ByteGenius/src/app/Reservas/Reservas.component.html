@@ -13,9 +13,9 @@
               <li>
                 Hora: {{ hora.franjaHoraria }}
                 <ul>
-                  <div *ngFor=" let entrenador of getEntrenadorPorUsuario(1, dia.id, hora.id)">
+                  <!-- <div *ngFor=" let entrenador of getEntrenadorPorUsuario(1, dia.id, hora.id)">
                      Entrenador: {{entrenador.nombre}}
-                  </div>
+                  </div> -->
                 </ul>
               </li>
             </div>
@@ -24,4 +24,8 @@
       </div>
     </ul>
   </div>
+  <div>
+    <pre>{{ reservas | json }}</pre>
+  </div>
+  
 </div>
