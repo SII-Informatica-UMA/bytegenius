@@ -5,7 +5,6 @@ import { Dia } from '../Dia';
 import { Hora } from '../Hora';
 import { HashMap } from '../HashMap';
 import { Usuario } from '../Usuario';
-import { AppComponent } from '../app.component';
 import { FormsModule } from '@angular/forms';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';

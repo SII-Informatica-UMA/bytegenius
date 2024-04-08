@@ -1,5 +1,4 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
 import { HorarioEntrenadorComponent } from './horario-entrenador.component';
 
 describe('HorarioClienteComponent', () => {

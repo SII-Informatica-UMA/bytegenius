@@ -33,6 +33,7 @@
     
     <form>
       &nbsp;<label>Días</label>
+      <!-- Selector de los días que se quieren reservar de la semana -->
       <ng-multiselect-dropdown
       [placeholder]="'Seleccione los días'"
       [settings]="dropdownSettings"
@@ -59,8 +60,8 @@
     <!-- Botón de eliminar disponibilidad -->
     <button type="button" class ="btn btn-danger" *ngIf="cbMarcado" (click)="eliminarHorasMarcadas()">Eliminar Disponibilidad</button>
 
-    
-    <ngbd-datepicker-basic></ngbd-datepicker-basic>
+    <!-- Elemento del calendario mensual para el horario de los entrenadores -->
+    <app-datepicker></app-datepicker>
 
   </body>
 </html>
