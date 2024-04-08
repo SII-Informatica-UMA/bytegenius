@@ -110,10 +110,6 @@ export class BackendFakeService {
     return of(this.usuarios);
   }
 
-  getArrayUsuarios():Usuario[]{
-    return usuariosC;
-  }
-
   postUsuario(usuario: Usuario): Observable<Usuario> {
     let u = this.usuarios.find(u => u.email == usuario.email);
     if (!usuario.email) {

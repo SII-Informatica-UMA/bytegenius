@@ -29,7 +29,7 @@ export class ReservasComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.actualizarReservas();
+    this.actualizarReservas
    }
 
    getDiasPorUsuario(idUsuario:number):Dia[]{

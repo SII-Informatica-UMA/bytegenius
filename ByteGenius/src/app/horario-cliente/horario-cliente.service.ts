@@ -13,7 +13,8 @@ import { BackendFakeService } from "../services/backend.fake.service";
 export class UsuarioServiceCliente {
   private usuarios: Usuario[]= [];
   constructor(private usuario: AppComponentService, private backendService:BackendFakeService) {
-       this.usuarios=backendService.getArrayUsuarios();
+      this.backendService.getUsuarios().subscribe(usuarios => {
+      this.usuarios = usuarios;});
    }
   private reservasRealizadas: HashMapReservas = {};
     
@@ -60,15 +61,16 @@ export class UsuarioServiceCliente {
 
     private asignaciones: HashMap = {
       1: {
-          1: { idTrainers: [1, 2 ,3, 4, 5, 6, 7 , 8] }
-      },
-      4: {
-          1: { idTrainers: [3,5,6] }
+          1: { idTrainers: [4, 5, 6, 7 , 8] },
+          10: {idTrainers: [3]}
       },
       2: {
-          2: { idTrainers: [2, 4] }
+          1: { idTrainers: [3,5,6] }
       },
       3: {
+          2: { idTrainers: [2, 4] }
+      },
+      4: {
           3: { idTrainers: [1, 3, 2] }
       },
       5: {
@@ -229,5 +231,5 @@ export class UsuarioServiceCliente {
       
     
 }
-export { Hora, Usuario , HashMapReservas};
+export { Hora, Usuario};
 
