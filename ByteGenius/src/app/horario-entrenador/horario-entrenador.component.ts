@@ -8,12 +8,15 @@ import { Usuario } from '../Usuario';
 import { FormsModule } from '@angular/forms';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
-import { NgbdDatepickerBasic } from '../datepicker/datepicker.component';
+import { JsonPipe } from '@angular/common';
+import { NgbCalendar, NgbDate, NgbDatepickerModule, NgbDateStruct, NgbDateStructAdapter } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDatepickerNavigation } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker-navigation';
+
 
 @Component({
   selector: 'app-horario-entrenador',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgMultiSelectDropDownModule, NgbdDatepickerBasic],
+  imports: [CommonModule, FormsModule, NgMultiSelectDropDownModule,NgbDatepickerModule, FormsModule, JsonPipe],
   templateUrl: './horario-entrenador.component.html',
   styleUrl: './horario-entrenador.component.css'
 })
@@ -24,6 +27,14 @@ export class HorarioEntrenadorComponent {
   asignaciones: HashMap = [];
   usuarios: Usuario [] = [];
   id:number = 1;
+
+  today: NgbDate;
+	dia: NgbDate;
+  
+	model: NgbDateStruct;
+	date: { year: number; month: number };
+  sol:String = "";
+
   
 
   // Variables necesarias para el selector de los días en el formulario
@@ -34,7 +45,14 @@ export class HorarioEntrenadorComponent {
   cbMarcados: HashMap = []; // HashMap para controlar los checkbox marcados.
   cbMarcado: boolean = false; // Indica si no hay ninguna checkbox marcada.
 
-  constructor(private usuariosservice: UsuarioService) {}
+  constructor(private usuariosservice: UsuarioService, private calendar:NgbCalendar) {
+    // Inicialización de las propiedades
+		this.today = this.calendar.getToday();
+		this.model = { year: this.today.year, month: this.today.month, day: this.today.day };
+		this.date = { year: this.today.year, month: this.today.month };
+    this.dia = this.today;
+	  
+  }
 
   ngOnInit(): void {
     this.dias = this.usuariosservice.getDias();
@@ -191,6 +209,44 @@ export class HorarioEntrenadorComponent {
       this.cbMarcados[dia][hora].idTrainers.splice(index, 1);
     }
   }
+
+  //Implementacion DATEPICKER
+  rellenarSemana() {
+		const dia: NgbDate = new NgbDate(this.date.year, this.date.month, this.today.day);
+		// Hacer algo con 'dia'
+	  }
+
+	  ngMode(){
+
+	  }
+	
+	  onDateSelection(event: any) {
+		// Extrae la fecha del evento
+		const selectedDate: NgbDate = event;
+		// Asigna el día seleccionado a 'di'
+		this.dia = selectedDate; 
+    this.Semana();
+	  }
+    Semana():void {
+        const selectedDay = this.dia.day; // 0 = Domingo, 1 = Lunes, ..., 6 = Sábado
+        const startOfWeek = new Date(this.dia.day);
+        const endOfWeek = new Date(selectedDay);
+        
+        // Calcular el inicio de la semana (lunes)
+        startOfWeek.setDate(startOfWeek.getDate() - selectedDay + (selectedDay === 1 ? -7 : 1));
+        
+        // Calcular el final de la semana (domingo)
+        endOfWeek.setDate(endOfWeek.getDate() - selectedDay + (selectedDay === 0 ? 1 : 8));
+        
+        this.sol = startOfWeek.getDay().toString() + " --> " + endOfWeek.getDay().toString();
+    }
+
+    getDayOfWeek(date: NgbDateStruct): string {
+      const dayNames = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+      let d = new Date(date.year, date.month - 1, date.day);
+      return dayNames[d.getDay()];
+    }
+
 
 }
 

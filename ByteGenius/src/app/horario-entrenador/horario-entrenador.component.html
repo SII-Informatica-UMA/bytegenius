@@ -6,11 +6,26 @@
     <title>Document</title>
 </head>
 <body>
+
+  <ngb-datepicker #dp [(ngModel)]="model" (navigate)="date = $event.next" (select)="onDateSelection(date)">
+  </ngb-datepicker>
+  <div class="form-group">
+    <button class="btn btn-outline-secondary calendar" (click)="onDateSelection(model)" type="button">Aceptar</button>
+    </div>
+  <hr />
+  
+  <button class="btn btn-sm btn-outline-primary me-2" (click)="model = today">Seleccionar hoy</button>
+  <button class="btn btn-sm btn-outline-primary me-2" (click)="dp.navigateTo()">Ir al mes actual</button>
+  <button class="btn btn-sm btn-outline-primary me-2" (click)="dp.navigateTo({ year: 2013, month: 2 })"
+          >Ir a febrero de 2013</button>
+  
+  <hr />
+  AQUÍ {{this.getDayOfWeek(this.dia)}}
   <table class="table table-bordered">
     <thead>
       <tr>
         <th scope="col">Horas</th>
-        <th scope="col" *ngFor="let Dia of dias">{{ Dia.nombre }}</th>
+        <th scope="col" *ngFor="let Dia of dias">{{ Dia.nombre }}  </th>
       </tr>
     </thead>
     <tbody class="table-group-divider">
@@ -61,7 +76,6 @@
     <button type="button" class ="btn btn-danger" *ngIf="cbMarcado" (click)="eliminarHorasMarcadas()">Eliminar Disponibilidad</button>
 
     <!-- Elemento del calendario mensual para el horario de los entrenadores -->
-    <app-datepicker></app-datepicker>
 
   </body>
 </html>
