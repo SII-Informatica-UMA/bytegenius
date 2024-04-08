@@ -32,7 +32,7 @@ export class UsuarioService {
     ]
 
     private asignaciones: HashMap = {
-      1: {
+      8: {
           1: { idTrainers: [1,3] }
       },
       4: {
