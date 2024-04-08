@@ -1,15 +1,21 @@
+<<<<<<< Updated upstream
 <ngb-datepicker #dp [(ngModel)]="model" (navigate)="date = $event.next" />
 
+=======
+<p>Simple datepicker</p>
+
+<ngb-datepicker #dp [(ngModel)]="model" (navigate)="date = $event.next" (select)="onDateSelection(date)">
+</ngb-datepicker>
+<div class="form-group">
+	<button class="btn btn-outline-secondary calendar" (click)="onDateSelection(model)" type="button">Aceptar</button>
+  </div>
+>>>>>>> Stashed changes
 <hr />
 
-<button class="btn btn-sm btn-outline-primary me-2" (click)="model = today">Select Today</button>
-<button class="btn btn-sm btn-outline-primary me-2" (click)="dp.navigateTo()">To current month</button>
+<button class="btn btn-sm btn-outline-primary me-2" (click)="model = today">Seleccionar hoy</button>
+<button class="btn btn-sm btn-outline-primary me-2" (click)="dp.navigateTo()">Ir al mes actual</button>
 <button class="btn btn-sm btn-outline-primary me-2" (click)="dp.navigateTo({ year: 2013, month: 2 })"
-	>To Feb 2013</button
->
+        >Ir a febrero de 2013</button>
 
 <hr />
-{{today.day}}
-
-{{today.month}}
-
+AQUÍ {{this.di}}
