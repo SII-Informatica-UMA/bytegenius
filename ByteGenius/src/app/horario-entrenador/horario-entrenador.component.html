@@ -20,28 +20,26 @@
           >Ir a febrero de 2013</button>
   
   <hr />
-  AQUÍ {{this.obtenerLunesMasCercano(this.dia)}}
-        {{this.sol}}
   <table class="table table-bordered">
     <thead>
       <tr>
         <th scope="col">Horas</th>
-        <ng-container *ngFor="let num of [0, 1, 2, 3, 4, 5, 6]">
-          <th scope="col">{{dias.at(num)?.nombre}} {{this.dia.day+num}}</th>
+        <ng-container *ngFor="let dia of obtenerSemana(this.dia)">
+          <th scope="col">{{getDayOfWeek(dia)}} &nbsp;{{dia.day}}</th>
         </ng-container>      </tr>
     </thead>
     <tbody class="table-group-divider">
       <tr *ngFor="let Hora of horas">
         <td>{{ Hora.franjaHoraria }}</td>
-        <td *ngFor="let num of [0, 1, 2, 3, 4, 5, 6]" [ngStyle]="{'background-color': pertenece(obtenerIdTrainer(asignaciones, this.dia.day+num, Hora.id)) ? 'lightgrey' : 'green', 'color': 'black'} ">
-          {{ obtenerNombres(obtenerIdTrainer(asignaciones, this.dia.day+num, Hora.id)) }}
+        <td *ngFor="let dia of obtenerSemana(this.dia)" [ngStyle]="{'background-color': pertenece(obtenerIdTrainer(asignaciones, this.dia.day, Hora.id)) ? 'lightgrey' : 'green', 'color': 'black'} ">
+          {{ obtenerNombres(obtenerIdTrainer(asignaciones, dia.day, Hora.id)) }}
            <!-- Si el entrenador está asignado en esa hora y día, mostrar checkbox -->
-          <ng-container *ngIf="estaId(obtenerIdTrainer(asignaciones, this.dia.day+num, Hora.id), id)">
-            <button (click)="eliminarHora(this.dia.day+num, Hora.id)">-</button>
-            <input type="checkbox" id="checkbox_{{ this.dia.day+num }}_{{ Hora.id }}" (change)= "mostrarBoton(this.dia.day+num, Hora.id, $event)">
+          <ng-container *ngIf="estaId(obtenerIdTrainer(asignaciones, this.dia.day, Hora.id), id)">
+            <button (click)="eliminarHora(this.dia.day, Hora.id)">-</button>
+            <input type="checkbox" id="checkbox_{{ this.dia.day }}_{{ Hora.id }}" (change)= "mostrarBoton(this.dia.day, Hora.id, $event)">
           </ng-container>
-          <ng-container *ngIf="!estaId(obtenerIdTrainer(asignaciones, this.dia.day+num, Hora.id), id)">
-            <button (click)="agregarHora(this.dia.day+num, Hora.id)" class="boton-añadir">&plus;</button>
+          <ng-container *ngIf="!estaId(obtenerIdTrainer(asignaciones, this.dia.day, Hora.id), id)">
+            <button (click)="agregarHora(this.dia.day, Hora.id)" class="boton-añadir">&plus;</button>
           </ng-container>
         </td>
       </tr>

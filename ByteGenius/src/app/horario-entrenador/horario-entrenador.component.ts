@@ -274,7 +274,40 @@ export class HorarioEntrenadorComponent {
       this.dia = lunesMasCercano;
       return lunesMasCercano;
     }
-
+    obtenerCantidadDiasMes(year: number, month: number): number {
+      // Obtener el último día del mes
+      const ultimoDiaMes = new Date(year, month, 0).getDate();
+    
+      return ultimoDiaMes;
+    }
+    
+    obtenerSemana(date:NgbDate):NgbDateStruct[]{
+      let primerLunes = this.obtenerLunesMasCercano(this.dia);
+      let lista = [];
+      var diaAct = primerLunes;
+      lista.push(primerLunes);
+      let cont = 0;
+      let cambio = false;
+      let cont2 = 0;
+      while(cont < 6){
+        if(this.obtenerCantidadDiasMes(diaAct.year,diaAct.month) > diaAct.day){
+          if(!cambio)lista.push(new NgbDate(diaAct.year,diaAct.month,diaAct.day+1));
+          else lista.push(new NgbDate(diaAct.year,diaAct.month,diaAct.day+1));
+        }else{
+          if(diaAct.month <= 12){
+            lista.push(new NgbDate(diaAct.year,diaAct.month+1,1));
+            cambio = true;
+          }else{
+            lista.push(new NgbDate(diaAct.year+1,1,1));
+            cambio = true;
+          }
+        }
+        cont = cont+1;
+        if(cambio) cont2 = cont2+1;
+        diaAct = lista[lista.length-1];
+      }
+      return lista;
+    }
     
     
 
