@@ -9,11 +9,12 @@ import { AppComponent } from '../app.component';
 import { FormsModule } from '@angular/forms';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
+import { NgbdDatepickerBasic } from '../datepicker/datepicker.component';
 
 @Component({
   selector: 'app-horario-entrenador',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgMultiSelectDropDownModule],
+  imports: [CommonModule, FormsModule, NgMultiSelectDropDownModule, NgbdDatepickerBasic],
   templateUrl: './horario-entrenador.component.html',
   styleUrl: './horario-entrenador.component.css'
 })
@@ -69,8 +70,11 @@ export class HorarioEntrenadorComponent {
     }
   }
 
-  obtenerNombres(ids: number[]): boolean {
-    return ids.includes(this.id);
+  obtenerNombres(ids: number[]): string[] {
+    return ids.map(id => {
+        const usuario = this.usuarios.find(u => u.id === id);
+        return usuario ? usuario.nombre : '';
+    });
   }
     
   estaId(ids:number[],id:number){
