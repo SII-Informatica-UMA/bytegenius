@@ -266,15 +266,16 @@ export class HorarioEntrenadorComponent {
       }
     
       // Convertir el resultado de vuelta a NgbDateStruct
-      const lunesMasCercano = {
-        year: jsDate.getFullYear(),
-        month: jsDate.getMonth() + 1,
-        day: jsDate.getDate()
-      };
+
+
+      const lunesMasCercano = new NgbDate(jsDate.getFullYear(),jsDate.getMonth()+1,jsDate.getDate());
       this.sol = lunesMasCercano.day.toString();
+      this.dia = lunesMasCercano;
       return lunesMasCercano;
     }
 
+    
+    
 
 }
 
