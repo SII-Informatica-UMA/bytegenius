@@ -27,6 +27,7 @@ export class HorarioEntrenadorComponent {
   asignaciones: HashMap = [];
   usuarios: Usuario [] = [];
   id:number = 1;
+  semana:NgbDate [] = [];
 
   today: NgbDate;
 	dia: NgbDate;
@@ -87,14 +88,22 @@ export class HorarioEntrenadorComponent {
     }
   }
 
-  obtenerNombres(ids: number[]): string[] {
-    return ids.map(id => {
-        const usuario = this.usuarios.find(u => u.id === id);
-        return usuario ? usuario.nombre : '';
-    });
+  pertenece(lista:number[]):boolean{
+    return lista.includes(this.id);
   }
+
+  obtenerNombres(ids: number[]): string {
+    if (this.pertenece(ids)) {
+      const usuario = this.usuarios.find(u => u.id === this.id); // Busca el usuario por el id
+      if (usuario) {
+        return usuario.nombre; // Devuelve el nombre del usuario si se encuentra
+      }
+    }
+    return ''; // Devuelve una cadena vacía si no se encuentra el usuario
+  }
+  
     
-  estaId(ids:number[],id:number){
+  estaId(ids:number[],id:number): boolean{
     return ids.includes(id);
   }
     
@@ -245,6 +254,25 @@ export class HorarioEntrenadorComponent {
       const dayNames = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
       let d = new Date(date.year, date.month - 1, date.day);
       return dayNames[d.getDay()];
+    }
+
+   obtenerLunesMasCercano(date: NgbDateStruct): NgbDateStruct {
+      // Convertir la fecha NgbDateStruct a un objeto Date de JavaScript
+      const jsDate = new Date(date.year, date.month - 1, date.day);
+      
+      // Iterar hacia atrás desde la fecha dada hasta encontrar un lunes
+      while (jsDate.getDay() !== 1) { // 1 representa el lunes en JavaScript
+        jsDate.setDate(jsDate.getDate() - 1); // Restar un día
+      }
+    
+      // Convertir el resultado de vuelta a NgbDateStruct
+      const lunesMasCercano = {
+        year: jsDate.getFullYear(),
+        month: jsDate.getMonth() + 1,
+        day: jsDate.getDate()
+      };
+      this.sol = lunesMasCercano.day.toString();
+      return lunesMasCercano;
     }
 
 
