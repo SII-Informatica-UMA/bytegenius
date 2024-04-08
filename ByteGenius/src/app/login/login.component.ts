@@ -22,12 +22,12 @@ export class LoginComponent {
   login() {
     this.usuarioService.doLogin(this.loginInfo).subscribe({
       next: (usuario) => {
-        if (usuario.roles[0].rol === 'entrenador') {
-;          this.router.navigateByUrl('entrenador');
+        if (usuario.roles[0].rol === 'administrador') {
+;          this.router.navigateByUrl('/');
         } else if (usuario.roles[0].rol === 'cliente') {
           this.router.navigateByUrl('cliente');
-        } else {
-          this.router.navigateByUrl('/');
+        } else if (usuario.roles[0].rol === 'entrenador') {
+          this.router.navigateByUrl('entrenador');
         }
       },
       error: (error) => {

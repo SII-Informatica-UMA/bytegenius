@@ -21,19 +21,13 @@ export class UsuariosService {
     let usuarioObs = jwtObs.pipe(concatMap(jwt=>this.backend.getUsuario(this.getUsuarioIdFromJwt(jwt))));
     let join = forkJoin({jwt: jwtObs, usuario: usuarioObs});
     let usuarioSesion = join.pipe(map(obj => {
-      let roles = [];
-      if (obj.usuario.administrador) {
-        roles.push({rol: Rol.ADMINISTRADOR});
-      } else {
-        roles.push({rol: Rol.CLIENTE});
-      }
       return {
         id: obj.usuario.id,
         nombre: obj.usuario.nombre,
         apellido1: obj.usuario.apellido1,
         apellido2: obj.usuario.apellido2,
         email: obj.usuario.email,
-        roles: roles,
+        roles: obj.usuario.administrador?[{rol: Rol.ADMINISTRADOR}]:[],
         jwt: obj.jwt
       };
     }));
@@ -52,30 +46,14 @@ export class UsuariosService {
   }
 
   private completarConRoles(usuarioSesion: UsuarioSesion): Observable<UsuarioSesion> {
-  const roles = usuarioSesion.roles.map(rolCentro => {
-    if (rolCentro.rol === Rol.ENTRENADOR) {
-      return this.backend.getUsuario(usuarioSesion.id).pipe(
-        map(entrenador => {
-          return {rol: Rol.ENTRENADOR};
-        })
-      );
-    } else if (rolCentro.rol === Rol.CLIENTE) {
-      return this.backend.getUsuario(usuarioSesion.id).pipe(
-        map(cliente => {
-          return {rol: Rol.CLIENTE};
-        })
-      );
-    } else {
-      return of(rolCentro);
+    if(usuarioSesion.id==2){
+      usuarioSesion.roles.push({rol:Rol.CLIENTE});
+    }else if(usuarioSesion.id==3 || usuarioSesion.id==4 || usuarioSesion.id==5 || usuarioSesion.id==6 || usuarioSesion.id==7 || usuarioSesion.id==8 ){
+      usuarioSesion.roles.push({rol:Rol.ENTRENADOR});
     }
-  });
-  return forkJoin(roles).pipe(
-    map(roles => {
-      usuarioSesion.roles = roles;
-      return usuarioSesion;
-    })
-  );
-}
+    return of(usuarioSesion);
+  }
+
 
   private getUsuarioIdFromJwt(jwt: string): number {
     let payload = jose.decodeJwt(jwt);

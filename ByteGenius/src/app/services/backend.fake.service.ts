@@ -27,6 +27,60 @@ const usuariosC: Usuario [] = [
     administrador: false,
     password: '5678'
   },
+  {
+    id: 3,
+    nombre: 'Jaime',
+    apellido1: 'Garfia',
+    apellido2: 'Aragón',
+    email: 'jaime@uma.es',
+    administrador: false,
+    password: '1234'
+  },
+  {
+    id: 4,
+    nombre: 'Victor',
+    apellido1: 'Rueda',
+    apellido2: 'Guerrero',
+    email: 'Victor@uma.es',
+    administrador: false,
+    password: '1234'
+  },
+  {
+    id: 5,
+    nombre: 'Juan Diego',
+    apellido1: 'Alba',
+    apellido2: 'Cantero',
+    email: 'juandi@uma.es',
+    administrador: false,
+    password: '1234'
+  },
+  {
+    id: 6,
+    nombre: 'Pablo',
+    apellido1: 'Muñoz',
+    apellido2: 'Lara',
+    email: 'pablo@uma.es',
+    administrador: false,
+    password: '1234'
+  },
+  {
+    id: 7,
+    nombre: 'Roberto',
+    apellido1: 'Brasero',
+    apellido2: 'Garcia',
+    email: 'roberto@uma.es',
+    administrador: false,
+    password: '1234'
+  },
+  {
+    id: 8,
+    nombre: 'Tom',
+    apellido1: 'Holland',
+    apellido2: 'Ramos',
+    email: 'tom@uma.es',
+    administrador: false,
+    password: '1234'
+  },
 ];
 
 @Injectable({
@@ -54,6 +108,10 @@ export class BackendFakeService {
 
   getUsuarios(): Observable<Usuario[]> {
     return of(this.usuarios);
+  }
+
+  getArrayUsuarios():Usuario[]{
+    return usuariosC;
   }
 
   postUsuario(usuario: Usuario): Observable<Usuario> {
