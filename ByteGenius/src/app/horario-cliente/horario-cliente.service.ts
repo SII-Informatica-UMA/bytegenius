@@ -160,7 +160,7 @@ export class UsuarioService {
 
       obtenerDiasPorUsuario(idUsuario: number): Dia[] {
         const usuario = this.reservasRealizadas[idUsuario];
-        const dias: Dia[] =idEntrenador [];
+        const dias: Dia[] = [];
         if (usuario) {
           for (const idDia in usuario) {
             if (usuario.hasOwnProperty(idDia)) {
