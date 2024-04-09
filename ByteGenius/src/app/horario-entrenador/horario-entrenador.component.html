@@ -6,7 +6,7 @@
     <title>Document</title>
 </head>
 <body>
-
+  <button (click)="mostrarReservas()">Mis Reservas</button>
   <ngb-datepicker #dp [(ngModel)]="model" (navigate)="date = $event.next" (select)="onDateSelection(date)">
   </ngb-datepicker>
   <div class="form-group">
@@ -16,8 +16,6 @@
   
   <button class="btn btn-sm btn-outline-primary me-2" (click)="model = today">Seleccionar hoy</button>
   <button class="btn btn-sm btn-outline-primary me-2" (click)="dp.navigateTo()">Ir al mes actual</button>
-  <button class="btn btn-sm btn-outline-primary me-2" (click)="dp.navigateTo({ year: 2013, month: 2 })"
-          >Ir a febrero de 2013</button>
   
   <hr />
   <table class="table table-bordered">

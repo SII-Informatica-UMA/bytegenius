@@ -13,7 +13,7 @@ import { FormsModule } from "@angular/forms";
 
 export class UsuarioService {
   
-    private id: number = 3;
+    private id: number = 1;
 
     private horas: Hora[] = [
         {id:1,franjaHoraria:'9:00'},

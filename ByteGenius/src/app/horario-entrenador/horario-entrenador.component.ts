@@ -11,7 +11,8 @@ import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { JsonPipe } from '@angular/common';
 import { NgbCalendar, NgbDate, NgbDatepickerModule, NgbDateStruct, NgbDateStructAdapter } from '@ng-bootstrap/ng-bootstrap';
 import { NgbDatepickerNavigation } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker-navigation';
-
+import { ReservasEntrenadorComponent } from '../reservas-entrenador/reservas-entrenador.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-horario-entrenador',
@@ -46,7 +47,7 @@ export class HorarioEntrenadorComponent {
   cbMarcados: HashMap = []; // HashMap para controlar los checkbox marcados.
   cbMarcado: boolean = false; // Indica si no hay ninguna checkbox marcada.
 
-  constructor(private usuariosservice: UsuarioService, private calendar:NgbCalendar) {
+  constructor(private usuariosservice: UsuarioService, private calendar:NgbCalendar,private modalService: NgbModal) {
     // Inicialización de las propiedades
 		this.today = this.calendar.getToday();
 		this.model = { year: this.today.year, month: this.today.month, day: this.today.day };
@@ -70,6 +71,10 @@ export class HorarioEntrenadorComponent {
       unSelectAllText: 'UnSelect All',
       itemsShowLimit: 7,
     };
+  }
+
+  mostrarReservas():void{
+    let ref = this.modalService.open(ReservasEntrenadorComponent);
   }
 
   onItemSelect(item: any) {
