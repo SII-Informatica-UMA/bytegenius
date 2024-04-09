@@ -13,7 +13,30 @@ import { BackendFakeService } from "../services/backend.fake.service";
 export class UsuarioServiceCliente {
   private usuarios: Usuario[]= [];
 
-  private reservasRealizadas: HashMapReservas = {};
+  private reservasRealizadas: HashMapReservas ={
+    5: { // idUsuario
+        1: { // idDia
+            1: { // idHora
+                idEntrenador: 6
+            },
+            2: {
+                idEntrenador: 6
+            }
+        },
+        3: {
+            3: {
+                idEntrenador: 6
+            }
+        }
+    },
+    2: {
+        1: {
+            4: {
+                idEntrenador: 1
+            }
+        }
+    }
+};
     
   
 
