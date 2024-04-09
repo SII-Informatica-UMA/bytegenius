@@ -45,8 +45,12 @@ export class HorarioClienteComponent implements OnInit {
     this.entrenadores = this.usuariosServiceLogin.getArrayEntrenadores();
     this.reservas = this.usuariosservice.getReservasUsuarios();
     this.id = usuariosServiceLogin.getSesionID() as number;
+
+    this.actualizarReservas();
   }
+
   ngOnInit(): void {
+    this.actualizarReservas();
     this.cargarDatos();
     this.updateDates();
     setInterval(() => {
@@ -69,12 +73,13 @@ export class HorarioClienteComponent implements OnInit {
   
   guardarDatos(): void {
     localStorage.setItem('horarioEntrenadoresPD', JSON.stringify(this.horarioEntrenadoresPD));
-    localStorage.setItem('reservasRealizadas', JSON.stringify(this.reservas));
+    localStorage.setItem('reservasRealizadas', JSON.stringify(this.reservas)) ;
   }
 
 
 elegirDia(dia: number): void {
     this.diaElegido = dia;
+    this.actualizarReservas();
 }  
 
 entrenadoresPD(dia:number):Usuario[]{
@@ -110,6 +115,9 @@ aniadirReserva(usuario: number, dia: number, hora: number, entrenador: number): 
   // Agrega la información de la reserva
   this.reservas[usuario][dia][hora] = { idEntrenador: entrenador };
   this.guardarDatos();
+
+  this.actualizarReservas();
+
 }
 
 
@@ -117,7 +125,15 @@ getIdSesion(){
   return this.id;
 }
 
-existeReserva(idUsuario: number, idDia: number, idHora: number): boolean { this.cargarDatos();
+actualizarReservas(): void {
+  const reservasGuardadas = localStorage.getItem('reservasRealizadas');
+  if (reservasGuardadas) {
+    this.reservas = JSON.parse(reservasGuardadas);
+  }
+}
+
+existeReserva(idUsuario: number, idDia: number, idHora: number): boolean { 
+  this.actualizarReservas();
   return this.usuariosservice.existeReserva(idUsuario, idDia, idHora); 
 }
 

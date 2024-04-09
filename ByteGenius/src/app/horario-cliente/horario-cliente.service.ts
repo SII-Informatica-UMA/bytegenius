@@ -130,6 +130,8 @@ export class UsuarioServiceCliente {
         return this.asignaciones;
       }
 
+      
+
       getEntrenadoresPorDia(dia: number): Usuario[] {
         const entrenadoresPorDia: Usuario[] = [];
         const asignacionesParaDia = this.asignaciones[dia];
@@ -242,14 +244,22 @@ export class UsuarioServiceCliente {
         this.reservasRealizadas[usuario][dia][hora] = { idEntrenador: entrenador };
       }
 
+      actualizarReservas(): void {
+        const reservasGuardadas = localStorage.getItem('reservasRealizadas');
+        if (reservasGuardadas) {
+          this.reservasRealizadas = JSON.parse(reservasGuardadas);
+        }
+      }
+
+
       existeReserva(idUsuario: number, idDia: number, idHora: number): boolean {
+        this.actualizarReservas();
         return !!(this.reservasRealizadas[idUsuario] && this.reservasRealizadas[idUsuario][idDia] && this.reservasRealizadas[idUsuario][idDia][idHora]);
       }
     
       
 
       getReservasUsuarios():HashMapReservas{
-        console.log(this.reservasRealizadas);
         return this.reservasRealizadas;
       }
 
