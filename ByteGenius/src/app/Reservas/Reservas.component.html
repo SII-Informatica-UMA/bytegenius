@@ -2,16 +2,17 @@
   <h1 class="modal-title" id="modal-basic-title">Mis Reservas</h1>
   <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
 </div>
-<div class="modal-body">
-  <div class="form-group">
+<div class="container">
+  <div class="info">
     <ul>
       <div *ngFor="let dia of getDiasPorUsuario(getIdSesion(), reservas)">
-        <li>
+        <li *ngIf="getHorasPorUsuario(getIdSesion(), dia.id, reservas).length > 0 ">
           Día: {{ dia.nombre }}
           <ul>
             <div *ngFor="let hora of getHorasPorUsuario(getIdSesion(), dia.id, reservas)">
               <li>
                 Hora: {{ hora.franjaHoraria }}
+                <button type="button" class="btn-cancelar" (click)="cancelarReserva(getIdSesion(), dia.id, hora.id)">Cancelar Reserva</button>
                 <ul>
                   <div *ngFor=" let entrenador of getEntrenadorPorUsuario(getIdSesion(), dia.id, hora.id, reservas)">
                      Entrenador: {{entrenador.nombre}}
@@ -26,5 +27,4 @@
   </div>
   <div>
   </div>
-  
 </div>
