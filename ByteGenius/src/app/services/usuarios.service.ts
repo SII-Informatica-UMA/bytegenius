@@ -47,9 +47,9 @@ export class UsuariosService {
   }
 
   private completarConRoles(usuarioSesion: UsuarioSesion): Observable<UsuarioSesion> {
-    if(usuarioSesion.id==2){
+    if(usuarioSesion.id==2 || usuarioSesion.id==8){
       usuarioSesion.roles.push({rol:Rol.CLIENTE});
-    }else if(usuarioSesion.id==3 || usuarioSesion.id==4 || usuarioSesion.id==5 || usuarioSesion.id==6 || usuarioSesion.id==7 || usuarioSesion.id==8 ){
+    }else if(usuarioSesion.id==3 || usuarioSesion.id==4 || usuarioSesion.id==5 || usuarioSesion.id==6 || usuarioSesion.id==7){
       usuarioSesion.roles.push({rol:Rol.ENTRENADOR});
       this.entrenadores.push({id: usuarioSesion.id, nombre: usuarioSesion.nombre, apellido1: usuarioSesion.apellido1,
         apellido2: usuarioSesion.apellido2, email:usuarioSesion.email, password:usuarioSesion.jwt, administrador:false

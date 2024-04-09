@@ -8,6 +8,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { HashMapReservas } from "../HashMapReservas";
 import { Dia } from '../Dia';
 import { Usuario } from "../entities/usuario";
+import { UsuariosService } from '../services/usuarios.service';
+
 
 @Component({
   selector: 'app-reservas',
@@ -23,10 +25,11 @@ export class ReservasComponent implements OnInit {
   horas:Hora[]=[];
   dias:Dia[]=[];
   reservas:HashMapReservas={};
+  id: number = 0;
 
-  constructor(private usuariosservice: UsuarioServiceCliente, public modal: NgbActiveModal) { 
+  constructor(private usuariosservice: UsuarioServiceCliente, public modal: NgbActiveModal, private usuariosServiceLogin:UsuariosService) { 
     this.horas = this.usuariosservice.getHoras();
-    
+    this.id = usuariosServiceLogin.getSesionID() as number;
   }
 
   ngOnInit(): void {
@@ -53,7 +56,9 @@ export class ReservasComponent implements OnInit {
     return this.usuariosservice.obtenerEntrenadoresPorUsuario(idUsuario, idDia, idHora, reservas);
   }
 
-  
+  getIdSesion(){
+    return this.id;
+  }
 
   cerrarModal(): void {
     this.modal.close('actualizar');
