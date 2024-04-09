@@ -4,18 +4,15 @@ import { Dia } from "../Dia";
 import { HashMapReservas } from "../HashMapReservas";
 import { HashMap } from "../HashMap";
 import { AppComponentService } from "../app.component.service";
-import { Injectable } from "@angular/core";
+import { Injectable, OnInit } from "@angular/core";
 import { BackendFakeService } from "../services/backend.fake.service";
 
 @Injectable({
   providedIn: 'root'
 })
-export class UsuarioServiceCliente {
+export class UsuarioServiceCliente  implements OnInit {
   private usuarios: Usuario[]= [];
-  constructor(private usuario: AppComponentService, private backendService:BackendFakeService) {
-      this.backendService.getUsuarios().subscribe(usuarios => {
-      this.usuarios = usuarios;});
-   }
+
   private reservasRealizadas: HashMapReservas = {};
     
   
@@ -71,14 +68,14 @@ export class UsuarioServiceCliente {
           2: { idTrainers: [2, 4] }
       },
       4: {
-          3: { idTrainers: [1, 3, 2] }
+          3: { idTrainers: [3, 2] }
       },
       5: {
         4:{idTrainers: [3, 4]},
-        5:{idTrainers: [6, 1]}
+        5:{idTrainers: [6, 5]}
       },
       6:{
-        2:{idTrainers:[1,2,3]},
+        2:{idTrainers:[2,3]},
         7:{idTrainers:[4,6]}
       }
 
@@ -95,6 +92,36 @@ export class UsuarioServiceCliente {
       {id:6, nombre:'Sabado'},
       {id:7, nombre:'Domingo'}
       ]
+  constructor(private usuario: AppComponentService, private backendService:BackendFakeService) {
+      this.backendService.getUsuarios().subscribe(usuarios => {
+      this.usuarios = usuarios;});
+   }
+
+   ngOnInit(): void {
+    this.cargarDatos();
+  }
+
+  cargarDatos(): void {
+    const datosGuardados = localStorage.getItem('reservasRealizadas');
+    if (datosGuardados) {
+      this.reservasRealizadas = JSON.parse(datosGuardados);
+    }
+    const datosGuardadosAsignaciones = localStorage.getItem('asignaciones');
+    if (datosGuardadosAsignaciones) {
+      this.asignaciones = JSON.parse(datosGuardadosAsignaciones);
+    }
+    const datosGuardadosUsuarios = localStorage.getItem('usuarios');
+    if (datosGuardadosUsuarios) {
+      this.usuarios = JSON.parse(datosGuardadosUsuarios);
+    }
+  }
+
+  guardarDatos(): void {
+    localStorage.setItem('reservasRealizadas', JSON.stringify(this.reservasRealizadas));
+    localStorage.setItem('asignaciones', JSON.stringify(this.asignaciones));
+    localStorage.setItem('usuarios', JSON.stringify(this.usuarios));
+  }
+  
 
 
       getUsuarios(): Usuario[] {
@@ -213,6 +240,7 @@ export class UsuarioServiceCliente {
         }
         // Agrega la información de la reserva
         this.reservasRealizadas[usuario][dia][hora] = { idEntrenador: entrenador };
+        this.guardarDatos();
       }
 
       existeReserva(idUsuario: number, idDia: number, idHora: number): boolean {
