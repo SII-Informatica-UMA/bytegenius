@@ -152,6 +152,19 @@ getHorasPorUsuario(idUsuario:number, idDia:number, reservas:HashMapReservas){
 getEntrenadoresPorUsuario(idUsuario:number, idDia:number, idHora:number, reservas:HashMapReservas){
   return this.usuariosservice.obtenerEntrenadoresPorUsuario(idUsuario, idDia, idHora, reservas);
 }
+onReservaCancelada(eventData: {idUsuario: number, idDia: number, idHora: number}) {
+  // Actualizar el HashMapReservas del componente HorarioClienteComponent
+  this.cancelarReserva(eventData.idUsuario, eventData.idDia, eventData.idHora);
+}
+
+cancelarReserva(idUsuario: number, idDia: number, idHora: number) {
+  if (this.reservas[idUsuario] && this.reservas[idUsuario][idDia] && this.reservas[idUsuario][idDia][idHora]) {
+    // Eliminar la reserva del HashMap
+    delete this.reservas[idUsuario][idDia][idHora];
+    // Guardar los cambios en el almacenamiento local (opcional)
+    localStorage.setItem('reservasRealizadas', JSON.stringify(this.reservas));
+  }
+}
 
 
 

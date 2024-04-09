@@ -1,5 +1,5 @@
 
-import { Component, Injectable, OnInit } from '@angular/core';
+import { Component, EventEmitter, Injectable, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgFor } from '@angular/common';
 import { UsuarioServiceCliente} from '../horario-cliente/horario-cliente.service'; 
@@ -18,11 +18,12 @@ import { Usuario } from "../entities/usuario";
   styleUrl: './Reservas.component.css',
 })
 
-export class ReservasComponent implements OnInit { 
+export class ReservasComponent implements OnInit {
   entrenadores: Usuario[] = [];
   horas:Hora[]=[];
   dias:Dia[]=[];
   reservas:HashMapReservas={};
+  @Output() reservaCancelada = new EventEmitter<{idUsuario: number, idDia: number, idHora: number}>();
 
   constructor(private usuariosservice: UsuarioServiceCliente, public modal: NgbActiveModal) { 
     this.horas = this.usuariosservice.getHoras();
@@ -53,11 +54,28 @@ export class ReservasComponent implements OnInit {
     return this.usuariosservice.obtenerEntrenadoresPorUsuario(idUsuario, idDia, idHora, reservas);
   }
 
+  cancelarReserva(idUsuario: number, idDia: number, idHora: number) {
+    if (this.reservas[idUsuario] && this.reservas[idUsuario][idDia] && this.reservas[idUsuario][idDia][idHora]) {
+      // Eliminar la reserva del HashMap
+      delete this.reservas[idUsuario][idDia][idHora];
+      // Verificar si ya no hay horas reservadas para ese día
+      if (Object.keys(this.reservas[idUsuario][idDia]).length === 0) {
+        // Si no hay más horas reservadas para ese día, eliminar el día del HashMap
+        delete this.reservas[idUsuario][idDia];
+      }
+      // Guardar los cambios en el almacenamiento local (opcional)
+      localStorage.setItem('reservasRealizadas', JSON.stringify(this.reservas));
+    }
+  }
+  
+   
   
 
   cerrarModal(): void {
     this.modal.close('actualizar');
   }
+
+  
 
   
 
