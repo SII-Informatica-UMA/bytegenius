@@ -70,6 +70,10 @@ export class UsuariosService {
     }
   }
 
+  getSesionID(){
+    return this.getUsuarioSesion()?.id;
+  }
+
   get rolCentro(): RolCentro | undefined {
     return this._rolCentro;
   }
