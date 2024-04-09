@@ -123,13 +123,15 @@ export class UsuarioServiceCliente {
         return entrenadoresPorDia;
       }
 
-      getHorasPorEntrenador(idEntrenador: number): Hora[] {
+      getHorasPorEntrenador(idEntrenador: number, idDia: number): Hora[] {
         const horasEntrenador: Hora[] = [];
-        // Iterar sobre todas las asignaciones
-        for (const dia in this.asignaciones) {
-          for (const hora in this.asignaciones[dia]) {
+        
+        // Verificar si el día especificado existe en las asignaciones
+        if (this.asignaciones[idDia]) {
+          // Iterar sobre todas las horas de ese día
+          for (const hora in this.asignaciones[idDia]) {
             // Verificar si el entrenador está asignado a esta hora
-            if (this.asignaciones[dia][hora].idTrainers.includes(idEntrenador)) {
+            if (this.asignaciones[idDia][hora].idTrainers.includes(idEntrenador)) {
               // Obtener la hora correspondiente y agregarla al array
               const horaObj = this.horas.find(h => h.id === parseInt(hora));
               if (horaObj) {
@@ -138,8 +140,10 @@ export class UsuarioServiceCliente {
             }
           }
         }
+        
         return horasEntrenador;
       }
+      
 
       
       getHoras(): Hora []{
