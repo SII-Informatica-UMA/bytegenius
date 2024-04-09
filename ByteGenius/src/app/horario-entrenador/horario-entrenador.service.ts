@@ -1,19 +1,24 @@
-import { Usuario } from "../Usuario";
+import { Usuario } from "../entities/usuario";
 import { Hora } from "../Hora";
 import { Dia } from "../Dia";
 import { HashMap } from "../HashMap";
 import { Injectable } from '@angular/core';
 import { AppComponentService } from "../app.component.service";
 import { FormsModule } from "@angular/forms";
-
+import { BackendFakeService } from "../services/backend.fake.service";
 
 @Injectable({
   providedIn: 'root'
 })
 
-export class UsuarioService {
+export class UsuarioServiceEntrenador {
   
-    private id: number = 1;
+  
+  private usuarios: Usuario[]= [];
+  constructor(private usuario: AppComponentService, private backendService:BackendFakeService) {
+      this.backendService.getUsuarios().subscribe(usuarios => {
+      this.usuarios = usuarios;});
+   }
 
     private horas: Hora[] = [
         {id:1,franjaHoraria:'9:00'},
@@ -56,12 +61,9 @@ export class UsuarioService {
       {id:7, nombre:'Domingo'}
       ]
 
-    constructor(private usuario: AppComponentService) {
-     }
-
-    getUsuarios(): Usuario [] {
-      return this.usuario.getUsuarios();
-    }
+      getUsuarios(): Usuario[] {
+        return this.usuarios;
+      }
 
     getasignaciones(): HashMap {
       return this.asignaciones;
@@ -75,11 +77,5 @@ export class UsuarioService {
       return this.dias;
     }
 
-    getId(): number {
-      return this.id;
-    }
-    setId(ids:number): void{
-      this.id = ids;
-    }
     
 }

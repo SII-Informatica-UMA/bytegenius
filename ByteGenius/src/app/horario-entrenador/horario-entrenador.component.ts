@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {UsuarioService } from './horario-entrenador.service';
+import { UsuarioServiceEntrenador } from './horario-entrenador.service';
 import { Dia } from '../Dia';
 import { Hora } from '../Hora';
 import { HashMap } from '../HashMap';
-import { Usuario } from '../Usuario';
+import { Usuario } from '../entities/usuario';
 import { FormsModule } from '@angular/forms';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
@@ -13,6 +13,8 @@ import { NgbCalendar, NgbDate, NgbDatepickerModule, NgbDateStruct, NgbDateStruct
 import { NgbDatepickerNavigation } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker-navigation';
 import { ReservasEntrenadorComponent } from '../reservas-entrenador/reservas-entrenador.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {UsuariosService} from '../services/usuarios.service';
+
 
 @Component({
   selector: 'app-horario-entrenador',
@@ -47,12 +49,13 @@ export class HorarioEntrenadorComponent {
   cbMarcados: HashMap = []; // HashMap para controlar los checkbox marcados.
   cbMarcado: boolean = false; // Indica si no hay ninguna checkbox marcada.
 
-  constructor(private usuariosservice: UsuarioService, private calendar:NgbCalendar,private modalService: NgbModal) {
+  constructor(private usuariosservice: UsuarioServiceEntrenador, private calendar:NgbCalendar,private modalService: NgbModal, private usuarioServiceLogin: UsuariosService) {
     // Inicialización de las propiedades
 		this.today = this.calendar.getToday();
 		this.model = { year: this.today.year, month: this.today.month, day: this.today.day };
 		this.date = { year: this.today.year, month: this.today.month };
     this.dia = this.today;
+    this.id = usuarioServiceLogin.getSesionID() as number;
 	  
   }
 
@@ -75,6 +78,10 @@ export class HorarioEntrenadorComponent {
 
   mostrarReservas():void{
     let ref = this.modalService.open(ReservasEntrenadorComponent);
+  }
+
+  getIdSesion(){
+    return this.id;
   }
 
   onItemSelect(item: any) {

@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
-import { UsuarioService } from '../horario-entrenador/horario-entrenador.service';
+import { UsuarioServiceEntrenador } from '../horario-entrenador/horario-entrenador.service';
 import { HorarioEntrenadorComponent } from '../horario-entrenador/horario-entrenador.component';
 import { HashMap } from '../HashMap';
 import { CommonModule } from '@angular/common';
+import {UsuariosService} from '../services/usuarios.service';
 
 
 @Component({
@@ -15,8 +16,8 @@ import { CommonModule } from '@angular/common';
 export class ReservasEntrenadorComponent {
   asignaciones = this.usuariosService.getasignaciones();
   id:number = 1;
-  constructor(private usuariosService:UsuarioService){
-    this.id = usuariosService.getId();
+  constructor(private usuariosService:UsuarioServiceEntrenador, private usuariosServiceLogin:UsuariosService){
+    this.id = usuariosServiceLogin.getSesionID() as number;
   }
 
 
