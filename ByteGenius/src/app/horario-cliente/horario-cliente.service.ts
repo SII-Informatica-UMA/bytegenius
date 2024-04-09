@@ -10,7 +10,7 @@ import { BackendFakeService } from "../services/backend.fake.service";
 @Injectable({
   providedIn: 'root'
 })
-export class UsuarioServiceCliente  implements OnInit {
+export class UsuarioServiceCliente {
   private usuarios: Usuario[]= [];
 
   private reservasRealizadas: HashMapReservas = {};
@@ -97,31 +97,6 @@ export class UsuarioServiceCliente  implements OnInit {
       this.usuarios = usuarios;});
    }
 
-   ngOnInit(): void {
-    this.cargarDatos();
-  }
-
-  cargarDatos(): void {
-    const datosGuardados = localStorage.getItem('reservasRealizadas');
-    if (datosGuardados) {
-      this.reservasRealizadas = JSON.parse(datosGuardados);
-    }
-    const datosGuardadosAsignaciones = localStorage.getItem('asignaciones');
-    if (datosGuardadosAsignaciones) {
-      this.asignaciones = JSON.parse(datosGuardadosAsignaciones);
-    }
-    const datosGuardadosUsuarios = localStorage.getItem('usuarios');
-    if (datosGuardadosUsuarios) {
-      this.usuarios = JSON.parse(datosGuardadosUsuarios);
-    }
-  }
-
-  guardarDatos(): void {
-    localStorage.setItem('reservasRealizadas', JSON.stringify(this.reservasRealizadas));
-    localStorage.setItem('asignaciones', JSON.stringify(this.asignaciones));
-    localStorage.setItem('usuarios', JSON.stringify(this.usuarios));
-  }
-  
 
 
       getUsuarios(): Usuario[] {
@@ -233,14 +208,15 @@ export class UsuarioServiceCliente  implements OnInit {
         // Inicializa la entrada del usuario si no existe
         if (!(usuario in this.reservasRealizadas)) {
           this.reservasRealizadas[usuario] = {};
+         
         }
         // Inicializa la entrada del día si no existe
         if (!(dia in this.reservasRealizadas[usuario])) {
           this.reservasRealizadas[usuario][dia] = {};
+          
         }
         // Agrega la información de la reserva
         this.reservasRealizadas[usuario][dia][hora] = { idEntrenador: entrenador };
-        this.guardarDatos();
       }
 
       existeReserva(idUsuario: number, idDia: number, idHora: number): boolean {

@@ -47,7 +47,7 @@ export class HorarioClienteComponent implements OnInit {
     this.id = usuariosServiceLogin.getSesionID() as number;
   }
   ngOnInit(): void {
-    
+    this.cargarDatos();
     this.updateDates();
     setInterval(() => {
       this.updateDates();
@@ -55,6 +55,23 @@ export class HorarioClienteComponent implements OnInit {
   }
 
   public selectedDate: Date = new Date;
+
+  cargarDatos(): void {
+    const datosGuardados = localStorage.getItem('horarioEntrenadores');
+    if (datosGuardados) {
+      this.horarioEntrenadoresPD = JSON.parse(datosGuardados);
+    }
+    const datosGuardadosReservas = localStorage.getItem('reservasRealizadas');
+    if (datosGuardadosReservas) {
+      this.reservas = JSON.parse(datosGuardadosReservas);
+    }
+  }
+  
+  guardarDatos(): void {
+    localStorage.setItem('horarioEntrenadoresPD', JSON.stringify(this.horarioEntrenadoresPD));
+    localStorage.setItem('reservasRealizadas', JSON.stringify(this.reservas));
+  }
+
 
 elegirDia(dia: number): void {
     this.diaElegido = dia;
@@ -80,9 +97,19 @@ MostrarReservas(): void {
 }
 
 aniadirReserva(usuario: number, dia: number, hora: number, entrenador: number): void {
-  this.usuariosservice.aniadirReserva(usuario, dia, hora, entrenador); 
-  const nuevasReservas = this.usuariosservice.getReservasUsuarios();
-  this.usuariosservice.setReservas(nuevasReservas);
+  // Inicializa la entrada del usuario si no existe
+  if (!(usuario in this.reservas)) {
+    this.reservas[usuario] = {};
+    this.guardarDatos();
+  }
+  // Inicializa la entrada del día si no existe
+  if (!(dia in this.reservas[usuario])) {
+    this.reservas[usuario][dia] = {};
+    this.guardarDatos();
+  }
+  // Agrega la información de la reserva
+  this.reservas[usuario][dia][hora] = { idEntrenador: entrenador };
+  this.guardarDatos();
 }
 
 
@@ -90,7 +117,7 @@ getIdSesion(){
   return this.id;
 }
 
-existeReserva(idUsuario: number, idDia: number, idHora: number): boolean {
+existeReserva(idUsuario: number, idDia: number, idHora: number): boolean { this.cargarDatos();
   return this.usuariosservice.existeReserva(idUsuario, idDia, idHora); 
 }
 
