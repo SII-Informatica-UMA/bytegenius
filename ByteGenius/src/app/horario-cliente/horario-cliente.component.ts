@@ -141,16 +141,16 @@ onBotonPulsado() {
   this.botonPulsado = true;
 }
 
-getDiasPorUsuario(idUsuario:number):Dia[]{
-  return this.usuariosservice.obtenerDiasPorUsuario(idUsuario);
+getDiasPorUsuario(idUsuario:number, reservas:HashMapReservas):Dia[]{
+  return this.usuariosservice.obtenerDiasPorUsuario(idUsuario, reservas);
 }
 
-getHorasPorUsuario(idUsuario:number, idDia:number){
-  return this.usuariosservice.obtenerHorasPorUsuario(idUsuario,idDia);
+getHorasPorUsuario(idUsuario:number, idDia:number, reservas:HashMapReservas){
+  return this.usuariosservice.obtenerHorasPorUsuario(idUsuario,idDia, reservas);
 }
 
-getEntrenadoresPorUsuario(idUsuario:number, idDia:number, idHora:number){
-  return this.usuariosservice.obtenerEntrenadoresPorUsuario(idUsuario, idDia, idHora);
+getEntrenadoresPorUsuario(idUsuario:number, idDia:number, idHora:number, reservas:HashMapReservas){
+  return this.usuariosservice.obtenerEntrenadoresPorUsuario(idUsuario, idDia, idHora, reservas);
 }
 
 

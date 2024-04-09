@@ -14,28 +14,28 @@ export class UsuarioServiceCliente {
   private usuarios: Usuario[]= [];
 
   private reservasRealizadas: HashMapReservas ={
-    5: { // idUsuario
-        1: { // idDia
-            1: { // idHora
-                idEntrenador: 6
-            },
-            2: {
-                idEntrenador: 6
-            }
-        },
-        3: {
-            3: {
-                idEntrenador: 6
-            }
-        }
-    },
-    2: {
-        1: {
-            4: {
-                idEntrenador: 1
-            }
-        }
-    }
+    // 5: { // idUsuario
+    //     1: { // idDia
+    //         1: { // idHora
+    //             idEntrenador: 6
+    //         },
+    //         2: {
+    //             idEntrenador: 6
+    //         }
+    //     },
+    //     3: {
+    //         3: {
+    //             idEntrenador: 6
+    //         }
+    //     }
+    // },
+    // 2: {
+    //     1: {
+    //         4: {
+    //             idEntrenador: 1
+    //         }
+    //     }
+    // }
 };
     
   
@@ -181,8 +181,8 @@ export class UsuarioServiceCliente {
         return this.dias;
       }
 
-      obtenerDiasPorUsuario(idUsuario: number): Dia[] {
-        const usuario = this.reservasRealizadas[idUsuario];
+      obtenerDiasPorUsuario(idUsuario: number, reservasComp: HashMapReservas): Dia[] {
+        const usuario = reservasComp[idUsuario];
         const dias: Dia[] = [];
         if (usuario) {
           for (const idDia in usuario) {
@@ -198,9 +198,10 @@ export class UsuarioServiceCliente {
         return dias;
       }
       
+      
     
-      obtenerHorasPorUsuario(idUsuario: number, idDia: number): Hora[] {
-        const dia = this.reservasRealizadas[idUsuario] ? this.reservasRealizadas[idUsuario][idDia] : null;
+      obtenerHorasPorUsuario(idUsuario: number, idDia: number, reservasComp: HashMapReservas): Hora[] {
+        const dia = reservasComp[idUsuario] ? reservasComp[idUsuario][idDia] : null;
         const horas: Hora[] = [];
         if (dia) {
           for (const idHora in dia) {
@@ -216,9 +217,10 @@ export class UsuarioServiceCliente {
         return horas;
       }
       
+      
     
-      obtenerEntrenadoresPorUsuario(idUsuario: number, idDia: number, idHora: number): Usuario[] {
-        const hora = this.reservasRealizadas[idUsuario] && this.reservasRealizadas[idUsuario][idDia] ? this.reservasRealizadas[idUsuario][idDia][idHora] : null;
+      obtenerEntrenadoresPorUsuario(idUsuario: number, idDia: number, idHora: number, reservasComp: HashMapReservas): Usuario[] {
+        const hora = reservasComp[idUsuario] && reservasComp[idUsuario][idDia] ? reservasComp[idUsuario][idDia][idHora] : null;
         const entrenadores: Usuario[] = [];
         if (hora && hora.idEntrenador) {
           const entrenador = this.usuarios.find(usuario => usuario.id === hora.idEntrenador);
@@ -228,6 +230,7 @@ export class UsuarioServiceCliente {
         }
         return entrenadores;
       }
+      
 
       aniadirReserva(usuario: number, dia: number, hora: number, entrenador: number): void {
         // Inicializa la entrada del usuario si no existe

@@ -3,11 +3,11 @@ import { Component, Injectable, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NgFor } from '@angular/common';
 import { UsuarioServiceCliente} from '../horario-cliente/horario-cliente.service'; 
-import { Usuario } from "../Usuario";
 import { Hora } from '../Hora';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { HashMapReservas } from "../HashMapReservas";
 import { Dia } from '../Dia';
+import { Usuario } from "../entities/usuario";
 
 @Component({
   selector: 'app-reservas',
@@ -41,17 +41,17 @@ export class ReservasComponent implements OnInit {
     }
   }
 
-   getDiasPorUsuario(idUsuario:number):Dia[]{
-      return this.usuariosservice.obtenerDiasPorUsuario(idUsuario);
+   getDiasPorUsuario(idUsuario:number, reservas:HashMapReservas):Dia[]{
+      return this.usuariosservice.obtenerDiasPorUsuario(idUsuario, reservas);
    }
   
-  getHorasPorUsuario(idUsuario: number, idDia: number): Hora[]{
-      return this.usuariosservice.obtenerHorasPorUsuario(idUsuario, idDia);
+  getHorasPorUsuario(idUsuario: number, idDia: number, reservas:HashMapReservas): Hora[]{
+      return this.usuariosservice.obtenerHorasPorUsuario(idUsuario, idDia, reservas);
   }
   
-  // getEntrenadorPorUsuario(idUsuario: number, idDia: number, idHora: number) :Usuario[]{
-  //   return this.usuariosservice.obtenerEntrenadoresPorUsuario(idUsuario, idDia, idHora);
-  // }
+  getEntrenadorPorUsuario(idUsuario: number, idDia: number, idHora: number, reservas: HashMapReservas) :Usuario[]{
+    return this.usuariosservice.obtenerEntrenadoresPorUsuario(idUsuario, idDia, idHora, reservas);
+  }
 
   
 
