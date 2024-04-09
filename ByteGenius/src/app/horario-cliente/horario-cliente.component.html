@@ -134,8 +134,8 @@
                     <td *ngFor="let hora of horas">
                         
                         <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id, 1).includes(hora)">
-                          @if(!existeReserva(1,1,hora.id)){
-                            <button class="button" (click)="aniadirReserva(1,1,hora.id, Entrenador.id)"> Reservar</button>
+                          @if(!existeReserva(getIdSesion(),1,hora.id)){
+                            <button class="button" (click)="aniadirReserva(getIdSesion(),1,hora.id, Entrenador.id)"> Reservar</button>
                           }@else{
                             <p class="reserva"> Ya reservado </p>
                           }
@@ -158,8 +158,8 @@
                     <th>{{Entrenador.nombre}}</th>
                     <td *ngFor="let hora of horas">
                       <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id, 2).includes(hora)">
-                        @if(!existeReserva(1,2,hora.id)){
-                          <button class="button" (click)="aniadirReserva(1,2,hora.id, Entrenador.id)"> Reservar</button>
+                        @if(!existeReserva(getIdSesion(),2,hora.id)){
+                          <button class="button" (click)="aniadirReserva(getIdSesion(),2,hora.id, Entrenador.id)"> Reservar</button>
                         }@else{
                           <p class="reserva"> Ya reservado </p>
                         }
@@ -182,8 +182,8 @@
                     <th>{{Entrenador.nombre}}</th>
                     <td *ngFor="let hora of horas">
                       <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id, 3).includes(hora)">
-                        @if(!existeReserva(1,3,hora.id)){
-                          <button class="button" (click)="aniadirReserva(1,3,hora.id, Entrenador.id)"> Reservar</button>
+                        @if(!existeReserva(getIdSesion(),3,hora.id)){
+                          <button class="button" (click)="aniadirReserva(getIdSesion(),3,hora.id, Entrenador.id)"> Reservar</button>
                         }@else{
                           <p class="reserva"> Ya reservado </p>
                         }
@@ -206,8 +206,8 @@
                     <th>{{Entrenador.nombre}}</th>
                     <td *ngFor="let hora of horas">
                       <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id, 4).includes(hora)">
-                        @if(!existeReserva(1,4,hora.id)){
-                          <button class="button" (click)="aniadirReserva(1,4,hora.id, Entrenador.id)"> Reservar</button>
+                        @if(!existeReserva(getIdSesion(),4,hora.id)){
+                          <button class="button" (click)="aniadirReserva(getIdSesion(),4,hora.id, Entrenador.id)"> Reservar</button>
                         }@else{
                           <p class="reserva"> Ya reservado </p>
                         }
@@ -230,8 +230,8 @@
                     <th>{{Entrenador.nombre}}</th>
                     <td *ngFor="let hora of horas">
                       <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id, 5).includes(hora)">
-                        @if(!existeReserva(1,5,hora.id)){
-                          <button class="button" (click)="aniadirReserva(1,5,hora.id, Entrenador.id)"> Reservar</button>
+                        @if(!existeReserva(getIdSesion(),5,hora.id)){
+                          <button class="button" (click)="aniadirReserva(getIdSesion(),5,hora.id, Entrenador.id)"> Reservar</button>
                         }@else{
                           <p class="reserva"> Ya reservado </p>
                         }
@@ -254,8 +254,8 @@
                     <th>{{Entrenador.nombre}}</th>
                     <td *ngFor="let hora of horas">
                       <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id, 6).includes(hora)">
-                        @if(!existeReserva(1,6,hora.id)){
-                          <button class="button" (click)="aniadirReserva(1,6,hora.id, Entrenador.id)"> Reservar</button>
+                        @if(!existeReserva(getIdSesion(),6,hora.id)){
+                          <button class="button" (click)="aniadirReserva(getIdSesion(),6,hora.id, Entrenador.id)"> Reservar</button>
                         }@else{
                           <p class="reserva"> Ya reservado </p>
                         }
@@ -278,8 +278,8 @@
                     <th>{{Entrenador.nombre}}</th>
                     <td *ngFor="let hora of horas">
                       <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id, 7).includes(hora)">
-                        @if(!existeReserva(1,7,hora.id)){
-                          <button class="button" (click)="aniadirReserva(1,7,hora.id, Entrenador.id)"> Reservar</button>
+                        @if(!existeReserva(getIdSesion(),7,hora.id)){
+                          <button class="button" (click)="aniadirReserva(getIdSesion(),7,hora.id, Entrenador.id)"> Reservar</button>
                         }@else{
                           <p class="reserva"> Ya reservado </p>
                         }

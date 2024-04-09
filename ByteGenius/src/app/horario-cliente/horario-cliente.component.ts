@@ -36,7 +36,7 @@ export class HorarioClienteComponent implements OnInit {
   dias:Dia[]=[];
   entrenadores:Usuario[]=[];
   reservas:HashMapReservas={};
-  id: number = 1;
+  id: number = 0;
   botonPulsado:boolean=false;
 
 
@@ -44,6 +44,7 @@ export class HorarioClienteComponent implements OnInit {
     this.horas = this.usuariosservice.getHoras();
     this.entrenadores = this.usuariosServiceLogin.getArrayEntrenadores();
     this.reservas = this.usuariosservice.getReservasUsuarios();
+    this.id = usuariosServiceLogin.getSesionID() as number;
   }
   ngOnInit(): void {
     
@@ -85,7 +86,9 @@ aniadirReserva(usuario: number, dia: number, hora: number, entrenador: number): 
 }
 
 
-
+getIdSesion(){
+  return this.id;
+}
 
 existeReserva(idUsuario: number, idDia: number, idHora: number): boolean {
   return this.usuariosservice.existeReserva(idUsuario, idDia, idHora); 
