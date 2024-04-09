@@ -62,8 +62,9 @@ export class HorarioEntrenadorComponent {
   ngOnInit(): void {
     this.dias = this.usuariosservice.getDias();
     this.horas = this.usuariosservice.getHoras();
-    this.asignaciones = this.usuariosservice.getasignaciones();
     this.usuarios = this.usuariosservice.getUsuarios();
+    this.cargarDatos();
+
     
     // Configuración necesaria de la interfaz IDropdownSettings para el selector múltiple de la lista de días
     this.dropdownSettings= {
@@ -134,6 +135,7 @@ export class HorarioEntrenadorComponent {
       this.asignaciones[dia][hora] = { idTrainers: [] };
     }
       this.asignaciones[dia][hora].idTrainers.push(this.id);
+      this.guardarDatos();
   }
     
     // Método para el evento (click) del botón "Guardar Disponibilidad"
@@ -320,7 +322,18 @@ export class HorarioEntrenadorComponent {
       }
       return lista;
     }
+
+    cargarDatos(): void {
+      const datosGuardados = localStorage.getItem('horarioEntrenadoresPD');
+      if (datosGuardados) {
+        this.asignaciones = JSON.parse(datosGuardados);
+      }
+
+    }
     
+    guardarDatos(): void {
+      localStorage.setItem('horarioEntrenadoresPD', JSON.stringify(this.asignaciones));
+    }
     
 
 }

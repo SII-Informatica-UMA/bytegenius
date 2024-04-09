@@ -21,14 +21,21 @@ import { Observable, map } from 'rxjs';
 })
 export class ReservasEntrenadorComponent {
   asignaciones = this.usuariosService.getasignaciones();
-  reservas = this.clienteService.getReservasUsuarios();
+  reservas = {}
   id:number = 1;
   private usuarios:Usuario[] = []
   constructor(private usuariosService:UsuarioServiceEntrenador, private usuariosServiceLogin:UsuariosService, private clienteService:UsuarioServiceCliente, private usr:BackendFakeService){
     this.id = usuariosServiceLogin.getSesionID() as number;
     usr.getUsuarios().subscribe(usrs=>{this.usuarios = usrs})
+    this.cargarDatos();
   }
+  cargarDatos(): void {
+    const datosGuardadosReservas = localStorage.getItem('reservasRealizadas');
+    if (datosGuardadosReservas) {
+      this.reservas = JSON.parse(datosGuardadosReservas);
+    }
 
+  }
 
   obtenerDiasYHoras(hashMap: HashMap, idTrainer: number): { dia: number, hora: number }[] {
     const diasYHoras: { dia: number, hora: number }[] = [];
@@ -66,9 +73,35 @@ export class ReservasEntrenadorComponent {
 
 
 
-obtenerNombre(id: number):String|undefined {
-  return this.usuarios.at(id)?.nombre;
+obtenerNombre(id: number): string | undefined {
+  const usuarioEncontrado = this.usuarios.find(usuario => usuario.id === id);
+  return usuarioEncontrado ? usuarioEncontrado.nombre : undefined;
 }
 
+
+encontrarReservasPorEntrenador(reservas: HashMapReservas, idEntrenadorBuscado: number): {idUsuario:number,idDia:number,idHora:number}[] {
+  const reservasEncontradas: {idUsuario:number,idDia:number,idHora:number}[] = [];
+
+  // Iterar sobre cada usuario en las reservas
+  for (const idUsuario in reservas) {
+      // Iterar sobre cada día para el usuario actual
+      for (const idDia in reservas[idUsuario]) {
+          // Iterar sobre cada hora para el día actual
+          for (const idHora in reservas[idUsuario][idDia]) {
+              // Verificar si el idEntrenador coincide con el buscado
+              if (reservas[idUsuario][idDia][idHora].idEntrenador === idEntrenadorBuscado) {
+                  // Agregar la reserva a la lista de reservas encontradas
+                  reservasEncontradas.push({
+                      idUsuario: parseInt(idUsuario),
+                      idDia: parseInt(idDia),
+                      idHora: parseInt(idHora)
+                  });
+              }
+          }
+      }
+  }
+  
+  return reservasEncontradas;
+}
 
 }

@@ -1,4 +1,4 @@
 
 <h1>Mis Reservas</h1>
-<div *ngFor="let dia of obtenerHorasYDiaPorEntrenador(this.reservas,this.id)">
+<div *ngFor="let dia of encontrarReservasPorEntrenador(this.reservas,this.id)">
     Dia -> {{dia.idDia}} Hora -> {{dia.idHora}} -> {{obtenerNombre(dia.idUsuario)}}

@@ -37,7 +37,7 @@
             <input type="checkbox" id="checkbox_{{ this.dia.day }}_{{ Hora.id }}" (change)= "mostrarBoton(this.dia.day, Hora.id, $event)">
           </ng-container>
           <ng-container *ngIf="!estaId(obtenerIdTrainer(asignaciones, this.dia.day, Hora.id), getIdSesion())">
-            <button (click)="agregarHora(this.dia.day, Hora.id)" class="boton-añadir">&plus;</button>
+            <button (click)="agregarHora(dia.day, Hora.id)" class="boton-añadir">&plus;</button>
           </ng-container>
         </td>
       </tr>
