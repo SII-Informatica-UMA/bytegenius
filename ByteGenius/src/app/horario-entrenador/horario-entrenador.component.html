@@ -6,25 +6,38 @@
     <title>Document</title>
 </head>
 <body>
+  <button (click)="mostrarReservas()">Mis Reservas</button>
+  <ngb-datepicker #dp [(ngModel)]="model" (navigate)="date = $event.next" (select)="onDateSelection(date)">
+  </ngb-datepicker>
+  <div class="form-group">
+    <button class="btn btn-outline-secondary calendar" (click)="onDateSelection(model)" type="button">Aceptar</button>
+    </div>
+  <hr />
+  
+  <button class="btn btn-sm btn-outline-primary me-2" (click)="model = today">Seleccionar hoy</button>
+  <button class="btn btn-sm btn-outline-primary me-2" (click)="dp.navigateTo()">Ir al mes actual</button>
+  
+  <hr />
   <table class="table table-bordered">
     <thead>
       <tr>
         <th scope="col">Horas</th>
-        <th scope="col" *ngFor="let Dia of dias">{{ Dia.nombre }}</th>
-      </tr>
+        <ng-container *ngFor="let dia of obtenerSemana(this.dia)">
+          <th scope="col">{{getDayOfWeek(dia)}} &nbsp;{{dia.day}}</th>
+        </ng-container>      </tr>
     </thead>
     <tbody class="table-group-divider">
       <tr *ngFor="let Hora of horas">
         <td>{{ Hora.franjaHoraria }}</td>
-        <td *ngFor="let Dia of dias" [ngStyle]="{'background-color': obtenerIdTrainer(asignaciones, Dia.id, Hora.id).length > 0 ? 'lightgrey' : 'green', 'color': 'black'} ">
-          {{ obtenerNombres(obtenerIdTrainer(asignaciones, Dia.id, Hora.id)).join(', ') }}
+        <td *ngFor="let dia of obtenerSemana(this.dia)" [ngStyle]="{'background-color': pertenece(obtenerIdTrainer(asignaciones, this.dia.day, Hora.id)) ? 'lightgrey' : 'green', 'color': 'black'} ">
+          {{ obtenerNombres(obtenerIdTrainer(asignaciones, dia.day, Hora.id)) }}
            <!-- Si el entrenador está asignado en esa hora y día, mostrar checkbox -->
-          <ng-container *ngIf="estaId(obtenerIdTrainer(asignaciones, Dia.id, Hora.id), id)">
-            <button (click)="eliminarHora(Dia.id, Hora.id)">-</button>
-            <input type="checkbox" id="checkbox_{{ Dia.id }}_{{ Hora.id }}" (change)= "mostrarBoton(Dia.id, Hora.id, $event)">
+          <ng-container *ngIf="estaId(obtenerIdTrainer(asignaciones, this.dia.day, Hora.id), id)">
+            <button (click)="eliminarHora(this.dia.day, Hora.id)">-</button>
+            <input type="checkbox" id="checkbox_{{ this.dia.day }}_{{ Hora.id }}" (change)= "mostrarBoton(this.dia.day, Hora.id, $event)">
           </ng-container>
-          <ng-container *ngIf="!estaId(obtenerIdTrainer(asignaciones, Dia.id, Hora.id), id)">
-            <button (click)="agregarHora(Dia.id, Hora.id)" class="boton-añadir">&plus;</button>
+          <ng-container *ngIf="!estaId(obtenerIdTrainer(asignaciones, this.dia.day, Hora.id), id)">
+            <button (click)="agregarHora(this.dia.day, Hora.id)" class="boton-añadir">&plus;</button>
           </ng-container>
         </td>
       </tr>
@@ -33,6 +46,7 @@
     
     <form>
       &nbsp;<label>Días</label>
+      <!-- Selector de los días que se quieren reservar de la semana -->
       <ng-multiselect-dropdown
       [placeholder]="'Seleccione los días'"
       [settings]="dropdownSettings"
@@ -58,6 +72,7 @@
     &nbsp; <button type="button" class="btn btn-primary" (click)="guardarDisponibilidad()">Guardar Disponibilidad</button> &nbsp;
     <!-- Botón de eliminar disponibilidad -->
     <button type="button" class ="btn btn-danger" *ngIf="cbMarcado" (click)="eliminarHorasMarcadas()">Eliminar Disponibilidad</button>
+
   </body>
 </html>
 

@@ -23,7 +23,7 @@ export class LoginComponent {
     this.usuarioService.doLogin(this.loginInfo).subscribe({
       next: (usuario) => {
         if (usuario.roles[0].rol === 'administrador') {
-;          this.router.navigateByUrl('/');
+          this.router.navigateByUrl('/');
         } else if (usuario.roles[0].rol === 'cliente') {
           this.router.navigateByUrl('cliente');
         } else if (usuario.roles[0].rol === 'entrenador') {

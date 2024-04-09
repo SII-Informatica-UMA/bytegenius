@@ -5,15 +5,19 @@ import { Dia } from '../Dia';
 import { Hora } from '../Hora';
 import { HashMap } from '../HashMap';
 import { Usuario } from '../Usuario';
-import { AppComponent } from '../app.component';
 import { FormsModule } from '@angular/forms';
 import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
+import { JsonPipe } from '@angular/common';
+import { NgbCalendar, NgbDate, NgbDatepickerModule, NgbDateStruct, NgbDateStructAdapter } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDatepickerNavigation } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker-navigation';
+import { ReservasEntrenadorComponent } from '../reservas-entrenador/reservas-entrenador.component';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-horario-entrenador',
   standalone: true,
-  imports: [CommonModule, FormsModule, NgMultiSelectDropDownModule],
+  imports: [CommonModule, FormsModule, NgMultiSelectDropDownModule,NgbDatepickerModule, FormsModule, JsonPipe],
   templateUrl: './horario-entrenador.component.html',
   styleUrl: './horario-entrenador.component.css'
 })
@@ -24,6 +28,15 @@ export class HorarioEntrenadorComponent {
   asignaciones: HashMap = [];
   usuarios: Usuario [] = [];
   id:number = 1;
+  semana:NgbDate [] = [];
+
+  today: NgbDate;
+	dia: NgbDate;
+  
+	model: NgbDateStruct;
+	date: { year: number; month: number };
+  sol:String = "";
+
   
 
   // Variables necesarias para el selector de los días en el formulario
@@ -34,7 +47,14 @@ export class HorarioEntrenadorComponent {
   cbMarcados: HashMap = []; // HashMap para controlar los checkbox marcados.
   cbMarcado: boolean = false; // Indica si no hay ninguna checkbox marcada.
 
-  constructor(private usuariosservice: UsuarioService) {}
+  constructor(private usuariosservice: UsuarioService, private calendar:NgbCalendar,private modalService: NgbModal) {
+    // Inicialización de las propiedades
+		this.today = this.calendar.getToday();
+		this.model = { year: this.today.year, month: this.today.month, day: this.today.day };
+		this.date = { year: this.today.year, month: this.today.month };
+    this.dia = this.today;
+	  
+  }
 
   ngOnInit(): void {
     this.dias = this.usuariosservice.getDias();
@@ -53,6 +73,10 @@ export class HorarioEntrenadorComponent {
     };
   }
 
+  mostrarReservas():void{
+    let ref = this.modalService.open(ReservasEntrenadorComponent);
+  }
+
   onItemSelect(item: any) {
     console.log(item);
   }
@@ -69,14 +93,22 @@ export class HorarioEntrenadorComponent {
     }
   }
 
-  obtenerNombres(ids: number[]): string[] {
-    return ids.map(id => {
-        const usuario = this.usuarios.find(u => u.id === id);
-        return usuario ? usuario.nombre : '';
-    });
+  pertenece(lista:number[]):boolean{
+    return lista.includes(this.id);
   }
+
+  obtenerNombres(ids: number[]): string {
+    if (this.pertenece(ids)) {
+      const usuario = this.usuarios.find(u => u.id === this.id); // Busca el usuario por el id
+      if (usuario) {
+        return usuario.nombre; // Devuelve el nombre del usuario si se encuentra
+      }
+    }
+    return ''; // Devuelve una cadena vacía si no se encuentra el usuario
+  }
+  
     
-  estaId(ids:number[],id:number){
+  estaId(ids:number[],id:number): boolean{
     return ids.includes(id);
   }
     
@@ -191,6 +223,98 @@ export class HorarioEntrenadorComponent {
       this.cbMarcados[dia][hora].idTrainers.splice(index, 1);
     }
   }
+
+  //Implementacion DATEPICKER
+  rellenarSemana() {
+		const dia: NgbDate = new NgbDate(this.date.year, this.date.month, this.today.day);
+		// Hacer algo con 'dia'
+	}
+
+	ngMode(){
+
+	}
+	
+	onDateSelection(event: any) {
+		// Extrae la fecha del evento
+		const selectedDate: NgbDate = event;
+		// Asigna el día seleccionado a 'di'
+		this.dia = selectedDate; 
+    this.Semana();
+	}
+
+  Semana():void {
+    const selectedDay = this.dia.day; // 0 = Domingo, 1 = Lunes, ..., 6 = Sábado
+    const startOfWeek = new Date(this.dia.day);
+    const endOfWeek = new Date(selectedDay);
+        
+    // Calcular el inicio de la semana (lunes)
+    startOfWeek.setDate(startOfWeek.getDate() - selectedDay + (selectedDay === 1 ? -7 : 1));
+        
+    // Calcular el final de la semana (domingo)
+    endOfWeek.setDate(endOfWeek.getDate() - selectedDay + (selectedDay === 0 ? 1 : 8));
+        
+    this.sol = startOfWeek.getDay().toString() + " --> " + endOfWeek.getDay().toString();
+  }
+
+  getDayOfWeek(date: NgbDateStruct): string {
+    const dayNames = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+    let d = new Date(date.year, date.month - 1, date.day);
+    return dayNames[d.getDay()];
+  }
+
+   obtenerLunesMasCercano(date: NgbDateStruct): NgbDateStruct {
+      // Convertir la fecha NgbDateStruct a un objeto Date de JavaScript
+      const jsDate = new Date(date.year, date.month - 1, date.day);
+      
+      // Iterar hacia atrás desde la fecha dada hasta encontrar un lunes
+      while (jsDate.getDay() !== 1) { // 1 representa el lunes en JavaScript
+        jsDate.setDate(jsDate.getDate() - 1); // Restar un día
+      }
+    
+      // Convertir el resultado de vuelta a NgbDateStruct
+
+
+      const lunesMasCercano = new NgbDate(jsDate.getFullYear(),jsDate.getMonth()+1,jsDate.getDate());
+      this.sol = lunesMasCercano.day.toString();
+      this.dia = lunesMasCercano;
+      return lunesMasCercano;
+    }
+    obtenerCantidadDiasMes(year: number, month: number): number {
+      // Obtener el último día del mes
+      const ultimoDiaMes = new Date(year, month, 0).getDate();
+    
+      return ultimoDiaMes;
+    }
+    
+    obtenerSemana(date:NgbDate):NgbDateStruct[]{
+      let primerLunes = this.obtenerLunesMasCercano(this.dia);
+      let lista = [];
+      var diaAct = primerLunes;
+      lista.push(primerLunes);
+      let cont = 0;
+      let cambio = false;
+      let cont2 = 0;
+      while(cont < 6){
+        if(this.obtenerCantidadDiasMes(diaAct.year,diaAct.month) > diaAct.day){
+          if(!cambio)lista.push(new NgbDate(diaAct.year,diaAct.month,diaAct.day+1));
+          else lista.push(new NgbDate(diaAct.year,diaAct.month,diaAct.day+1));
+        }else{
+          if(diaAct.month <= 12){
+            lista.push(new NgbDate(diaAct.year,diaAct.month+1,1));
+            cambio = true;
+          }else{
+            lista.push(new NgbDate(diaAct.year+1,1,1));
+            cambio = true;
+          }
+        }
+        cont = cont+1;
+        if(cambio) cont2 = cont2+1;
+        diaAct = lista[lista.length-1];
+      }
+      return lista;
+    }
+    
+    
 
 }
 
