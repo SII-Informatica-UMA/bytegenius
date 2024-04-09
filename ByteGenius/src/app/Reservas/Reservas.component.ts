@@ -8,6 +8,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { HashMapReservas } from "../HashMapReservas";
 import { Dia } from '../Dia';
 import { Usuario } from "../entities/usuario";
+import { UsuariosService } from '../services/usuarios.service';
+
 
 @Component({
   selector: 'app-reservas',
@@ -24,10 +26,11 @@ export class ReservasComponent implements OnInit {
   dias:Dia[]=[];
   reservas:HashMapReservas={};
   @Output() reservaCancelada = new EventEmitter<{idUsuario: number, idDia: number, idHora: number}>();
+  id: number = 0;
 
-  constructor(private usuariosservice: UsuarioServiceCliente, public modal: NgbActiveModal) { 
+  constructor(private usuariosservice: UsuarioServiceCliente, public modal: NgbActiveModal, private usuariosServiceLogin:UsuariosService) { 
     this.horas = this.usuariosservice.getHoras();
-    
+    this.id = usuariosServiceLogin.getSesionID() as number;
   }
 
   ngOnInit(): void {
@@ -70,6 +73,9 @@ export class ReservasComponent implements OnInit {
   
    
   
+  getIdSesion(){
+    return this.id;
+  }
 
   cerrarModal(): void {
     this.modal.close('actualizar');
