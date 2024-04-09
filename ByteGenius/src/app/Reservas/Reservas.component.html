@@ -5,11 +5,11 @@
 <div class="modal-body">
   <div class="form-group">
     <ul>
-      <div *ngFor="let dia of getDiasPorUsuario(1)">
+      <div *ngFor="let dia of getDiasPorUsuario(2)">
         <li>
           Día: {{ dia.nombre }}
           <ul>
-            <div *ngFor="let hora of getHorasPorUsuario(1, dia.id)">
+            <div *ngFor="let hora of getHorasPorUsuario(2, dia.id)">
               <li>
                 Hora: {{ hora.franjaHoraria }}
                 <ul>

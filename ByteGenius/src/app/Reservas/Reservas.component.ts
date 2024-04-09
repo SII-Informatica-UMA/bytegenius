@@ -23,14 +23,23 @@ export class ReservasComponent implements OnInit {
   horas:Hora[]=[];
   dias:Dia[]=[];
   reservas:HashMapReservas={};
+
   constructor(private usuariosservice: UsuarioServiceCliente, public modal: NgbActiveModal) { 
     this.horas = this.usuariosservice.getHoras();
-    this.reservas = this.usuariosservice.getReservasUsuarios();
+    
   }
 
   ngOnInit(): void {
-    this.actualizarReservas
+    this.cargarDatos();
    }
+
+
+   cargarDatos(): void {
+    const datosGuardadosReservas = localStorage.getItem('reservasRealizadas');
+    if (datosGuardadosReservas) {
+      this.reservas = JSON.parse(datosGuardadosReservas);
+    }
+  }
 
    getDiasPorUsuario(idUsuario:number):Dia[]{
       return this.usuariosservice.obtenerDiasPorUsuario(idUsuario);
@@ -44,13 +53,13 @@ export class ReservasComponent implements OnInit {
   //   return this.usuariosservice.obtenerEntrenadoresPorUsuario(idUsuario, idDia, idHora);
   // }
 
-  actualizarReservas(): void {
-    this.reservas = this.usuariosservice.getReservasUsuarios();
-  }
+  
 
   cerrarModal(): void {
     this.modal.close('actualizar');
   }
+
+  
 
 
 }
