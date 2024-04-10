@@ -112,9 +112,30 @@ private asignaciones: HashMap = {
   // Mes 4
   4: {
     // Día 3 del mes 4
-    3: {
+    8: {
       // Hora 3 del día 3 del mes 4
-      3: { idTrainers: [3, 2] } // Entrenadores asignados para la hora 3 del día 3 del mes 4
+      3: { idTrainers: [3, 2] } ,// Entrenadores asignados para la hora 3 del día 3 del mes 4
+      7:{idTrainers:[6,5]}
+    },
+    9: {
+      // Hora 3 del día 3 del mes 4
+      4: { idTrainers: [3, 2] } // Entrenadores asignados para la hora 3 del día 3 del mes 4
+    },
+    10: {
+      // Hora 3 del día 3 del mes 4
+      5: { idTrainers: [3, 2] } // Entrenadores asignados para la hora 3 del día 3 del mes 4
+    },
+    11: {
+      // Hora 3 del día 3 del mes 4
+      6: { idTrainers: [3, 2] } // Entrenadores asignados para la hora 3 del día 3 del mes 4
+    },
+    12: {
+      // Hora 3 del día 3 del mes 4
+      7: { idTrainers: [3, 2] } // Entrenadores asignados para la hora 3 del día 3 del mes 4
+    },
+    13: {
+      // Hora 3 del día 3 del mes 4
+      8: { idTrainers: [3, 2] } // Entrenadores asignados para la hora 3 del día 3 del mes 4
     },
   },
   // Mes 5
@@ -175,7 +196,6 @@ private asignaciones: HashMap = {
 
       getEntrenadoresPorDia(dia: number, mes: number): Usuario[] {
         const entrenadoresPorDia: Usuario[] = [];
-        
         // Verificar si el mes especificado existe en las asignaciones
         if (mes in this.asignaciones) {
           const asignacionesDelMes = this.asignaciones[mes];
@@ -256,22 +276,27 @@ private asignaciones: HashMap = {
       
       
     
-      obtenerHorasPorUsuario(idUsuario: number, idDia: number, reservasComp: HashMapReservas): Hora[] {
-        const dia = reservasComp[idUsuario] ? reservasComp[idUsuario][idDia] : null;
+      obtenerHorasPorUsuario(idUsuario: number, idMes: number, idDia: number, reservasComp: HashMapReservas): Hora[] {
+        const usuarioReservas = reservasComp[idUsuario];
+        if (!usuarioReservas || !usuarioReservas[idMes] || !usuarioReservas[idMes][idDia]) {
+          return [];
+        }
+      
         const horas: Hora[] = [];
-        if (dia) {
-          for (const idHora in dia) {
-            if (dia.hasOwnProperty(idHora)) {
-              const horaId = parseInt(idHora);
-              const hora = this.horas.find(h => h.id === horaId);
-              if (hora) {
-                horas.push(hora);
-              }
+        const reservasDia = usuarioReservas[idMes][idDia];
+      
+        for (const idHoraStr in reservasDia) {
+          if (reservasDia.hasOwnProperty(idHoraStr)) {
+            const idHora = parseInt(idHoraStr);
+            const hora = this.horas.find(h => h.id === idHora);
+            if (hora) {
+              horas.push(hora);
             }
           }
         }
         return horas;
       }
+      
       
       
     
@@ -324,10 +349,16 @@ private asignaciones: HashMap = {
       }
 
 
-      existeReserva(idUsuario: number, idDia: number, idHora: number): boolean {
+      existeReserva(idUsuario: number, idDia: number, idHora: number, idMes: number): boolean {
         this.actualizarReservas();
-        return !!(this.reservasRealizadas[idUsuario] && this.reservasRealizadas[idUsuario][idDia] && this.reservasRealizadas[idUsuario][idDia][idHora]);
+        return !!(
+          this.reservasRealizadas[idUsuario] &&
+          this.reservasRealizadas[idUsuario][idMes] &&
+          this.reservasRealizadas[idUsuario][idMes][idDia] &&
+          this.reservasRealizadas[idUsuario][idMes][idDia][idHora]
+        );
       }
+      
     
       
 

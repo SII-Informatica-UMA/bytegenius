@@ -85,13 +85,13 @@ elegirDia(dia: number): void {
     this.actualizarReservas();
 }  
 
-entrenadoresPD(mes: number, dia: number): Usuario[] {
-  return this.entrenadoresPorDia = this.usuariosservice.getEntrenadoresPorDia(mes, dia);
+entrenadoresPD(dia: number, mes: number): Usuario[] {
+  return this.entrenadoresPorDia = this.usuariosservice.getEntrenadoresPorDia(dia, mes);
 }
 
 
-horarioEntrenadoresPD(idEntrenador: number, idMes: number, idDia: number): Hora[] {
-  return this.horarioEntrenadoresPorDia = this.usuariosservice.getHorasPorEntrenador(idEntrenador, idMes, idDia);
+horarioEntrenadoresPD(idEntrenador: number, idDia: number, idMes: number): Hora[] {
+  return this.horarioEntrenadoresPorDia = this.usuariosservice.getHorasPorEntrenador(idEntrenador, idDia, idMes);
 }
 
 
@@ -141,9 +141,9 @@ actualizarReservas(): void {
   }
 }
 
-existeReserva(idUsuario: number, idDia: number, idHora: number): boolean { 
+existeReserva(idUsuario: number, idDia: number, idHora: number, idMes:number): boolean { 
   this.actualizarReservas();
-  return this.usuariosservice.existeReserva(idUsuario, idDia, idHora); 
+  return this.usuariosservice.existeReserva(idUsuario, idDia, idHora, idMes); 
 }
 
 onBotonPulsado() {
@@ -154,27 +154,39 @@ getDiasPorUsuario(idUsuario:number, reservas:HashMapReservas):Dia[]{
   return this.usuariosservice.obtenerDiasPorUsuario(idUsuario, reservas);
 }
 
-getHorasPorUsuario(idUsuario:number, idDia:number, reservas:HashMapReservas){
-  return this.usuariosservice.obtenerHorasPorUsuario(idUsuario,idDia, reservas);
+getHorasPorUsuario(idUsuario:number,idMes:number, idDia:number, reservas:HashMapReservas){
+  return this.usuariosservice.obtenerHorasPorUsuario(idUsuario,idMes, idDia, reservas);
 }
 
 getEntrenadoresPorUsuario(idUsuario: number, idMes: number, idDia: number, idHora: number, reservas: HashMapReservas) {
   return this.usuariosservice.obtenerEntrenadoresPorUsuario(idUsuario, idMes, idDia, idHora, reservas);
 }
 
-onReservaCancelada(eventData: {idUsuario: number, idDia: number, idHora: number}) {
+onReservaCancelada(eventData: {idUsuario: number, idMes: number, idDia: number, idHora: number}) {
   // Actualizar el HashMapReservas del componente HorarioClienteComponent
-  this.cancelarReserva(eventData.idUsuario, eventData.idDia, eventData.idHora);
+  this.cancelarReserva(eventData.idUsuario, eventData.idDia, eventData.idHora, eventData.idMes);
 }
 
-cancelarReserva(idUsuario: number, idDia: number, idHora: number) {
-  if (this.reservas[idUsuario] && this.reservas[idUsuario][idDia] && this.reservas[idUsuario][idDia][idHora]) {
+cancelarReserva(idUsuario: number,idMes:number, idDia: number, idHora: number) {
+  if (this.reservas[idUsuario] && this.reservas[idUsuario][idMes] && this.reservas[idUsuario][idMes][idDia] && this.reservas[idUsuario][idMes][idDia][idHora]) {
     // Eliminar la reserva del HashMap
-    delete this.reservas[idUsuario][idDia][idHora];
+    delete this.reservas[idUsuario][idMes][idDia][idHora];
+    // Verificar si ya no hay horas reservadas para ese día
+    if (Object.keys(this.reservas[idUsuario][idMes][idDia]).length === 0) {
+      // Si no hay más horas reservadas para ese día, eliminar el día del HashMap
+      delete this.reservas[idUsuario][idMes][idDia];
+    }
+    // Verificar si ya no hay días reservados para ese mes
+    if (Object.keys(this.reservas[idUsuario][idMes]).length === 0) {
+      // Si no hay más días reservados para ese mes, eliminar el mes del HashMap
+      delete this.reservas[idUsuario][idMes];
+    }
     // Guardar los cambios en el almacenamiento local (opcional)
     localStorage.setItem('reservasRealizadas', JSON.stringify(this.reservas));
   }
 }
+
+
 
 
 
