@@ -80,27 +80,27 @@ export class UsuarioServiceCliente {
     // };
 
     private asignaciones: HashMap = {
-      1: {
-          1: { idTrainers: [4, 5, 6, 7 , 8] },
-          10: {idTrainers: [3]}
-      },
-      2: {
-          1: { idTrainers: [3,5,6] }
-      },
-      3: {
-          2: { idTrainers: [2, 4] }
-      },
-      4: {
-          3: { idTrainers: [3, 2] }
-      },
-      5: {
-        4:{idTrainers: [3, 4]},
-        5:{idTrainers: [6, 5]}
-      },
-      6:{
-        2:{idTrainers:[2,3]},
-        7:{idTrainers:[4,6]}
-      }
+      // 1: {
+      //     1: { idTrainers: [4, 5, 6, 7 , 8] },
+      //     10: {idTrainers: [3]}
+      // },
+      // 2: {
+      //     1: { idTrainers: [3,5,6] }
+      // },
+      // 3: {
+      //     2: { idTrainers: [2, 4] }
+      // },
+      // 4: {
+      //     3: { idTrainers: [3, 2] }
+      // },
+      // 5: {
+      //   4:{idTrainers: [3, 4]},
+      //   5:{idTrainers: [6, 5]}
+      // },
+      // 6:{
+      //   2:{idTrainers:[2,3]},
+      //   7:{idTrainers:[4,6]}
+      // }
 
   };
   
