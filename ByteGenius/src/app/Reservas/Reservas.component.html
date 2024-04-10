@@ -14,9 +14,9 @@
                 Hora: {{ hora.franjaHoraria }}
                 <button type="button" class="btn-cancelar" (click)="cancelarReserva(getIdSesion(), dia.id, hora.id)">Cancelar Reserva</button>
                 <ul>
-                  <div *ngFor=" let entrenador of getEntrenadorPorUsuario(getIdSesion(), dia.id, hora.id, reservas)">
+                  <!-- <div *ngFor=" let entrenador of getEntrenadorPorUsuario(getIdSesion(), dia.id, hora.id, reservas)">
                      Entrenador: {{entrenador.nombre}}
-                  </div>
+                  </div> -->
                 </ul>
               </li>
             </div>

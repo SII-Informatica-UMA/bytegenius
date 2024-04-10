@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { NgFor } from '@angular/common';
 import { UsuarioServiceCliente} from '../horario-cliente/horario-cliente.service'; 
 import { Hora } from '../Hora';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbActiveModal, NgbCalendar, NgbDate, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { HashMapReservas } from "../HashMapReservas";
 import { Dia } from '../Dia';
 import { Usuario } from "../entities/usuario";
@@ -25,12 +25,16 @@ export class ReservasComponent implements OnInit {
   horas:Hora[]=[];
   dias:Dia[]=[];
   reservas:HashMapReservas={};
+  today:NgbDate;
+  diasDeLaSemana:NgbDateStruct[]=[];
   @Output() reservaCancelada = new EventEmitter<{idUsuario: number, idDia: number, idHora: number}>();
   id: number = 0;
 
-  constructor(private usuariosservice: UsuarioServiceCliente, public modal: NgbActiveModal, private usuariosServiceLogin:UsuariosService) { 
+  constructor(private usuariosservice: UsuarioServiceCliente, public modal: NgbActiveModal, private usuariosServiceLogin:UsuariosService, calendar:NgbCalendar) { 
     this.horas = this.usuariosservice.getHoras();
     this.id = usuariosServiceLogin.getSesionID() as number;
+    this.today= calendar.getToday();
+    this.diasDeLaSemana=usuariosservice.obtenerSemana(this.today);
   }
 
   ngOnInit(): void {
@@ -53,8 +57,8 @@ export class ReservasComponent implements OnInit {
       return this.usuariosservice.obtenerHorasPorUsuario(idUsuario, idDia, reservas);
   }
   
-  getEntrenadorPorUsuario(idUsuario: number, idDia: number, idHora: number, reservas: HashMapReservas) :Usuario[]{
-    return this.usuariosservice.obtenerEntrenadoresPorUsuario(idUsuario, idDia, idHora, reservas);
+  getEntrenadorPorUsuario(idUsuario: number, idMes: number, idDia: number, idHora: number, reservas: HashMapReservas) :Usuario[]{
+    return this.usuariosservice.obtenerEntrenadoresPorUsuario(idUsuario,idMes, idDia, idHora, reservas);
   }
 
   cancelarReserva(idUsuario: number, idDia: number, idHora: number) {

@@ -6,12 +6,14 @@ import { HashMap } from "../HashMap";
 import { AppComponentService } from "../app.component.service";
 import { Injectable, OnInit } from "@angular/core";
 import { BackendFakeService } from "../services/backend.fake.service";
+import { NgbCalendar, NgbDate, NgbDateStruct } from "@ng-bootstrap/ng-bootstrap";
 
 @Injectable({
   providedIn: 'root'
 })
 export class UsuarioServiceCliente {
   private usuarios: Usuario[]= [];
+  today:NgbDate;
 
   private reservasRealizadas: HashMapReservas ={
     // 5: { // idUsuario
@@ -153,9 +155,10 @@ private asignaciones: HashMap = {
       {id:6, nombre:'Sabado'},
       {id:7, nombre:'Domingo'}
       ]
-  constructor(private usuario: AppComponentService, private backendService:BackendFakeService) {
+  constructor(private usuario: AppComponentService, private backendService:BackendFakeService, calendar:NgbCalendar) {
       this.backendService.getUsuarios().subscribe(usuarios => {
       this.usuarios = usuarios;});
+      this.today=calendar.getToday();
    }
 
 
@@ -172,21 +175,35 @@ private asignaciones: HashMap = {
 
       getEntrenadoresPorDia(dia: number, mes: number): Usuario[] {
         const entrenadoresPorDia: Usuario[] = [];
-        const asignacionesParaDia = this.asignaciones[mes] ? this.asignaciones[mes][dia] : null;
-        if (asignacionesParaDia) {
-          for (let key in asignacionesParaDia) {
-            const idTrainers = asignacionesParaDia[key].idTrainers; // Ahora es un array de IDs
-            // Itera sobre cada ID de entrenador en la lista
-            idTrainers.forEach(id => {
-              const entrenador = this.usuarios.find(u => u.id === id);
-              if (entrenador) {
-                entrenadoresPorDia.push(entrenador);
-              }
-            });
+        
+        // Verificar si el mes especificado existe en las asignaciones
+        if (mes in this.asignaciones) {
+          const asignacionesDelMes = this.asignaciones[mes];
+      
+          // Verificar si el día especificado existe en las asignaciones del mes
+          if (dia in asignacionesDelMes) {
+            const asignacionesParaDia = asignacionesDelMes[dia];
+      
+            // Iterar sobre cada asignación para el día y obtener los IDs de los entrenadores
+            for (let key in asignacionesParaDia) {
+              const idTrainers = asignacionesParaDia[key].idTrainers;
+      
+              // Iterar sobre cada ID de entrenador en la lista y encontrar el entrenador correspondiente
+              idTrainers.forEach(id => {
+                const entrenador = this.usuarios.find(u => u.id === id);
+                if (entrenador && !entrenadoresPorDia.includes(entrenador)) {
+                  entrenadoresPorDia.push(entrenador);
+                }
+              });
+            }
           }
         }
+        
         return entrenadoresPorDia;
       }
+      
+      
+      
       
 
       getHorasPorEntrenador(idEntrenador: number, idDia: number, idMes: number): Hora[] {
@@ -321,6 +338,56 @@ private asignaciones: HashMap = {
 
       setReservas(reservas: HashMapReservas): void {
         this.reservasRealizadas = reservas;
+      }
+
+      obtenerLunesMasCercano(date: NgbDateStruct): NgbDateStruct {
+        // Convertir la fecha NgbDateStruct a un objeto Date de JavaScript
+        const jsDate = new Date(date.year, date.month - 1, date.day);
+      
+        // Iterar hacia atrás desde la fecha dada hasta encontrar un lunes
+        while (jsDate.getDay() !== 1) { // 1 representa el lunes en JavaScript
+          jsDate.setDate(jsDate.getDate() - 1); // Restar un día
+        }
+      
+        // Convertir el resultado de vuelta a NgbDateStruct
+      
+      
+        const lunesMasCercano = new NgbDate(jsDate.getFullYear(),jsDate.getMonth()+1,jsDate.getDate());
+        return lunesMasCercano;
+      }
+      obtenerCantidadDiasMes(year: number, month: number): number {
+        // Obtener el último día del mes
+        const ultimoDiaMes = new Date(year, month, 0).getDate();
+      
+        return ultimoDiaMes;
+      }
+      
+      obtenerSemana(date:NgbDate):NgbDateStruct[]{
+        let primerLunes = this.obtenerLunesMasCercano(this.today);
+        let lista = [];
+        var diaAct = primerLunes;
+        lista.push(primerLunes);
+        let cont = 0;
+        let cambio = false;
+        let cont2 = 0;
+        while(cont < 6){
+          if(this.obtenerCantidadDiasMes(diaAct.year,diaAct.month) > diaAct.day){
+            if(!cambio)lista.push(new NgbDate(diaAct.year,diaAct.month,diaAct.day+1));
+            else lista.push(new NgbDate(diaAct.year,diaAct.month,diaAct.day+1));
+          }else{
+            if(diaAct.month <= 12){
+              lista.push(new NgbDate(diaAct.year,diaAct.month+1,1));
+              cambio = true;
+            }else{
+              lista.push(new NgbDate(diaAct.year+1,1,1));
+              cambio = true;
+            }
+          }
+          cont = cont+1;
+          if(cambio) cont2 = cont2+1;
+          diaAct = lista[lista.length-1];
+        }
+        return lista;
       }
 
 

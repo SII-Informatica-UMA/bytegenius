@@ -48,7 +48,7 @@ export class HorarioClienteComponent implements OnInit {
     this.reservas = this.usuariosservice.getReservasUsuarios();
     this.id = usuariosServiceLogin.getSesionID() as number;
     this.today=this.calendar.getToday();
-    this.diasDeLaSemana=this.obtenerSemana(this.today);
+    this.diasDeLaSemana=usuariosservice.obtenerSemana(this.today);
     this.actualizarReservas();
   }
 
@@ -176,58 +176,9 @@ cancelarReserva(idUsuario: number, idDia: number, idHora: number) {
   }
 }
 
-obtenerLunesMasCercano(date: NgbDateStruct): NgbDateStruct {
-  // Convertir la fecha NgbDateStruct a un objeto Date de JavaScript
-  const jsDate = new Date(date.year, date.month - 1, date.day);
-
-  // Iterar hacia atrás desde la fecha dada hasta encontrar un lunes
-  while (jsDate.getDay() !== 1) { // 1 representa el lunes en JavaScript
-    jsDate.setDate(jsDate.getDate() - 1); // Restar un día
-  }
-
-  // Convertir el resultado de vuelta a NgbDateStruct
 
 
-  const lunesMasCercano = new NgbDate(jsDate.getFullYear(),jsDate.getMonth()+1,jsDate.getDate());
-  return lunesMasCercano;
-}
-obtenerCantidadDiasMes(year: number, month: number): number {
-  // Obtener el último día del mes
-  const ultimoDiaMes = new Date(year, month, 0).getDate();
-
-  return ultimoDiaMes;
-}
-
-obtenerSemana(date:NgbDate):NgbDateStruct[]{
-  let primerLunes = this.obtenerLunesMasCercano(this.today);
-  let lista = [];
-  var diaAct = primerLunes;
-  lista.push(primerLunes);
-  let cont = 0;
-  let cambio = false;
-  let cont2 = 0;
-  while(cont < 6){
-    if(this.obtenerCantidadDiasMes(diaAct.year,diaAct.month) > diaAct.day){
-      if(!cambio)lista.push(new NgbDate(diaAct.year,diaAct.month,diaAct.day+1));
-      else lista.push(new NgbDate(diaAct.year,diaAct.month,diaAct.day+1));
-    }else{
-      if(diaAct.month <= 12){
-        lista.push(new NgbDate(diaAct.year,diaAct.month+1,1));
-        cambio = true;
-      }else{
-        lista.push(new NgbDate(diaAct.year+1,1,1));
-        cambio = true;
-      }
-    }
-    cont = cont+1;
-    if(cambio) cont2 = cont2+1;
-    diaAct = lista[lista.length-1];
-  }
-  return lista;
-}
-
-
-
+//comentario
 
 
 }
