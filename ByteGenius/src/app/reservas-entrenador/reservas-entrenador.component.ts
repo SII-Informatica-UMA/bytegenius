@@ -37,39 +37,6 @@ export class ReservasEntrenadorComponent {
 
   }
 
-  obtenerDiasYHoras(hashMap: HashMap, idTrainer: number): { dia: number, hora: number }[] {
-    const diasYHoras: { dia: number, hora: number }[] = [];
-    
-    // Recorrer el HashMap
-    for (const idDia in hashMap) {
-      const horas = hashMap[idDia];
-      for (const idHora in horas) {
-        const trainers = horas[idHora].idTrainers;
-        if (trainers.includes(idTrainer)) {
-          diasYHoras.push({ dia: parseInt(idDia), hora: parseInt(idHora) });
-        }
-      }
-    }
-    
-    return diasYHoras;
-  }
-
-  obtenerHorasYDiaPorEntrenador(reservas: HashMapReservas, idEntrenadorBuscado: number): { idUsuario: number, idDia: number, idHora: number }[] {
-    const horasYDia: { idUsuario: number, idDia: number, idHora: number }[] = [];
-    for (const idUsuario in reservas) {
-        const usuario = reservas[idUsuario];
-        for (const idDia in usuario) {
-            const dia = usuario[idDia];
-            for (const idHora in dia) {
-                const asignacion = dia[idHora];
-                if (asignacion.idEntrenador === idEntrenadorBuscado) {
-                    horasYDia.push({ idUsuario: Number(idUsuario), idDia: Number(idDia), idHora: Number(idHora) });
-                }
-            }
-        }
-    }
-    return horasYDia;
-}
 
 
 
@@ -79,29 +46,36 @@ obtenerNombre(id: number): string | undefined {
 }
 
 
-encontrarReservasPorEntrenador(reservas: HashMapReservas, idEntrenadorBuscado: number): {idUsuario:number,idDia:number,idHora:number}[] {
-  const reservasEncontradas: {idUsuario:number,idDia:number,idHora:number}[] = [];
+encontrarReservasPorEntrenador(reservas: HashMapReservas, idEntrenadorBuscado: number): {idUsuario:number,idMes:number,idDia:number,idHora:number}[] {
+  const reservasEncontradas: {idUsuario:number,idMes:number,idDia:number,idHora:number}[] = [];
 
   // Iterar sobre cada usuario en las reservas
   for (const idUsuario in reservas) {
-      // Iterar sobre cada día para el usuario actual
-      for (const idDia in reservas[idUsuario]) {
-          // Iterar sobre cada hora para el día actual
-          for (const idHora in reservas[idUsuario][idDia]) {
-              // Verificar si el idEntrenador coincide con el buscado
-              if (reservas[idUsuario][idDia][idHora].idEntrenador === idEntrenadorBuscado) {
-                  // Agregar la reserva a la lista de reservas encontradas
-                  reservasEncontradas.push({
-                      idUsuario: parseInt(idUsuario),
-                      idDia: parseInt(idDia),
-                      idHora: parseInt(idHora)
-                  });
-              }
+    // Iterar sobre cada mes para el usuario actual
+    for (const idMes in reservas[idUsuario]) {
+      // Iterar sobre cada día para el mes actual
+      for (const idDia in reservas[idUsuario][idMes]) {
+        // Iterar sobre cada hora para el día actual
+        for (const idHora in reservas[idUsuario][idMes][idDia]) {
+          // Verificar si el idEntrenador coincide con el buscado
+          if (reservas[idUsuario][idMes][idDia][idHora].idEntrenador === idEntrenadorBuscado) {
+            // Agregar la reserva a la lista de reservas encontradas
+            reservasEncontradas.push({
+              idUsuario: parseInt(idUsuario),
+              idMes: parseInt(idMes),
+              idDia: parseInt(idDia),
+              idHora: parseInt(idHora)
+            });
           }
+        }
       }
+    }
   }
-  
+
   return reservasEncontradas;
 }
+
+
+
 
 }

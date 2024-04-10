@@ -1,4 +1,3 @@
-
 export interface HashMapReservas {
     [idUsuario: number]: {
         [idMes:number]:{
@@ -10,4 +9,3 @@ export interface HashMapReservas {
     };
 }
 }
-

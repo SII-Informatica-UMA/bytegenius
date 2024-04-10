@@ -1,4 +1,24 @@
-
-<h1>Mis Reservas</h1>
-<div *ngFor="let dia of encontrarReservasPorEntrenador(this.reservas,this.id)">
-    Dia -> {{dia.idDia}} Hora -> {{dia.idHora}} -> {{obtenerNombre(dia.idUsuario)}}
+<div style="text-align: center;">
+    <h1>Mis Reservas</h1>
+    <table style="margin: 0 auto;">
+      <thead>
+        <tr>
+          <th>Mes</th>
+          <th>Día</th>
+          <th>Hora</th>
+          <th>Usuario</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let dia of encontrarReservasPorEntrenador(reservas, id); let i = index">
+          <tr [class.odd]="i % 2 === 0" [class.even]="i % 2 !== 0">
+            <td>{{dia.idMes}}</td>
+            <td>{{ dia.idDia }}</td>
+            <td>{{ dia.idHora }}</td>
+            <td>{{ obtenerNombre(dia.idUsuario) }}</td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+  

@@ -1,0 +1,7 @@
+tr.odd {
+    background-color: #f0f0f0; /* Color de fondo para filas impares */
+  }
+  
+  tr.even {
+    background-color: #ffffff; /* Color de fondo para filas pares */
+  }

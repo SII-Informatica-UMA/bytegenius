@@ -14,6 +14,7 @@ import { NgbDatepickerNavigation } from '@ng-bootstrap/ng-bootstrap/datepicker/d
 import { ReservasEntrenadorComponent } from '../reservas-entrenador/reservas-entrenador.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {UsuariosService} from '../services/usuarios.service';
+import { HashMapReservas } from '../HashMapReservas';
 
 
 @Component({
@@ -31,6 +32,7 @@ export class HorarioEntrenadorComponent {
   usuarios: Usuario [] = [];
   id:number = 1;
   semana:NgbDate [] = [];
+  reservas:HashMapReservas = {}
 
   today: NgbDate;
 	dia: NgbDate;
@@ -56,6 +58,7 @@ export class HorarioEntrenadorComponent {
 		this.date = { year: this.today.year, month: this.today.month };
     this.dia = this.today;
     this.id = usuarioServiceLogin.getSesionID() as number;
+
 	  
   }
 
@@ -93,11 +96,11 @@ export class HorarioEntrenadorComponent {
     console.log(items);
   }
 
-  obtenerIdTrainer(hashMap: HashMap, idDia: number, idHora: number): number[] {
-    if (this.asignaciones[idDia] && this.asignaciones[idDia][idHora] && this.asignaciones[idDia][idHora].idTrainers) {
-        return this.asignaciones[idDia][idHora].idTrainers;
+  obtenerIdTrainer(hashMap: HashMap, idMes: number, idDia: number, idHora: number): number[] {
+    if (hashMap[idMes] && hashMap[idMes][idDia] && hashMap[idMes][idDia][idHora] && hashMap[idMes][idDia][idHora].idTrainers) {
+      return hashMap[idMes][idDia][idHora].idTrainers;
     } else {
-        return [];
+      return [];
     }
   }
 
@@ -120,23 +123,30 @@ export class HorarioEntrenadorComponent {
     return ids.includes(id);
   }
     
-  eliminarHora(dia: number, hora: number): void {
-    const index = this.asignaciones[dia][hora].idTrainers.indexOf(this.id);
-    if (index !== -1) {
-      this.asignaciones[dia][hora].idTrainers.splice(index, 1);
+  eliminarHora(mes: number, dia: number, hora: number): void {
+    if (this.asignaciones[mes] && this.asignaciones[mes][dia] && this.asignaciones[mes][dia][hora]) {
+      const index = this.asignaciones[mes][dia][hora].idTrainers.indexOf(this.id);
+      if (index !== -1) {
+        this.asignaciones[mes][dia][hora].idTrainers.splice(index, 1);
+      }
+      this.guardarDatos();
     }
   }
 
-  agregarHora(dia: number, hora: number): void {
-    if (!this.asignaciones[dia]) {
-      this.asignaciones[dia] = {};
+  agregarHora(mes: number, dia: number, hora: number): void {
+    if (!this.asignaciones[mes]) {
+      this.asignaciones[mes] = {};
     }
-    if (!this.asignaciones[dia][hora]) {
-      this.asignaciones[dia][hora] = { idTrainers: [] };
+    if (!this.asignaciones[mes][dia]) {
+      this.asignaciones[mes][dia] = {};
     }
-      this.asignaciones[dia][hora].idTrainers.push(this.id);
-      this.guardarDatos();
+    if (!this.asignaciones[mes][dia][hora]) {
+      this.asignaciones[mes][dia][hora] = { idTrainers: [] };
+    }
+    this.asignaciones[mes][dia][hora].idTrainers.push(this.id);
+    this.guardarDatos();
   }
+  
     
     // Método para el evento (click) del botón "Guardar Disponibilidad"
   guardarDisponibilidad(): void {
@@ -154,11 +164,11 @@ export class HorarioEntrenadorComponent {
         // Iterar sobre las horas dentro del rango seleccionado
         for (let i = desde; i <= hasta; i++) {
           // Verificar si el entrenador ya tiene asignada esa hora en ese día
-          const idTrainers = this.obtenerIdTrainer(this.asignaciones, dia, i);
-          if (!this.estaId(idTrainers, this.id)) {
+          //const idTrainers = this.obtenerIdTrainer(this.asignaciones, dia, i);
+          //if (!this.estaId(idTrainers, this.id)) {
             // Si el entrenador no tiene asignada esa hora, agregarla
-            this.agregarHora(dia, i);
-          }
+            //this.agregarHora(dia, i);
+          //}
         }
       });
 
@@ -176,6 +186,7 @@ export class HorarioEntrenadorComponent {
   }
 
   // Método para mostrar el botón "eliminar disponibilidad" cuando se hace click sobre un checkbox u ocultarlo cuando se quita el check.
+/*
   mostrarBoton(dia: number, hora: number, event: any): void {
     // Obtener el estado de verificación del checkbox
     const isChecked = event.target.checked;
@@ -190,6 +201,8 @@ export class HorarioEntrenadorComponent {
     }
   }
 
+*/
+
   // Función para comprobar si hay checkbox marcados
   tieneElementos(): void {
     this.cbMarcado = false
@@ -203,6 +216,7 @@ export class HorarioEntrenadorComponent {
   }
 
   //Función para eliminar todas las horas marcadas con los checkbox 
+/*
   eliminarHorasMarcadas(): void{
     for (const idDia in this.cbMarcados) {
       for (const idHora in this.cbMarcados[idDia]) {
@@ -214,6 +228,7 @@ export class HorarioEntrenadorComponent {
     }
     this.cbMarcados = [];
   }
+
 
   //Función para agregar las horas marcadas por los checkBox en el HashMap cbMarcados
   agregarHoraMarcada(dia: number, hora: number): void {
@@ -232,7 +247,7 @@ export class HorarioEntrenadorComponent {
       this.cbMarcados[dia][hora].idTrainers.splice(index, 1);
     }
   }
-
+*/
   //Implementacion DATEPICKER
   rellenarSemana() {
 		const dia: NgbDate = new NgbDate(this.date.year, this.date.month, this.today.day);
@@ -324,15 +339,27 @@ export class HorarioEntrenadorComponent {
     }
 
     cargarDatos(): void {
-      const datosGuardados = localStorage.getItem('horarioEntrenadoresPD');
+      const datosGuardados = localStorage.getItem('horarioEntrenadores');
       if (datosGuardados) {
         this.asignaciones = JSON.parse(datosGuardados);
       }
-
+      const datosGuardadosReservas = localStorage.getItem('reservasRealizadas');
+      if (datosGuardadosReservas) {
+        this.reservas = JSON.parse(datosGuardadosReservas);
+      }
     }
     
     guardarDatos(): void {
       localStorage.setItem('horarioEntrenadoresPD', JSON.stringify(this.asignaciones));
+    }
+
+    cancelarReserva(idUsuario: number, idDia: number, idHora: number) {
+      if (this.reservas[idUsuario] && this.reservas[idUsuario][idDia] && this.reservas[idUsuario][idDia][idHora]) {
+        // Eliminar la reserva del HashMap
+        delete this.reservas[idUsuario][idDia][idHora];
+        // Guardar los cambios en el almacenamiento local (opcional)
+        localStorage.setItem('reservasRealizadas', JSON.stringify(this.reservas));
+      }
     }
     
 

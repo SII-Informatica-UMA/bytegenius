@@ -29,15 +29,15 @@
     <tbody class="table-group-divider">
       <tr *ngFor="let Hora of horas">
         <td>{{ Hora.franjaHoraria }}</td>
-        <td *ngFor="let dia of obtenerSemana(this.dia)" [ngStyle]="{'background-color': pertenece(obtenerIdTrainer(asignaciones, this.dia.day, Hora.id)) ? 'lightgrey' : 'green', 'color': 'black'} ">
-          {{ obtenerNombres(obtenerIdTrainer(asignaciones, dia.day, Hora.id)) }}
+        <td *ngFor="let dia of obtenerSemana(this.dia)" [ngStyle]="{'background-color': pertenece(obtenerIdTrainer(asignaciones,this.dia.month, this.dia.day, Hora.id)) ? 'lightgrey' : 'green', 'color': 'black'} ">
+          {{ obtenerNombres(obtenerIdTrainer(asignaciones,dia.month, dia.day, Hora.id)) }}
            <!-- Si el entrenador está asignado en esa hora y día, mostrar checkbox -->
-          <ng-container *ngIf="estaId(obtenerIdTrainer(asignaciones, this.dia.day, Hora.id), getIdSesion())">
-            <button (click)="eliminarHora(this.dia.day, Hora.id)">-</button>
-            <input type="checkbox" id="checkbox_{{ this.dia.day }}_{{ Hora.id }}" (change)= "mostrarBoton(this.dia.day, Hora.id, $event)">
+          <ng-container *ngIf="estaId(obtenerIdTrainer(asignaciones,this.dia.day, this.dia.day, Hora.id), getIdSesion())">
+            <button (click)="eliminarHora(this.dia.month,dia.day, Hora.id)">-</button>
+           <!-- <input type="checkbox" id="checkbox_{{ this.dia.day }}_{{ Hora.id }}" (change)= "mostrarBoton(this.dia.day, Hora.id, $event)"> -->
           </ng-container>
-          <ng-container *ngIf="!estaId(obtenerIdTrainer(asignaciones, this.dia.day, Hora.id), getIdSesion())">
-            <button (click)="agregarHora(dia.day, Hora.id)" class="boton-añadir">&plus;</button>
+          <ng-container *ngIf="!estaId(obtenerIdTrainer(asignaciones,this.dia.month, this.dia.day, Hora.id), getIdSesion())">
+            <button (click)="agregarHora(dia.month,dia.day, Hora.id)" class="boton-añadir">&plus;</button>
           </ng-container>
         </td>
       </tr>
@@ -71,7 +71,7 @@
     <br>
     &nbsp; <button type="button" class="btn btn-primary" (click)="guardarDisponibilidad()">Guardar Disponibilidad</button> &nbsp;
     <!-- Botón de eliminar disponibilidad -->
-    <button type="button" class ="btn btn-danger" *ngIf="cbMarcado" (click)="eliminarHorasMarcadas()">Eliminar Disponibilidad</button>
+    <!--<button type="button" class ="btn btn-danger" *ngIf="cbMarcado" (click)="eliminarHorasMarcadas()">Eliminar Disponibilidad</button>-->
 
   </body>
 </html>

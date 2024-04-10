@@ -37,18 +37,6 @@ export class UsuarioServiceEntrenador {
     ]
 
     private asignaciones: HashMap = {
-      8: {
-          1: { idTrainers: [1,3] }
-      },
-      4: {
-          1: { idTrainers: [1] }
-      },
-      2: {
-          2: { idTrainers: [1] }
-      },
-      3: {
-          3: { idTrainers: [1,4] }
-      }
   };
 
     private dias: Dia [] = [
