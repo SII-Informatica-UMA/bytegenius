@@ -341,7 +341,7 @@ export class HorarioEntrenadorComponent {
     }
 
     cargarDatos(): void {
-      const datosGuardados = localStorage.getItem('horarioEntrenadores');
+      const datosGuardados = localStorage.getItem('horarioEntrenadoresPD');
       if (datosGuardados) {
         this.asignaciones = JSON.parse(datosGuardados);
       }

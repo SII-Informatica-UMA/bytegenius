@@ -9,6 +9,7 @@ import { HashMapReservas } from '../HashMapReservas';
 import { Usuario } from '../entities/usuario';
 import { BackendFakeService } from '../services/backend.fake.service';
 import { Observable, map } from 'rxjs';
+import { Hora } from '../Hora';
 
 
 
@@ -21,13 +22,18 @@ import { Observable, map } from 'rxjs';
 })
 export class ReservasEntrenadorComponent {
   asignaciones = this.usuariosService.getasignaciones();
-  reservas = {}
+  reservas:HashMapReservas = {}
   id:number = 1;
   private usuarios:Usuario[] = []
+  private horas: Hora[] = [];
+
+
   constructor(private usuariosService:UsuarioServiceEntrenador, private usuariosServiceLogin:UsuariosService, private clienteService:UsuarioServiceCliente, private usr:BackendFakeService){
     this.id = usuariosServiceLogin.getSesionID() as number;
+    this.horas = usuariosService.getHoras();
     usr.getUsuarios().subscribe(usrs=>{this.usuarios = usrs})
     this.cargarDatos();
+
   }
   cargarDatos(): void {
     const datosGuardadosReservas = localStorage.getItem('reservasRealizadas');
@@ -38,13 +44,43 @@ export class ReservasEntrenadorComponent {
   }
 
 
-
+ 
 
 obtenerNombre(id: number): string | undefined {
   const usuarioEncontrado = this.usuarios.find(usuario => usuario.id === id);
   return usuarioEncontrado ? usuarioEncontrado.nombre : undefined;
 }
 
+cancelarReserva(idUsuario: number,  idMes: number, idDia: number, idHora: number) {
+  if (this.reservas[idUsuario] && this.reservas[idUsuario][idMes] && this.reservas[idUsuario][idMes][idDia] && this.reservas[idUsuario][idMes][idDia][idHora]) {
+  
+      delete this.reservas[idUsuario][idMes][idDia][idHora];
+ 
+      if (Object.keys(this.reservas[idUsuario][idMes][idDia]).length === 0) {
+   
+          delete this.reservas[idUsuario][idMes][idDia];
+      }
+
+      if (Object.keys(this.reservas[idUsuario][idMes]).length === 0) {
+
+          delete this.reservas[idUsuario][idMes];
+      }
+
+      localStorage.setItem('reservasRealizadas', JSON.stringify(this.reservas));
+  }
+}
+
+
+obtenerFranjaHoraria(idHora: number): string {
+  const horaEncontrada = this.horas.find(hora => hora.id === idHora);
+  
+  if (!horaEncontrada) {
+    console.error(`No se encontró la hora con el ID ${idHora}`);
+    return 'Hora no encontrada';
+  }
+
+  return horaEncontrada.franjaHoraria;
+}
 
 encontrarReservasPorEntrenador(reservas: HashMapReservas, idEntrenadorBuscado: number): {idUsuario:number,idMes:number,idDia:number,idHora:number}[] {
   const reservasEncontradas: {idUsuario:number,idMes:number,idDia:number,idHora:number}[] = [];
@@ -72,8 +108,13 @@ encontrarReservasPorEntrenador(reservas: HashMapReservas, idEntrenadorBuscado: n
     }
   }
 
+
+
+
   return reservasEncontradas;
 }
+
+
 
 
 
