@@ -129,6 +129,8 @@ export class HorarioEntrenadorComponent {
       if (index !== -1) {
         this.asignaciones[mes][dia][hora].idTrainers.splice(index, 1);
       }
+      this.cancelarReservaOpcional(this.id,mes,dia,hora);
+
       this.guardarDatos();
     }
   }
@@ -363,6 +365,22 @@ export class HorarioEntrenadorComponent {
         localStorage.setItem('reservasRealizadas', JSON.stringify(this.reservas));
       }
     }
+
+    cancelarReservaOpcional(idEntrenador: number, idMes: number, idDia: number, idHora: number) {
+      for (const idUsuario in this.reservas) {
+        if (this.reservas[idUsuario] && this.reservas[idUsuario][idMes] && this.reservas[idUsuario][idMes][idDia] && this.reservas[idUsuario][idMes][idDia][idHora] && this.reservas[idUsuario][idMes][idDia][idHora].idEntrenador === idEntrenador) {
+          // Eliminar el idUsuario de la reserva del HashMap
+          delete this.reservas[idUsuario][idMes][idDia][idHora];
+          // Guardar los cambios en el almacenamiento local (opcional)
+          localStorage.setItem('reservasRealizadas', JSON.stringify(this.reservas));
+        }
+      }
+    }
+    
+    
+
+    
+    
     
 
 }
