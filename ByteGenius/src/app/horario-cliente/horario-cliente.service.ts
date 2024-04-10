@@ -198,7 +198,6 @@ private asignaciones: HashMap = {
             }
           }
         }
-        
         return entrenadoresPorDia;
       }
       
