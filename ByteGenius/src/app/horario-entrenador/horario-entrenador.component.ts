@@ -148,7 +148,7 @@ export class HorarioEntrenadorComponent {
   }
   
     
-    // Método para el evento (click) del botón "Guardar Disponibilidad"
+  // Método para el evento (click) del botón "Guardar Disponibilidad"
   guardarDisponibilidad(): void {
     // Obtener los días seleccionados del dropdown
     const diasSeleccionados = this.selectedItems.map((item: Dia) => item.id);
@@ -163,12 +163,14 @@ export class HorarioEntrenadorComponent {
       diasSeleccionados.forEach((dia: number) => {
         // Iterar sobre las horas dentro del rango seleccionado
         for (let i = desde; i <= hasta; i++) {
-          // Verificar si el entrenador ya tiene asignada esa hora en ese día
-          //const idTrainers = this.obtenerIdTrainer(this.asignaciones, dia, i);
-          //if (!this.estaId(idTrainers, this.id)) {
-            // Si el entrenador no tiene asignada esa hora, agregarla
-            //this.agregarHora(dia, i);
-          //}
+          // Verificar si el entrenador ya ha reservado en esa hora
+          const idTrainers = this.obtenerIdTrainer(this.asignaciones, this.dia.month, dia, i);
+          if (!this.estaId(idTrainers, this.id)) {
+            // Si el entrenador no tiene asignada esa hora y no hay una reserva existente, agregarla
+            this.agregarHora(this.dia.month, dia, i);
+            // Guardar la disponibilidad en el localStorage
+            this.guardarDatos();
+          }
         }
       });
 
@@ -183,7 +185,7 @@ export class HorarioEntrenadorComponent {
       // Si no hay días seleccionados o la hora de inicio es mayor o igual a la hora de fin, mostrar un mensaje de error.
       alert('Por favor, seleccione al menos un día y asegúrese de que la hora de inicio sea menor a la hora de fin.');
     }
-  }
+}
 
   // Método para mostrar el botón "eliminar disponibilidad" cuando se hace click sobre un checkbox u ocultarlo cuando se quita el check.
 /*
@@ -364,5 +366,4 @@ export class HorarioEntrenadorComponent {
     
 
 }
-
 
