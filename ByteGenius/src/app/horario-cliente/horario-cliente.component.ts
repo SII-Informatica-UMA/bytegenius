@@ -7,7 +7,7 @@ import { Hora } from '../Hora';
 import { FormsModule } from '@angular/forms';
 import { startOfWeek, endOfWeek } from 'date-fns';
 import { ReservasComponent } from '../Reservas/Reservas.component';
-import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
+import {NgbCalendar, NgbDate, NgbDateStruct, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { HashMapReservas } from '../HashMapReservas';
 import { Dia } from '../Dia';
 import { UsuariosService } from '../services/usuarios.service';
@@ -38,14 +38,17 @@ export class HorarioClienteComponent implements OnInit {
   reservas:HashMapReservas={};
   id: number = 0;
   botonPulsado:boolean=false;
+  today:NgbDate;
+  diasDeLaSemana:NgbDateStruct[]=[];
 
 
-  constructor(private usuariosservice: UsuarioServiceCliente, private modalService: NgbModal, private usuariosServiceLogin:UsuariosService) { 
+  constructor(private usuariosservice: UsuarioServiceCliente, private modalService: NgbModal, private usuariosServiceLogin:UsuariosService, private calendar:NgbCalendar) { 
     this.horas = this.usuariosservice.getHoras();
     this.entrenadores = this.usuariosServiceLogin.getArrayEntrenadores();
     this.reservas = this.usuariosservice.getReservasUsuarios();
     this.id = usuariosServiceLogin.getSesionID() as number;
-
+    this.today=this.calendar.getToday();
+    this.diasDeLaSemana=this.obtenerSemana(this.today);
     this.actualizarReservas();
   }
 
@@ -82,13 +85,15 @@ elegirDia(dia: number): void {
     this.actualizarReservas();
 }  
 
-entrenadoresPD(dia:number):Usuario[]{
-  return this.entrenadoresPorDia=this.usuariosservice.getEntrenadoresPorDia(dia);
+entrenadoresPD(mes: number, dia: number): Usuario[] {
+  return this.entrenadoresPorDia = this.usuariosservice.getEntrenadoresPorDia(mes, dia);
 }
 
-horarioEntrenadoresPD(idEntrenador:number, idDia:number):Hora[]{
-  return this.horarioEntrenadoresPorDia=this.usuariosservice.getHorasPorEntrenador(idEntrenador, idDia);
+
+horarioEntrenadoresPD(idEntrenador: number, idMes: number, idDia: number): Hora[] {
+  return this.horarioEntrenadoresPorDia = this.usuariosservice.getHorasPorEntrenador(idEntrenador, idMes, idDia);
 }
+
 
 
 updateDates(): void {
@@ -101,24 +106,28 @@ MostrarReservas(): void {
   let ref = this.modalService.open(ReservasComponent);
 }
 
-aniadirReserva(usuario: number, dia: number, hora: number, entrenador: number): void {
+aniadirReserva(usuario: number, mes: number, dia: number, hora: number, entrenador: number): void {
   // Inicializa la entrada del usuario si no existe
   if (!(usuario in this.reservas)) {
     this.reservas[usuario] = {};
-    this.guardarDatos();
   }
+  
+  // Inicializa la entrada del mes si no existe
+  if (!(mes in this.reservas[usuario])) {
+    this.reservas[usuario][mes] = {};
+  }
+  
   // Inicializa la entrada del día si no existe
-  if (!(dia in this.reservas[usuario])) {
-    this.reservas[usuario][dia] = {};
-    this.guardarDatos();
+  if (!(dia in this.reservas[usuario][mes])) {
+    this.reservas[usuario][mes][dia] = {};
   }
+  
   // Agrega la información de la reserva
-  this.reservas[usuario][dia][hora] = { idEntrenador: entrenador };
+  this.reservas[usuario][mes][dia][hora] = { idEntrenador: entrenador };
   this.guardarDatos();
-
   this.actualizarReservas();
-
 }
+
 
 
 getIdSesion(){
@@ -149,9 +158,10 @@ getHorasPorUsuario(idUsuario:number, idDia:number, reservas:HashMapReservas){
   return this.usuariosservice.obtenerHorasPorUsuario(idUsuario,idDia, reservas);
 }
 
-getEntrenadoresPorUsuario(idUsuario:number, idDia:number, idHora:number, reservas:HashMapReservas){
-  return this.usuariosservice.obtenerEntrenadoresPorUsuario(idUsuario, idDia, idHora, reservas);
+getEntrenadoresPorUsuario(idUsuario: number, idMes: number, idDia: number, idHora: number, reservas: HashMapReservas) {
+  return this.usuariosservice.obtenerEntrenadoresPorUsuario(idUsuario, idMes, idDia, idHora, reservas);
 }
+
 onReservaCancelada(eventData: {idUsuario: number, idDia: number, idHora: number}) {
   // Actualizar el HashMapReservas del componente HorarioClienteComponent
   this.cancelarReserva(eventData.idUsuario, eventData.idDia, eventData.idHora);
@@ -164,6 +174,56 @@ cancelarReserva(idUsuario: number, idDia: number, idHora: number) {
     // Guardar los cambios en el almacenamiento local (opcional)
     localStorage.setItem('reservasRealizadas', JSON.stringify(this.reservas));
   }
+}
+
+obtenerLunesMasCercano(date: NgbDateStruct): NgbDateStruct {
+  // Convertir la fecha NgbDateStruct a un objeto Date de JavaScript
+  const jsDate = new Date(date.year, date.month - 1, date.day);
+
+  // Iterar hacia atrás desde la fecha dada hasta encontrar un lunes
+  while (jsDate.getDay() !== 1) { // 1 representa el lunes en JavaScript
+    jsDate.setDate(jsDate.getDate() - 1); // Restar un día
+  }
+
+  // Convertir el resultado de vuelta a NgbDateStruct
+
+
+  const lunesMasCercano = new NgbDate(jsDate.getFullYear(),jsDate.getMonth()+1,jsDate.getDate());
+  return lunesMasCercano;
+}
+obtenerCantidadDiasMes(year: number, month: number): number {
+  // Obtener el último día del mes
+  const ultimoDiaMes = new Date(year, month, 0).getDate();
+
+  return ultimoDiaMes;
+}
+
+obtenerSemana(date:NgbDate):NgbDateStruct[]{
+  let primerLunes = this.obtenerLunesMasCercano(this.today);
+  let lista = [];
+  var diaAct = primerLunes;
+  lista.push(primerLunes);
+  let cont = 0;
+  let cambio = false;
+  let cont2 = 0;
+  while(cont < 6){
+    if(this.obtenerCantidadDiasMes(diaAct.year,diaAct.month) > diaAct.day){
+      if(!cambio)lista.push(new NgbDate(diaAct.year,diaAct.month,diaAct.day+1));
+      else lista.push(new NgbDate(diaAct.year,diaAct.month,diaAct.day+1));
+    }else{
+      if(diaAct.month <= 12){
+        lista.push(new NgbDate(diaAct.year,diaAct.month+1,1));
+        cambio = true;
+      }else{
+        lista.push(new NgbDate(diaAct.year+1,1,1));
+        cambio = true;
+      }
+    }
+    cont = cont+1;
+    if(cambio) cont2 = cont2+1;
+    diaAct = lista[lista.length-1];
+  }
+  return lista;
 }
 
 

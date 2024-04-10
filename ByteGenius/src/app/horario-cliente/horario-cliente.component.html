@@ -26,7 +26,7 @@
             </h1>    
     
             <strong class="ent">Entrenadores: </strong>
-            <p *ngFor="let Entrenador of entrenadoresPD(1)" class="entrenador">{{ Entrenador.nombre }}. </p>
+            <p *ngFor="let Entrenador of entrenadoresPD(today.day,today.month)" class="entrenador">{{ Entrenador.nombre }}. </p>
             <br>
             <button class="boton" (click)="elegirDia(1)" >
                 Reservar
@@ -40,7 +40,7 @@
             </h1>    
     
             <strong class="ent">Entrenadores: </strong>
-            <p *ngFor="let Entrenador of entrenadoresPD(2)" class="entrenador">{{ Entrenador.nombre }}. </p>
+            <p *ngFor="let Entrenador of entrenadoresPD(today.day,today.month)" class="entrenador">{{ Entrenador.nombre }}. </p>
             
             <br>
             <button class="boton" (click)="elegirDia(2)">
@@ -54,7 +54,7 @@
             </h1>    
     
             <strong class="ent">Entrenadores: </strong>
-            <p *ngFor="let Entrenador of entrenadoresPD(3)" class="entrenador">{{ Entrenador.nombre }}. </p>
+            <p *ngFor="let Entrenador of entrenadoresPD(today.day,today.month)" class="entrenador">{{ Entrenador.nombre }}. </p>
             <br>
             <button class="boton" (click)="elegirDia(3)">
                 Reservar
@@ -67,7 +67,7 @@
             </h1>    
     
             <strong class="ent">Entrenadores: </strong>
-            <p *ngFor="let Entrenador of entrenadoresPD(4)" class="entrenador">{{ Entrenador.nombre }}. </p>
+            <p *ngFor="let Entrenador of entrenadoresPD(today.day,today.month)" class="entrenador">{{ Entrenador.nombre }}. </p>
             <br>
             <button class="boton" (click)="elegirDia(4)">
                 Reservar
@@ -80,7 +80,7 @@
             </h1>    
     
             <strong class="ent">Entrenadores: </strong>
-            <p *ngFor="let Entrenador of entrenadoresPD(5)" class="entrenador">{{ Entrenador.nombre }}. </p>
+            <p *ngFor="let Entrenador of entrenadoresPD(today.day,today.month)" class="entrenador">{{ Entrenador.nombre }}. </p>
     
             <br>
             <button class="boton" (click)="elegirDia(5)">
@@ -94,7 +94,7 @@
             </h1>    
     
             <strong class="ent">Entrenadores: </strong>
-            <p *ngFor="let Entrenador of entrenadoresPD(6)" class="entrenador">{{ Entrenador.nombre }}. </p>
+            <p *ngFor="let Entrenador of entrenadoresPD(today.day,today.month)" class="entrenador">{{ Entrenador.nombre }}. </p>
     
             <br>
             <button class="boton" (click)="elegirDia(6)">
@@ -108,7 +108,7 @@
             </h1>    
     
             <strong class="ent">Entrenadores: </strong>
-            <p *ngFor="let Entrenador of entrenadoresPD(7)" class="entrenador">{{ Entrenador.nombre }}. </p>
+            <p *ngFor="let Entrenador of entrenadoresPD(today.day,today.month)" class="entrenador">{{ Entrenador.nombre }}. </p>
     
             <br>
             <button class="boton" (click)="elegirDia(7)">
@@ -129,13 +129,13 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr *ngFor="let Entrenador of entrenadoresPD(1)">
+                  <tr *ngFor="let Entrenador of entrenadoresPD(diasDeLaSemana[diaElegido-1].day, diasDeLaSemana[diaElegido-1].month)">
                     <th>{{Entrenador.nombre}}</th>
                     <td *ngFor="let hora of horas">
                         
-                        <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id, 1).includes(hora)">
-                          @if(!existeReserva(getIdSesion(),1,hora.id)){
-                            <button class="button" (click)="aniadirReserva(getIdSesion(),1,hora.id, Entrenador.id)"> Reservar</button>
+                        <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id, diasDeLaSemana[diaElegido-1].month, diasDeLaSemana[diaElegido-1].day).includes(hora)">
+                          @if(!existeReserva(getIdSesion(),diasDeLaSemana[diaElegido-1].day ,hora.id)){
+                            <button class="button" (click)="aniadirReserva(getIdSesion(),diasDeLaSemana[diaElegido-1].month, diasDeLaSemana[diaElegido-1].day , hora.id, Entrenador.id)"> Reservar</button>
                           }@else{
                             <p class="reserva"> Ya reservado </p>
                           }
@@ -146,148 +146,154 @@
               </table>
         </div>
         <div *ngSwitchCase="2">
-            <table>
-                <thead>
-                  <tr>
-                    <th>Entrenador / Hora</th>
-                    <th *ngFor="let Hora of horas">{{Hora.franjaHoraria}}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let Entrenador of entrenadoresPD(2)">
-                    <th>{{Entrenador.nombre}}</th>
-                    <td *ngFor="let hora of horas">
-                      <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id, 2).includes(hora)">
-                        @if(!existeReserva(getIdSesion(),2,hora.id)){
-                          <button class="button" (click)="aniadirReserva(getIdSesion(),2,hora.id, Entrenador.id)"> Reservar</button>
-                        }@else{
-                          <p class="reserva"> Ya reservado </p>
-                        }
-                      </ng-container>
-                  </td>
-                  </tr>
-                </tbody>
-              </table>
+          <table>
+            <thead>
+              <tr>
+                <th>Entrenador / Hora</th>
+                <th *ngFor="let Hora of horas">{{Hora.franjaHoraria}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let Entrenador of entrenadoresPD(diasDeLaSemana[diaElegido-1].day, diasDeLaSemana[diaElegido-1].month)">
+                <th>{{Entrenador.nombre}}</th>
+                <td *ngFor="let hora of horas">
+                    
+                    <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id, diasDeLaSemana[diaElegido-1].month, diasDeLaSemana[diaElegido-1].day).includes(hora)">
+                      @if(!existeReserva(getIdSesion(),diasDeLaSemana[diaElegido-1].day ,hora.id)){
+                        <button class="button" (click)="aniadirReserva(getIdSesion(),diasDeLaSemana[diaElegido-1].month, diasDeLaSemana[diaElegido-1].day , hora.id, Entrenador.id)"> Reservar</button>
+                      }@else{
+                        <p class="reserva"> Ya reservado </p>
+                      }
+                    </ng-container>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
         <div *ngSwitchCase="3">
-            <table>
-                <thead>
-                  <tr>
-                    <th>Entrenador / Hora</th>
-                    <th *ngFor="let Hora of horas">{{Hora.franjaHoraria}}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let Entrenador of entrenadoresPD(3)">
-                    <th>{{Entrenador.nombre}}</th>
-                    <td *ngFor="let hora of horas">
-                      <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id, 3).includes(hora)">
-                        @if(!existeReserva(getIdSesion(),3,hora.id)){
-                          <button class="button" (click)="aniadirReserva(getIdSesion(),3,hora.id, Entrenador.id)"> Reservar</button>
-                        }@else{
-                          <p class="reserva"> Ya reservado </p>
-                        }
-                      </ng-container>
-                  </td>
-                  </tr>
-                </tbody>
-              </table>
+          <table>
+            <thead>
+              <tr>
+                <th>Entrenador / Hora</th>
+                <th *ngFor="let Hora of horas">{{Hora.franjaHoraria}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let Entrenador of entrenadoresPD(diasDeLaSemana[diaElegido-1].day, diasDeLaSemana[diaElegido-1].month)">
+                <th>{{Entrenador.nombre}}</th>
+                <td *ngFor="let hora of horas">
+                    
+                    <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id, diasDeLaSemana[diaElegido-1].month, diasDeLaSemana[diaElegido-1].day).includes(hora)">
+                      @if(!existeReserva(getIdSesion(),diasDeLaSemana[diaElegido-1].day ,hora.id)){
+                        <button class="button" (click)="aniadirReserva(getIdSesion(),diasDeLaSemana[diaElegido-1].month, diasDeLaSemana[diaElegido-1].day , hora.id, Entrenador.id)"> Reservar</button>
+                      }@else{
+                        <p class="reserva"> Ya reservado </p>
+                      }
+                    </ng-container>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
         <div *ngSwitchCase="4">
-            <table>
-                <thead>
-                  <tr>
-                    <th>Entrenador / Hora</th>
-                    <th *ngFor="let Hora of horas">{{Hora.franjaHoraria}}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let Entrenador of entrenadoresPD(4)">
-                    <th>{{Entrenador.nombre}}</th>
-                    <td *ngFor="let hora of horas">
-                      <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id, 4).includes(hora)">
-                        @if(!existeReserva(getIdSesion(),4,hora.id)){
-                          <button class="button" (click)="aniadirReserva(getIdSesion(),4,hora.id, Entrenador.id)"> Reservar</button>
-                        }@else{
-                          <p class="reserva"> Ya reservado </p>
-                        }
-                      </ng-container>
-                  </td>
-                  </tr>
-                </tbody>
-              </table>
+          <table>
+            <thead>
+              <tr>
+                <th>Entrenador / Hora</th>
+                <th *ngFor="let Hora of horas">{{Hora.franjaHoraria}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let Entrenador of entrenadoresPD(diasDeLaSemana[diaElegido-1].day, diasDeLaSemana[diaElegido-1].month)">
+                <th>{{Entrenador.nombre}}</th>
+                <td *ngFor="let hora of horas">
+                    
+                    <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id, diasDeLaSemana[diaElegido-1].month, diasDeLaSemana[diaElegido-1].day).includes(hora)">
+                      @if(!existeReserva(getIdSesion(),diasDeLaSemana[diaElegido-1].day ,hora.id)){
+                        <button class="button" (click)="aniadirReserva(getIdSesion(),diasDeLaSemana[diaElegido-1].month, diasDeLaSemana[diaElegido-1].day , hora.id, Entrenador.id)"> Reservar</button>
+                      }@else{
+                        <p class="reserva"> Ya reservado </p>
+                      }
+                    </ng-container>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
         <div *ngSwitchCase="5">
-            <table>
-                <thead>
-                  <tr>
-                    <th>Entrenador / Hora</th>
-                    <th *ngFor="let Hora of horas">{{Hora.franjaHoraria}}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let Entrenador of entrenadoresPD(5)">
-                    <th>{{Entrenador.nombre}}</th>
-                    <td *ngFor="let hora of horas">
-                      <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id, 5).includes(hora)">
-                        @if(!existeReserva(getIdSesion(),5,hora.id)){
-                          <button class="button" (click)="aniadirReserva(getIdSesion(),5,hora.id, Entrenador.id)"> Reservar</button>
-                        }@else{
-                          <p class="reserva"> Ya reservado </p>
-                        }
-                      </ng-container>
-                  </td>
-                  </tr>
-                </tbody>
-              </table>
+          <table>
+            <thead>
+              <tr>
+                <th>Entrenador / Hora</th>
+                <th *ngFor="let Hora of horas">{{Hora.franjaHoraria}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let Entrenador of entrenadoresPD(diasDeLaSemana[diaElegido-1].day, diasDeLaSemana[diaElegido-1].month)">
+                <th>{{Entrenador.nombre}}</th>
+                <td *ngFor="let hora of horas">
+                    
+                    <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id, diasDeLaSemana[diaElegido-1].month, diasDeLaSemana[diaElegido-1].day).includes(hora)">
+                      @if(!existeReserva(getIdSesion(),diasDeLaSemana[diaElegido-1].day ,hora.id)){
+                        <button class="button" (click)="aniadirReserva(getIdSesion(),diasDeLaSemana[diaElegido-1].month, diasDeLaSemana[diaElegido-1].day , hora.id, Entrenador.id)"> Reservar</button>
+                      }@else{
+                        <p class="reserva"> Ya reservado </p>
+                      }
+                    </ng-container>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
         <div *ngSwitchCase="6">
-            <table>
-                <thead>
-                  <tr>
-                    <th>Entrenador / Hora</th>
-                    <th *ngFor="let Hora of horas">{{Hora.franjaHoraria}}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let Entrenador of entrenadoresPD(6)">
-                    <th>{{Entrenador.nombre}}</th>
-                    <td *ngFor="let hora of horas">
-                      <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id, 6).includes(hora)">
-                        @if(!existeReserva(getIdSesion(),6,hora.id)){
-                          <button class="button" (click)="aniadirReserva(getIdSesion(),6,hora.id, Entrenador.id)"> Reservar</button>
-                        }@else{
-                          <p class="reserva"> Ya reservado </p>
-                        }
-                      </ng-container>
-                  </td>
-                  </tr>
-                </tbody>
-              </table>
+          <table>
+            <thead>
+              <tr>
+                <th>Entrenador / Hora</th>
+                <th *ngFor="let Hora of horas">{{Hora.franjaHoraria}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let Entrenador of entrenadoresPD(diasDeLaSemana[diaElegido-1].day, diasDeLaSemana[diaElegido-1].month)">
+                <th>{{Entrenador.nombre}}</th>
+                <td *ngFor="let hora of horas">
+                    
+                    <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id, diasDeLaSemana[diaElegido-1].month, diasDeLaSemana[diaElegido-1].day).includes(hora)">
+                      @if(!existeReserva(getIdSesion(),diasDeLaSemana[diaElegido-1].day ,hora.id)){
+                        <button class="button" (click)="aniadirReserva(getIdSesion(),diasDeLaSemana[diaElegido-1].month, diasDeLaSemana[diaElegido-1].day , hora.id, Entrenador.id)"> Reservar</button>
+                      }@else{
+                        <p class="reserva"> Ya reservado </p>
+                      }
+                    </ng-container>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
         <div *ngSwitchCase="7">
-            <table>
-                <thead>
-                  <tr>
-                    <th>Entrenador / Hora</th>
-                    <th *ngFor="let Hora of horas">{{Hora.franjaHoraria}}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr *ngFor="let Entrenador of entrenadoresPD(7)">
-                    <th>{{Entrenador.nombre}}</th>
-                    <td *ngFor="let hora of horas">
-                      <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id, 7).includes(hora)">
-                        @if(!existeReserva(getIdSesion(),7,hora.id)){
-                          <button class="button" (click)="aniadirReserva(getIdSesion(),7,hora.id, Entrenador.id)"> Reservar</button>
-                        }@else{
-                          <p class="reserva"> Ya reservado </p>
-                        }
-                      </ng-container>
-                  </td>
-                  </tr>
-                </tbody>
-              </table>
+          <table>
+            <thead>
+              <tr>
+                <th>Entrenador / Hora</th>
+                <th *ngFor="let Hora of horas">{{Hora.franjaHoraria}}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let Entrenador of entrenadoresPD(diasDeLaSemana[diaElegido-1].day, diasDeLaSemana[diaElegido-1].month)">
+                <th>{{Entrenador.nombre}}</th>
+                <td *ngFor="let hora of horas">
+                    
+                    <ng-container *ngIf="horarioEntrenadoresPD(Entrenador.id, diasDeLaSemana[diaElegido-1].month, diasDeLaSemana[diaElegido-1].day).includes(hora)">
+                      @if(!existeReserva(getIdSesion(),diasDeLaSemana[diaElegido-1].day ,hora.id)){
+                        <button class="button" (click)="aniadirReserva(getIdSesion(),diasDeLaSemana[diaElegido-1].month, diasDeLaSemana[diaElegido-1].day , hora.id, Entrenador.id)"> Reservar</button>
+                      }@else{
+                        <p class="reserva"> Ya reservado </p>
+                      }
+                    </ng-container>
+                </td>
+              </tr>
+            </tbody>
+          </table>
         </div>
         <div>
         </div>

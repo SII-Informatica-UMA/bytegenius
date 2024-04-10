@@ -1,7 +1,9 @@
 export interface HashMap {
-  [idDia: number]: { 
-      [idHora: number]: { 
-          idTrainers: number[];
-      }; 
+  [idMes: number]: {
+    [idDia: number]: {
+      [idHora: number]: {
+        idTrainers: number[];
+      };
+    };
   };
 }

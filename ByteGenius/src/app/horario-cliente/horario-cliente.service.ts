@@ -79,30 +79,68 @@ export class UsuarioServiceCliente {
     //   }
     // };
 
-    private asignaciones: HashMap = {
-      1: {
-          1: { idTrainers: [4, 5, 6, 7 , 8] },
-          10: {idTrainers: [3]}
-      },
-      2: {
-          1: { idTrainers: [3,5,6] }
-      },
-      3: {
-          2: { idTrainers: [2, 4] }
-      },
-      4: {
-          3: { idTrainers: [3, 2] }
-      },
-      5: {
-        4:{idTrainers: [3, 4]},
-        5:{idTrainers: [6, 5]}
-      },
-      6:{
-        2:{idTrainers:[2,3]},
-        7:{idTrainers:[4,6]}
-      }
+// Declaración de la variable asignaciones, utilizando la interfaz HashMap para especificar su tipo
+private asignaciones: HashMap = {
+  // Mes 1
+  1: {
+    // Día 1 del mes 1
+    1: {
+      // Hora 1 del día 1 del mes 1
+      1: { idTrainers: [4, 5, 6, 7, 8] }, // Entrenadores asignados para la hora 1 del día 1 del mes 1
+      // Hora 10 del día 1 del mes 1
+      10: { idTrainers: [3] } // Entrenadores asignados para la hora 10 del día 1 del mes 1
+    },
+  },
+  // Mes 2
+  2: {
+    // Día 1 del mes 2
+    1: {
+      // Hora 1 del día 1 del mes 2
+      1: { idTrainers: [3, 5, 6] } // Entrenadores asignados para la hora 1 del día 1 del mes 2
+    },
+  },
+  // Mes 3
+  3: {
+    // Día 2 del mes 3
+    2: {
+      // Hora 2 del día 2 del mes 3
+      2: { idTrainers: [2, 4] } // Entrenadores asignados para la hora 2 del día 2 del mes 3
+    },
+  },
+  // Mes 4
+  4: {
+    // Día 3 del mes 4
+    3: {
+      // Hora 3 del día 3 del mes 4
+      3: { idTrainers: [3, 2] } // Entrenadores asignados para la hora 3 del día 3 del mes 4
+    },
+  },
+  // Mes 5
+  5: {
+    // Día 4 del mes 5
+    4: {
+      // Hora 4 del día 4 del mes 5
+      4: { idTrainers: [3, 4] }, // Entrenadores asignados para la hora 4 del día 4 del mes 5
+      // Hora 5 del día 4 del mes 5
+      5: { idTrainers: [6, 5] } // Entrenadores asignados para la hora 5 del día 4 del mes 5
+    },
+  },
+  // Mes 6
+  6: {
+    // Día 2 del mes 6
+    2: {
+      // Hora 2 del día 2 del mes 6
+      2: { idTrainers: [2, 3] } // Entrenadores asignados para la hora 2 del día 2 del mes 6
+    },
+    // Día 7 del mes 6
+    7: {
+      // Hora 7 del día 7 del mes 6
+      7: { idTrainers: [4, 6] } // Entrenadores asignados para la hora 7 del día 7 del mes 6
+    },
+  }
+};
 
-  };
+
   
 //Dia - Hora - Entrenador
 
@@ -132,9 +170,9 @@ export class UsuarioServiceCliente {
 
       
 
-      getEntrenadoresPorDia(dia: number): Usuario[] {
+      getEntrenadoresPorDia(dia: number, mes: number): Usuario[] {
         const entrenadoresPorDia: Usuario[] = [];
-        const asignacionesParaDia = this.asignaciones[dia];
+        const asignacionesParaDia = this.asignaciones[mes] ? this.asignaciones[mes][dia] : null;
         if (asignacionesParaDia) {
           for (let key in asignacionesParaDia) {
             const idTrainers = asignacionesParaDia[key].idTrainers; // Ahora es un array de IDs
@@ -149,16 +187,17 @@ export class UsuarioServiceCliente {
         }
         return entrenadoresPorDia;
       }
+      
 
-      getHorasPorEntrenador(idEntrenador: number, idDia: number): Hora[] {
+      getHorasPorEntrenador(idEntrenador: number, idDia: number, idMes: number): Hora[] {
         const horasEntrenador: Hora[] = [];
         
-        // Verificar si el día especificado existe en las asignaciones
-        if (this.asignaciones[idDia]) {
+        // Verificar si el mes y el día especificados existen en las asignaciones
+        if (this.asignaciones[idMes] && this.asignaciones[idMes][idDia]) {
           // Iterar sobre todas las horas de ese día
-          for (const hora in this.asignaciones[idDia]) {
+          for (const hora in this.asignaciones[idMes][idDia]) {
             // Verificar si el entrenador está asignado a esta hora
-            if (this.asignaciones[idDia][hora].idTrainers.includes(idEntrenador)) {
+            if (this.asignaciones[idMes][idDia][hora].idTrainers.includes(idEntrenador)) {
               // Obtener la hora correspondiente y agregarla al array
               const horaObj = this.horas.find(h => h.id === parseInt(hora));
               if (horaObj) {
@@ -170,6 +209,7 @@ export class UsuarioServiceCliente {
         
         return horasEntrenador;
       }
+      
       
 
       
@@ -219,33 +259,46 @@ export class UsuarioServiceCliente {
       
       
     
-      obtenerEntrenadoresPorUsuario(idUsuario: number, idDia: number, idHora: number, reservasComp: HashMapReservas): Usuario[] {
-        const hora = reservasComp[idUsuario] && reservasComp[idUsuario][idDia] ? reservasComp[idUsuario][idDia][idHora] : null;
+      obtenerEntrenadoresPorUsuario(idUsuario: number, idMes: number, idDia: number, idHora: number, reservasComp: HashMapReservas): Usuario[] {
+        // Verificar si el usuario tiene reservas para el día, mes y hora especificados
+        const reserva = reservasComp[idUsuario] && reservasComp[idUsuario][idMes] && reservasComp[idUsuario][idMes][idDia] && reservasComp[idUsuario][idMes][idDia][idHora];
         const entrenadores: Usuario[] = [];
-        if (hora && hora.idEntrenador) {
-          const entrenador = this.usuarios.find(usuario => usuario.id === hora.idEntrenador);
+        
+        if (reserva && reserva.idEntrenador) {
+          // Obtener el entrenador correspondiente a la reserva
+          const entrenador = this.usuarios.find(usuario => usuario.id === reserva.idEntrenador);
           if (entrenador) {
             entrenadores.push(entrenador);
           }
         }
+        
         return entrenadores;
       }
       
+      
+      
+      
 
-      aniadirReserva(usuario: number, dia: number, hora: number, entrenador: number): void {
+      aniadirReserva(usuario: number, mes: number, dia: number, hora: number, entrenador: number): void {
         // Inicializa la entrada del usuario si no existe
         if (!(usuario in this.reservasRealizadas)) {
           this.reservasRealizadas[usuario] = {};
-         
         }
+        
+        // Inicializa la entrada del mes si no existe
+        if (!(mes in this.reservasRealizadas[usuario])) {
+          this.reservasRealizadas[usuario][mes] = {};
+        }
+        
         // Inicializa la entrada del día si no existe
-        if (!(dia in this.reservasRealizadas[usuario])) {
-          this.reservasRealizadas[usuario][dia] = {};
-          
+        if (!(dia in this.reservasRealizadas[usuario][mes])) {
+          this.reservasRealizadas[usuario][mes][dia] = {};
         }
+        
         // Agrega la información de la reserva
-        this.reservasRealizadas[usuario][dia][hora] = { idEntrenador: entrenador };
+        this.reservasRealizadas[usuario][mes][dia][hora] = { idEntrenador: entrenador };
       }
+      
 
       actualizarReservas(): void {
         const reservasGuardadas = localStorage.getItem('reservasRealizadas');
