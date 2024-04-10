@@ -11,6 +11,7 @@ import {NgbCalendar, NgbDate, NgbDateStruct, NgbModal} from '@ng-bootstrap/ng-bo
 import { HashMapReservas } from '../HashMapReservas';
 import { Dia } from '../Dia';
 import { UsuariosService } from '../services/usuarios.service';
+import { HashMap } from '../HashMap';
 
 
 
@@ -49,6 +50,7 @@ export class HorarioClienteComponent implements OnInit {
     this.id = usuariosServiceLogin.getSesionID() as number;
     this.today=this.calendar.getToday();
     this.diasDeLaSemana=usuariosservice.obtenerSemana(this.today);
+    
     this.actualizarReservas();
   }
 
@@ -64,18 +66,14 @@ export class HorarioClienteComponent implements OnInit {
   public selectedDate: Date = new Date;
 
   cargarDatos(): void {
-    const datosGuardados = localStorage.getItem('horarioEntrenadores');
-    if (datosGuardados) {
-      this.horarioEntrenadoresPD = JSON.parse(datosGuardados);
-    }
     const datosGuardadosReservas = localStorage.getItem('reservasRealizadas');
     if (datosGuardadosReservas) {
       this.reservas = JSON.parse(datosGuardadosReservas);
     }
+
   }
   
   guardarDatos(): void {
-    localStorage.setItem('horarioEntrenadoresPD', JSON.stringify(this.horarioEntrenadoresPD));
     localStorage.setItem('reservasRealizadas', JSON.stringify(this.reservas)) ;
   }
 

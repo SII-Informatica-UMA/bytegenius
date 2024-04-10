@@ -14,31 +14,8 @@ import { NgbCalendar, NgbDate, NgbDateStruct } from "@ng-bootstrap/ng-bootstrap"
 export class UsuarioServiceCliente {
   private usuarios: Usuario[]= [];
   today:NgbDate;
-
-  private reservasRealizadas: HashMapReservas ={
-    // 5: { // idUsuario
-    //     1: { // idDia
-    //         1: { // idHora
-    //             idEntrenador: 6
-    //         },
-    //         2: {
-    //             idEntrenador: 6
-    //         }
-    //     },
-    //     3: {
-    //         3: {
-    //             idEntrenador: 6
-    //         }
-    //     }
-    // },
-    // 2: {
-    //     1: {
-    //         4: {
-    //             idEntrenador: 1
-    //         }
-    //     }
-    // }
-};
+  private asignaciones: HashMap = {}
+  private reservasRealizadas: HashMapReservas ={};
     
   
 
@@ -58,115 +35,6 @@ export class UsuarioServiceCliente {
         {id:13,franjaHoraria:'21:00'},        
     ]
 
-    // private ReservasUsuarios: HashMapReservas = {
-    //   1: { // idUsuario
-    //     2: { // idDia
-    //       1: { // idHora
-    //         idEntrenador: 5
-    //       },
-    //     },
-    //     3: { // otro idDia
-    //       1: { // idHora
-    //         idEntrenador: 3
-    //       }
-    //     }
-    //   },
-
-    //   6: { // otro idUsuario
-    //     1: { // idDia
-    //       1: { // idHora
-    //         idEntrenador: 4
-    //       }
-    //     }
-    //   }
-    // };
-
-// Declaración de la variable asignaciones, utilizando la interfaz HashMap para especificar su tipo
-private asignaciones: HashMap = {
-  // Mes 1
-  1: {
-    // Día 1 del mes 1
-    1: {
-      // Hora 1 del día 1 del mes 1
-      1: { idTrainers: [4, 5, 6, 7, 8] }, // Entrenadores asignados para la hora 1 del día 1 del mes 1
-      // Hora 10 del día 1 del mes 1
-      10: { idTrainers: [3] } // Entrenadores asignados para la hora 10 del día 1 del mes 1
-    },
-  },
-  // Mes 2
-  2: {
-    // Día 1 del mes 2
-    1: {
-      // Hora 1 del día 1 del mes 2
-      1: { idTrainers: [3, 5, 6] } // Entrenadores asignados para la hora 1 del día 1 del mes 2
-    },
-  },
-  // Mes 3
-  3: {
-    // Día 2 del mes 3
-    2: {
-      // Hora 2 del día 2 del mes 3
-      2: { idTrainers: [2, 4] } // Entrenadores asignados para la hora 2 del día 2 del mes 3
-    },
-  },
-  // Mes 4
-  4: {
-    // Día 3 del mes 4
-    8: {
-      // Hora 3 del día 3 del mes 4
-      3: { idTrainers: [3, 2] } ,// Entrenadores asignados para la hora 3 del día 3 del mes 4
-      7:{idTrainers:[6,5]}
-    },
-    9: {
-      // Hora 3 del día 3 del mes 4
-      4: { idTrainers: [3, 2] } // Entrenadores asignados para la hora 3 del día 3 del mes 4
-    },
-    10: {
-      // Hora 3 del día 3 del mes 4
-      5: { idTrainers: [3, 2] } // Entrenadores asignados para la hora 3 del día 3 del mes 4
-    },
-    11: {
-      // Hora 3 del día 3 del mes 4
-      6: { idTrainers: [3, 2] } // Entrenadores asignados para la hora 3 del día 3 del mes 4
-    },
-    12: {
-      // Hora 3 del día 3 del mes 4
-      7: { idTrainers: [3, 2] } // Entrenadores asignados para la hora 3 del día 3 del mes 4
-    },
-    13: {
-      // Hora 3 del día 3 del mes 4
-      8: { idTrainers: [3, 2] } // Entrenadores asignados para la hora 3 del día 3 del mes 4
-    },
-  },
-  // Mes 5
-  5: {
-    // Día 4 del mes 5
-    4: {
-      // Hora 4 del día 4 del mes 5
-      4: { idTrainers: [3, 4] }, // Entrenadores asignados para la hora 4 del día 4 del mes 5
-      // Hora 5 del día 4 del mes 5
-      5: { idTrainers: [6, 5] } // Entrenadores asignados para la hora 5 del día 4 del mes 5
-    },
-  },
-  // Mes 6
-  6: {
-    // Día 2 del mes 6
-    2: {
-      // Hora 2 del día 2 del mes 6
-      2: { idTrainers: [2, 3] } // Entrenadores asignados para la hora 2 del día 2 del mes 6
-    },
-    // Día 7 del mes 6
-    7: {
-      // Hora 7 del día 7 del mes 6
-      7: { idTrainers: [4, 6] } // Entrenadores asignados para la hora 7 del día 7 del mes 6
-    },
-  }
-};
-
-
-  
-//Dia - Hora - Entrenador
-
     private dias: Dia [] = [
       {id:1, nombre:'Lunes'},
       {id:2, nombre:'Martes'},
@@ -180,8 +48,17 @@ private asignaciones: HashMap = {
       this.backendService.getUsuarios().subscribe(usuarios => {
       this.usuarios = usuarios;});
       this.today=calendar.getToday();
+      this.cargarDatos();
    }
 
+   cargarDatos(): void {
+    const datosGuardados = localStorage.getItem('horarioEntrenadoresPD');
+    console.log('datitos: '+datosGuardados);
+    if (datosGuardados) {
+      this.asignaciones = JSON.parse(datosGuardados);
+    }
+
+  }
 
 
       getUsuarios(): Usuario[] {
