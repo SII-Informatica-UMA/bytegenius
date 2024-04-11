@@ -65,6 +65,11 @@
       <select id = "hasta">
         <option *ngFor="let Hora of horas" [value] = "Hora.id">{{Hora.franjaHoraria}}</option>
       </select>
+      &nbsp;<label>Mes:</label>
+      <select id="month">
+        <option *ngFor="let num of [1,2,3,4,5,6,7,8,9,10,11,12]" [value]="num">{{ num }}</option>
+      </select>
+      
     </form>
     <br>
     &nbsp; <button type="button" class="btn btn-primary" (click)="guardarDisponibilidad()">Guardar Disponibilidad</button> &nbsp;

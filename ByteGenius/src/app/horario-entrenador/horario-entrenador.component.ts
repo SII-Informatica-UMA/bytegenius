@@ -33,6 +33,8 @@ export class HorarioEntrenadorComponent {
   id:number = 1;
   semana:NgbDate [] = [];
   reservas:HashMapReservas = {}
+  semanaSelected:NgbDateStruct [] = [];
+  diaSiguienteSemana:NgbDate;
 
   today: NgbDate;
 	dia: NgbDate;
@@ -58,6 +60,7 @@ export class HorarioEntrenadorComponent {
 		this.date = { year: this.today.year, month: this.today.month };
     this.dia = this.today;
     this.id = usuarioServiceLogin.getSesionID() as number;
+    this.diaSiguienteSemana = this.today;
 
 	  
   }
@@ -154,6 +157,7 @@ export class HorarioEntrenadorComponent {
   guardarDisponibilidad(): void {
     // Obtener los días seleccionados del dropdown
     const diasSeleccionados = this.selectedItems.map((item: Dia) => item.id);
+    this.semanaSelected = this.obtenerSemana(this.today);
 
     // Obtener las horas seleccionadas desde y hasta
     const desde = parseInt((<HTMLSelectElement>document.getElementById("desde")).value);
@@ -166,10 +170,10 @@ export class HorarioEntrenadorComponent {
         // Iterar sobre las horas dentro del rango seleccionado
         for (let i = desde; i <= hasta; i++) {
           // Verificar si el entrenador ya ha reservado en esa hora
-          const idTrainers = this.obtenerIdTrainer(this.asignaciones, this.dia.month, dia, i);
+          const idTrainers = this.obtenerIdTrainer(this.asignaciones, this.semanaSelected[dia-1].month, this.semanaSelected[dia-1].day, i);
           if (!this.estaId(idTrainers, this.id)) {
             // Si el entrenador no tiene asignada esa hora y no hay una reserva existente, agregarla
-            this.agregarHora(this.dia.month, dia, i);
+            this.agregarHora(this.semanaSelected[dia-1].month, this.semanaSelected[dia-1].day, i);
             // Guardar la disponibilidad en el localStorage
             this.guardarDatos();
           }
