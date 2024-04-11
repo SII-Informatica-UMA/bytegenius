@@ -10,7 +10,6 @@ import { NgMultiSelectDropDownModule } from 'ng-multiselect-dropdown';
 import { IDropdownSettings } from 'ng-multiselect-dropdown';
 import { JsonPipe } from '@angular/common';
 import { NgbCalendar, NgbDate, NgbDatepickerModule, NgbDateStruct, NgbDateStructAdapter } from '@ng-bootstrap/ng-bootstrap';
-import { NgbDatepickerNavigation } from '@ng-bootstrap/ng-bootstrap/datepicker/datepicker-navigation';
 import { ReservasEntrenadorComponent } from '../reservas-entrenador/reservas-entrenador.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {UsuariosService} from '../services/usuarios.service';
@@ -53,16 +52,11 @@ export class HorarioEntrenadorComponent {
 	date: { year: number; month: number };
   sol:String = "";
 
-  
-
   // Variables necesarias para el selector de los días en el formulario
   selectedItems = []
   dropdownSettings: IDropdownSettings = {};
-
-  //Propiedades para controlar que los checkbox (cb -> checkbox).
-  cbMarcados: HashMap = []; // HashMap para controlar los checkbox marcados.
-  cbMarcado: boolean = false; // Indica si no hay ninguna checkbox marcada.
-
+  
+  //Constructor
   constructor(private usuariosservice: UsuarioServiceEntrenador, private calendar:NgbCalendar,private modalService: NgbModal, private usuarioServiceLogin: UsuariosService) {
     // Inicialización de las propiedades
 		this.today = this.calendar.getToday();
@@ -70,17 +64,15 @@ export class HorarioEntrenadorComponent {
 		this.date = { year: this.today.year, month: this.today.month };
     this.dia = this.today;
     this.id = usuarioServiceLogin.getSesionID() as number;
-    this.diaSiguienteSemana = this.today;
-
-	  
+    this.diaSiguienteSemana = this.today; 
   }
 
+  //Inicialización de variables y configuración para el selector múltiple.
   ngOnInit(): void {
     this.dias = this.usuariosservice.getDias();
     this.horas = this.usuariosservice.getHoras();
     this.usuarios = this.usuariosservice.getUsuarios();
     this.cargarDatos();
-
     
     // Configuración necesaria de la interfaz IDropdownSettings para el selector múltiple de la lista de días
     this.dropdownSettings= {
@@ -131,7 +123,6 @@ export class HorarioEntrenadorComponent {
     return ''; // Devuelve una cadena vacía si no se encuentra el usuario
   }
   
-    
   estaId(ids:number[],id:number): boolean{
     return ids.includes(id);
   }
@@ -143,7 +134,6 @@ export class HorarioEntrenadorComponent {
         this.asignaciones[mes][dia][hora].idTrainers.splice(index, 1);
       }
       this.cancelarReservaOpcional(this.id,mes,dia,hora);
-
       this.guardarDatos();
     }
   }
@@ -161,8 +151,7 @@ export class HorarioEntrenadorComponent {
     this.asignaciones[mes][dia][hora].idTrainers.push(this.id);
     this.guardarDatos();
   }
-  
-    
+   
   // Método para el evento (click) del botón "Guardar Disponibilidad"
   guardarDisponibilidad(): void {
     // Obtener los días seleccionados del dropdown
@@ -172,11 +161,8 @@ export class HorarioEntrenadorComponent {
     for(const di of diasSeleccionados){
       stringDias.push(this.diasAqui[di-1].nombre);
     }
-    console.log(stringDias);
     
     this.semanaSelected = this.obtenerSemana(this.today);
-
-
 
     // Obtener las horas seleccionadas desde y hasta
     const desde = parseInt((<HTMLSelectElement>document.getElementById("desde")).value);
@@ -186,130 +172,26 @@ export class HorarioEntrenadorComponent {
     const diasdelmes:number = this.obtenerCantidadDiasMes(month,this.today.year);
     const nombres:String[] = [];
     
-
     for (let day = 1; day <= diasdelmes; day++) {
-        if(stringDias.includes(this.getDayOfWeek(new NgbDate(this.today.year,month,day)))){
-          console.log(this.getDayOfWeek(new NgbDate(this.today.year,month,day)));
-          for (let i = desde; i <= hasta; i++) {
-            // Verificar si el entrenador ya ha reservado en esa hora
-              // Si el entrenador no tiene asignada esa hora y no hay una reserva existente, agregarla
-              this.agregarHora(month,day, i);
-              // Guardar la disponibilidad en el localStorage
-              this.guardarDatos();
-            
-          }
-        }
-      }
-
-
-    // Validar que haya días seleccionados y que la hora de inicio sea menor a la hora de fin
-    /*
-    if (diasSeleccionados.length > 0 && desde < hasta) {
-      // Iterar sobre los días seleccionados
-      
-      diasSeleccionados.forEach((dia: number) => {
-        // Iterar sobre las horas dentro del rango seleccionado
+      // Verificar si el entrenador ya ha reservado en esa hora
+      if(stringDias.includes(this.getDayOfWeek(new NgbDate(this.today.year,month,day)))){
         for (let i = desde; i <= hasta; i++) {
-          // Verificar si el entrenador ya ha reservado en esa hora
-          const idTrainers = this.obtenerIdTrainer(this.asignaciones, this.semanaSelected[dia-1].month, this.semanaSelected[dia-1].day, i);
-          if (!this.estaId(idTrainers, this.id)) {
             // Si el entrenador no tiene asignada esa hora y no hay una reserva existente, agregarla
-            this.agregarHora(this.semanaSelected[dia-1].month, this.semanaSelected[dia-1].day, i);
+            this.agregarHora(month,day, i);
             // Guardar la disponibilidad en el localStorage
-            this.guardarDatos();
-          }
-        }
-      });
-
-      // Limpiar la selección de días y horas en el formulario
-      this.selectedItems = [];
-      (<HTMLSelectElement>document.getElementById("desde")).selectedIndex = 0;
-      (<HTMLSelectElement>document.getElementById("hasta")).selectedIndex = 0;
-      (<HTMLSelectElement>document.getElementById("month")).selectedIndex = 0;
-      
-
-
-      // Notificar al usuario que la disponibilidad se ha guardado correctamente.
-      alert('La disponibilidad se ha guardado correctamente.');
-    } else {
-      // Si no hay días seleccionados o la hora de inicio es mayor o igual a la hora de fin, mostrar un mensaje de error.
-      alert('Por favor, seleccione al menos un día y asegúrese de que la hora de inicio sea menor a la hora de fin.');
-    }
-    */
-}
-
-  // Método para mostrar el botón "eliminar disponibilidad" cuando se hace click sobre un checkbox u ocultarlo cuando se quita el check.
-/*
-  mostrarBoton(dia: number, hora: number, event: any): void {
-    // Obtener el estado de verificación del checkbox
-    const isChecked = event.target.checked;
-
-    // Incrementar o decrementar el contador según el estado del checkbox
-    if (isChecked) {
-      this.agregarHoraMarcada(dia, hora);
-      this.tieneElementos();
-    } else {
-      this.eliminarHoraMarcada(dia, hora);
-      this.tieneElementos();
-    }
-  }
-
-*/
-
-  // Función para comprobar si hay checkbox marcados
-  tieneElementos(): void {
-    this.cbMarcado = false
-    // Iterar sobre las claves de nivel superior (idDia)
-    for (const idDia in this.cbMarcados) {
-      // Verificar si la clave tiene propiedades
-      if (Object.keys(this.cbMarcados[idDia]).length > 0) {
-        this.cbMarcado = true; // Si hay propiedades, la estructura tiene elementos
-      }
-    }
-  }
-
-  //Función para eliminar todas las horas marcadas con los checkbox 
-/*
-  eliminarHorasMarcadas(): void{
-    for (const idDia in this.cbMarcados) {
-      for (const idHora in this.cbMarcados[idDia]) {
-        // Verificar si el checkbox está marcado antes de eliminar la hora
-        if (this.cbMarcados[idDia][idHora]) {
-          this.eliminarHora(parseInt(idDia), parseInt(idHora));
+            this.guardarDatos(); 
         }
       }
     }
-    this.cbMarcados = [];
   }
 
-
-  //Función para agregar las horas marcadas por los checkBox en el HashMap cbMarcados
-  agregarHoraMarcada(dia: number, hora: number): void {
-    if (!this.cbMarcados[dia]) {
-      this.cbMarcados[dia] = {};
-    }
-    if (!this.cbMarcados[dia][hora]) {
-      this.cbMarcados[dia][hora] = { idTrainers: [] };
-    }
-      this.cbMarcados[dia][hora].idTrainers.push(this.id);
-  }
-
-  eliminarHoraMarcada(dia: number, hora: number): void {
-    const index = this.cbMarcados[dia][hora].idTrainers.indexOf(this.id);
-    if (index !== -1) {
-      this.cbMarcados[dia][hora].idTrainers.splice(index, 1);
-    }
-  }
-*/
   //Implementacion DATEPICKER
   rellenarSemana() {
 		const dia: NgbDate = new NgbDate(this.date.year, this.date.month, this.today.day);
 		// Hacer algo con 'dia'
 	}
 
-	ngMode(){
-
-	}
+	ngMode(){}
 	
 	onDateSelection(event: any) {
 		// Extrae la fecha del evento
@@ -339,124 +221,115 @@ export class HorarioEntrenadorComponent {
     return dayNames[d.getDay()];
   }
 
-   obtenerLunesMasCercano(date: NgbDateStruct): NgbDateStruct {
-      // Convertir la fecha NgbDateStruct a un objeto Date de JavaScript
-      const jsDate = new Date(date.year, date.month - 1, date.day);
-      
-      // Iterar hacia atrás desde la fecha dada hasta encontrar un lunes
-      while (jsDate.getDay() !== 1) { // 1 representa el lunes en JavaScript
-        jsDate.setDate(jsDate.getDate() - 1); // Restar un día
-      }
+  obtenerLunesMasCercano(date: NgbDateStruct): NgbDateStruct {
+    // Convertir la fecha NgbDateStruct a un objeto Date de JavaScript
+    const jsDate = new Date(date.year, date.month - 1, date.day);
     
-      // Convertir el resultado de vuelta a NgbDateStruct
-
-
-      const lunesMasCercano = new NgbDate(jsDate.getFullYear(),jsDate.getMonth()+1,jsDate.getDate());
-      this.sol = lunesMasCercano.day.toString();
-      this.dia = lunesMasCercano;
-      return lunesMasCercano;
+    // Iterar hacia atrás desde la fecha dada hasta encontrar un lunes
+    while (jsDate.getDay() !== 1) { // 1 representa el lunes en JavaScript
+      jsDate.setDate(jsDate.getDate() - 1); // Restar un día
     }
-    obtenerCantidadDiasMes(year: number, month: number): number {
-      // Obtener el último día del mes
-      const ultimoDiaMes = new Date(year, month, 0).getDate();
-    
-      return ultimoDiaMes;
-    }
-    
-    obtenerSemana(date:NgbDate):NgbDateStruct[]{
-      let primerLunes = this.obtenerLunesMasCercano(this.dia);
-      let lista = [];
-      var diaAct = primerLunes;
-      lista.push(primerLunes);
-      let cont = 0;
-      let cambio = false;
-      let cont2 = 0;
-      while(cont < 6){
-        if(this.obtenerCantidadDiasMes(diaAct.year,diaAct.month) > diaAct.day){
-          if(!cambio)lista.push(new NgbDate(diaAct.year,diaAct.month,diaAct.day+1));
-          else lista.push(new NgbDate(diaAct.year,diaAct.month,diaAct.day+1));
+  
+    // Convertir el resultado de vuelta a NgbDateStruct
+    const lunesMasCercano = new NgbDate(jsDate.getFullYear(),jsDate.getMonth()+1,jsDate.getDate());
+    this.sol = lunesMasCercano.day.toString();
+    this.dia = lunesMasCercano;
+    return lunesMasCercano;
+  }
+
+  obtenerCantidadDiasMes(year: number, month: number): number {
+    // Obtener el último día del mes
+    const ultimoDiaMes = new Date(year, month, 0).getDate();
+    return ultimoDiaMes;
+  }
+  
+  obtenerSemana(date:NgbDate):NgbDateStruct[]{
+    let primerLunes = this.obtenerLunesMasCercano(this.dia);
+    let lista = [];
+    var diaAct = primerLunes;
+    lista.push(primerLunes);
+    let cont = 0;
+    let cambio = false;
+    let cont2 = 0;
+    while(cont < 6){
+      if(this.obtenerCantidadDiasMes(diaAct.year,diaAct.month) > diaAct.day){
+        if(!cambio)lista.push(new NgbDate(diaAct.year,diaAct.month,diaAct.day+1));
+        else lista.push(new NgbDate(diaAct.year,diaAct.month,diaAct.day+1));
+      }else{
+        if(diaAct.month <= 12){
+          lista.push(new NgbDate(diaAct.year,diaAct.month+1,1));
+          cambio = true;
         }else{
-          if(diaAct.month <= 12){
-            lista.push(new NgbDate(diaAct.year,diaAct.month+1,1));
-            cambio = true;
-          }else{
-            lista.push(new NgbDate(diaAct.year+1,1,1));
-            cambio = true;
-          }
+          lista.push(new NgbDate(diaAct.year+1,1,1));
+          cambio = true;
         }
-        cont = cont+1;
-        if(cambio) cont2 = cont2+1;
-        diaAct = lista[lista.length-1];
       }
-      return lista;
+      cont = cont+1;
+      if(cambio) cont2 = cont2+1;
+      diaAct = lista[lista.length-1];
     }
+    return lista;
+  }
 
-    cargarDatos(): void {
-      const datosGuardados = localStorage.getItem('horarioEntrenadoresPD');
-      if (datosGuardados) {
-        this.asignaciones = JSON.parse(datosGuardados);
-      }
-      const datosGuardadosReservas = localStorage.getItem('reservasRealizadas');
-      if (datosGuardadosReservas) {
-        this.reservas = JSON.parse(datosGuardadosReservas);
-      }
+  cargarDatos(): void {
+    const datosGuardados = localStorage.getItem('horarioEntrenadoresPD');
+    if (datosGuardados) {
+      this.asignaciones = JSON.parse(datosGuardados);
     }
-    
-    guardarDatos(): void {
-      localStorage.setItem('horarioEntrenadoresPD', JSON.stringify(this.asignaciones));
+    const datosGuardadosReservas = localStorage.getItem('reservasRealizadas');
+    if (datosGuardadosReservas) {
+      this.reservas = JSON.parse(datosGuardadosReservas);
     }
+  }
+  
+  guardarDatos(): void {
+    localStorage.setItem('horarioEntrenadoresPD', JSON.stringify(this.asignaciones));
+  }
 
-    cancelarReserva(idUsuario: number, idDia: number, idHora: number) {
-      if (this.reservas[idUsuario] && this.reservas[idUsuario][idDia] && this.reservas[idUsuario][idDia][idHora]) {
-        // Eliminar la reserva del HashMap
-        delete this.reservas[idUsuario][idDia][idHora];
-        // Verificar si ya no hay reservas para ese día y hora
-        if (Object.keys(this.reservas[idUsuario][idDia]).length === 0) {
-          // Si no hay más reservas para ese día, eliminar el día del HashMap
-          delete this.reservas[idUsuario][idDia];
-          // Verificar si ya no hay días reservados para ese usuario
-          if (Object.keys(this.reservas[idUsuario]).length === 0) {
-            // Si no hay más días reservados para ese usuario, eliminar la entrada del usuario del HashMap de reservas
-            delete this.reservas[idUsuario];
-          }
-        }
-        // Guardar los cambios en el almacenamiento local (opcional)
-        localStorage.setItem('reservasRealizadas', JSON.stringify(this.reservas));
-      }
-    }
-    
-    cancelarReservaOpcional(idEntrenador: number, idMes: number, idDia: number, idHora: number) {
-      for (const idUsuario in this.reservas) {
-        if (this.reservas[idUsuario] && this.reservas[idUsuario][idMes] && this.reservas[idUsuario][idMes][idDia] && this.reservas[idUsuario][idMes][idDia][idHora] && this.reservas[idUsuario][idMes][idDia][idHora].idEntrenador === idEntrenador) {
-          // Eliminar el idUsuario de la reserva del HashMap
-          delete this.reservas[idUsuario][idMes][idDia][idHora];
-          // Verificar si ya no hay reservas para ese día y hora
-          if (Object.keys(this.reservas[idUsuario][idMes][idDia]).length === 0) {
-            // Si no hay más reservas para ese día, eliminar el día del HashMap
-            delete this.reservas[idUsuario][idMes][idDia];
-            // Verificar si ya no hay días reservados para ese mes
-            if (Object.keys(this.reservas[idUsuario][idMes]).length === 0) {
-              // Si no hay más días reservados para ese mes, eliminar el mes del HashMap
-              delete this.reservas[idUsuario][idMes];
-              // Verificar si ya no hay meses reservados para ese usuario
-              if (Object.keys(this.reservas[idUsuario]).length === 0) {
-                // Si no hay más meses reservados para ese usuario, eliminar la entrada del usuario del HashMap de reservas
-                delete this.reservas[idUsuario];
-              }
-            }
-          }
+  cancelarReserva(idUsuario: number, idDia: number, idHora: number) {
+    if (this.reservas[idUsuario] && this.reservas[idUsuario][idDia] && this.reservas[idUsuario][idDia][idHora]) {
+      // Eliminar la reserva del HashMap
+      delete this.reservas[idUsuario][idDia][idHora];
+      // Verificar si ya no hay reservas para ese día y hora
+      if (Object.keys(this.reservas[idUsuario][idDia]).length === 0) {
+        // Si no hay más reservas para ese día, eliminar el día del HashMap
+        delete this.reservas[idUsuario][idDia];
+        // Verificar si ya no hay días reservados para ese usuario
+        if (Object.keys(this.reservas[idUsuario]).length === 0) {
+          // Si no hay más días reservados para ese usuario, eliminar la entrada del usuario del HashMap de reservas
+          delete this.reservas[idUsuario];
         }
       }
       // Guardar los cambios en el almacenamiento local (opcional)
       localStorage.setItem('reservasRealizadas', JSON.stringify(this.reservas));
     }
-    
-    
-    
+  }
+  
+  cancelarReservaOpcional(idEntrenador: number, idMes: number, idDia: number, idHora: number) {
+    for (const idUsuario in this.reservas) {
+      if (this.reservas[idUsuario] && this.reservas[idUsuario][idMes] && this.reservas[idUsuario][idMes][idDia] && this.reservas[idUsuario][idMes][idDia][idHora] && this.reservas[idUsuario][idMes][idDia][idHora].idEntrenador === idEntrenador) {
+        // Eliminar el idUsuario de la reserva del HashMap
+        delete this.reservas[idUsuario][idMes][idDia][idHora];
+        // Verificar si ya no hay reservas para ese día y hora
+        if (Object.keys(this.reservas[idUsuario][idMes][idDia]).length === 0) {
+          // Si no hay más reservas para ese día, eliminar el día del HashMap
+          delete this.reservas[idUsuario][idMes][idDia];
+          // Verificar si ya no hay días reservados para ese mes
+          if (Object.keys(this.reservas[idUsuario][idMes]).length === 0) {
+            // Si no hay más días reservados para ese mes, eliminar el mes del HashMap
+            delete this.reservas[idUsuario][idMes];
+            // Verificar si ya no hay meses reservados para ese usuario
+            if (Object.keys(this.reservas[idUsuario]).length === 0) {
+              // Si no hay más meses reservados para ese usuario, eliminar la entrada del usuario del HashMap de reservas
+              delete this.reservas[idUsuario];
+            }
+          }
+        }
+      }
+    }
 
-    
-    
-    
-
+    // Guardar los cambios en el almacenamiento local (opcional)
+    localStorage.setItem('reservasRealizadas', JSON.stringify(this.reservas));
+  }
 }
 
