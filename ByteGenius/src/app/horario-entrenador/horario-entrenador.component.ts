@@ -36,6 +36,16 @@ export class HorarioEntrenadorComponent {
   semanaSelected:NgbDateStruct [] = [];
   diaSiguienteSemana:NgbDate;
 
+  private diasAqui: Dia [] = [
+    {id:1, nombre:'Lunes'},
+    {id:2, nombre:'Martes'},
+    {id:3, nombre:'Miércoles'},
+    {id:4, nombre:'Jueves'},
+    {id:5, nombre:'Viernes'},
+    {id:6, nombre:'Sabado'},
+    {id:7, nombre:'Domingo'}
+    ]
+
   today: NgbDate;
 	dia: NgbDate;
   
@@ -157,21 +167,43 @@ export class HorarioEntrenadorComponent {
   guardarDisponibilidad(): void {
     // Obtener los días seleccionados del dropdown
     const diasSeleccionados = this.selectedItems.map((item: Dia) => item.id);
+    const stringDias:string[] = [];
+
+    for(const di of diasSeleccionados){
+      stringDias.push(this.diasAqui[di-1].nombre);
+    }
+    console.log(stringDias);
+    
     this.semanaSelected = this.obtenerSemana(this.today);
+
 
 
     // Obtener las horas seleccionadas desde y hasta
     const desde = parseInt((<HTMLSelectElement>document.getElementById("desde")).value);
     const hasta = parseInt((<HTMLSelectElement>document.getElementById("hasta")).value);
     const month = parseInt((<HTMLSelectElement>document.getElementById("month")).value);
-/*
-    console.log(diasSeleccionados);
+
     const diasdelmes:number = this.obtenerCantidadDiasMes(month,this.today.year);
     const nombres:String[] = [];
+    
 
-*/
+    for (let day = 1; day <= diasdelmes; day++) {
+        if(stringDias.includes(this.getDayOfWeek(new NgbDate(this.today.year,month,day)))){
+          console.log(this.getDayOfWeek(new NgbDate(this.today.year,month,day)));
+          for (let i = desde; i <= hasta; i++) {
+            // Verificar si el entrenador ya ha reservado en esa hora
+              // Si el entrenador no tiene asignada esa hora y no hay una reserva existente, agregarla
+              this.agregarHora(month,day, i);
+              // Guardar la disponibilidad en el localStorage
+              this.guardarDatos();
+            
+          }
+        }
+      }
+
 
     // Validar que haya días seleccionados y que la hora de inicio sea menor a la hora de fin
+    /*
     if (diasSeleccionados.length > 0 && desde < hasta) {
       // Iterar sobre los días seleccionados
       
@@ -193,6 +225,9 @@ export class HorarioEntrenadorComponent {
       this.selectedItems = [];
       (<HTMLSelectElement>document.getElementById("desde")).selectedIndex = 0;
       (<HTMLSelectElement>document.getElementById("hasta")).selectedIndex = 0;
+      (<HTMLSelectElement>document.getElementById("month")).selectedIndex = 0;
+      
+
 
       // Notificar al usuario que la disponibilidad se ha guardado correctamente.
       alert('La disponibilidad se ha guardado correctamente.');
@@ -200,6 +235,7 @@ export class HorarioEntrenadorComponent {
       // Si no hay días seleccionados o la hora de inicio es mayor o igual a la hora de fin, mostrar un mensaje de error.
       alert('Por favor, seleccione al menos un día y asegúrese de que la hora de inicio sea menor a la hora de fin.');
     }
+    */
 }
 
   // Método para mostrar el botón "eliminar disponibilidad" cuando se hace click sobre un checkbox u ocultarlo cuando se quita el check.
