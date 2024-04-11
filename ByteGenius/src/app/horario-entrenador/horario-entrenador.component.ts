@@ -159,13 +159,28 @@ export class HorarioEntrenadorComponent {
     const diasSeleccionados = this.selectedItems.map((item: Dia) => item.id);
     this.semanaSelected = this.obtenerSemana(this.today);
 
+
     // Obtener las horas seleccionadas desde y hasta
     const desde = parseInt((<HTMLSelectElement>document.getElementById("desde")).value);
     const hasta = parseInt((<HTMLSelectElement>document.getElementById("hasta")).value);
+    const month = parseInt((<HTMLSelectElement>document.getElementById("month")).value);
+/*
+    console.log(diasSeleccionados);
+    const diasdelmes:number = this.obtenerCantidadDiasMes(month,this.today.year);
+    const nombres:String[] = [];
+
+    for (let day = 1; day <= this.semanaSelected.length; day++) {
+      if(!nombres.includes(this.getDayOfWeek(new NgbDate(this.today.year,month,day)))) {
+        nombres.push(this.getDayOfWeek(new NgbDate(this.today.year,month,day)));
+    }
+  }
+    console.log(nombres);
+*/
 
     // Validar que haya días seleccionados y que la hora de inicio sea menor a la hora de fin
     if (diasSeleccionados.length > 0 && desde < hasta) {
       // Iterar sobre los días seleccionados
+      
       diasSeleccionados.forEach((dia: number) => {
         // Iterar sobre las horas dentro del rango seleccionado
         for (let i = desde; i <= hasta; i++) {
