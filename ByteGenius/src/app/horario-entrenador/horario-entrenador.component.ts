@@ -42,7 +42,7 @@ export class HorarioEntrenadorComponent {
     {id:3, nombre:'Miércoles'},
     {id:4, nombre:'Jueves'},
     {id:5, nombre:'Viernes'},
-    {id:6, nombre:'Sabado'},
+    {id:6, nombre:'Sábado'},
     {id:7, nombre:'Domingo'}
     ]
 

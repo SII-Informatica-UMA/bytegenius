@@ -1,58 +1,113 @@
-body{
-  font-family:'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+body {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .small-button {
-    padding: 5px 10px;
-    font-size: 14px;
-    background-color: black;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    
+  padding: 5px 10px;
+  margin-left: 5px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  font-size: 14px;
+  background-color: black;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
 }
-  
-  .small-button:hover {
-    background-color: #0056b3;
-  }
 
-.table th,td{
-  background-color:#5466ca;
+.small-button:hover {
+  background-color: #0056b3;
+}
+
+.table th,
+.table td {
+  background-color: #5466ca;
   color: white;
   text-align: center;
+  padding: 5px; /* Ajusta el padding para reducir el tamaño de las celdas */
 }
-.boton-eliminar{
+
+.boton-eliminar {
   overflow: hidden;
-  color:black;
+  color: black;
   background-color: white;
   border: none;
   border-radius: 5px;
 }
 
-.boton-eliminar:hover{
+.boton-eliminar:hover {
   overflow: hidden;
-  color:white;
+  color: white;
   border: none;
   background-color: black;
   border-radius: 5px;
 }
 
-.boton-añadir:hover{
+.boton-añadir:hover {
   overflow: hidden;
-  color:white;
+  color: white;
   background-color: black;
   border: none;
   border-radius: 5px;
 }
-.boton-añadir{
+
+.boton-añadir {
   overflow: hidden;
-  color:black;
+  color: black;
   border: none;
   border-radius: 5px;
 }
 
-.table{
+.table {
   overflow: hidden;
-  border-radius: 10px ;
+  border-radius: 10px;
+  margin: 0; /* Ajusta el margen para que no haya espacio adicional alrededor de la tabla */
 }
+
+/* Estilos CSS para organizar los elementos */
+
+/* FlexBox que permite colocar el container left y right en fila. */
+.flex-container {
+  display: flex;
+  align-items: start;
+  width: 100%;
+}
+
+.container-left {
+  padding: 10px;
+  width: 30%;
+}
+
+.container-right {
+  padding: 10px;
+  width: 100%;
+}
+
+.datepicker {
+  width: 100%;
+  justify-content: center; /* Centrado horizontal */
+}
+
+.buttonsDatepicker {
+  margin-top: 10px;
+}
+
+.form-container {
+  width: 80%;
+  margin-top: 20px;
+}
+
+.table-container {
+  width: 100%;
+  margin-left: 5px;
+}
+
+button#btnGuardar {
+  margin-top: 20px;
+}
+
