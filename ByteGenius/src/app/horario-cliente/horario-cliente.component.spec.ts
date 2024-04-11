@@ -76,15 +76,29 @@ describe('HorarioClienteComponent', () => {
     };
 
     const initialReservasCount = Object.keys(component.reservas).length;
-    console.log(initialReservasCount);
 
     component.cancelarReserva(usuario, mes, dia, hora);
 
     expect(Object.keys(component.reservas).length).toEqual(initialReservasCount-1 );
   });
 
-  it('should set mostrarReservas to true when calling MostrarReservas method', () => {
-    component.MostrarReservas();
-    expect(component.mostrarReservas).toBeTrue();
+  it('should return true if a reservation exists for the specified user, day, and hour', () => {
+    const usuario = 3;
+    const mes = 4;
+    const dia = 11;
+    const hora = 10;
+    const entrenador=5;
+  
+    // Agregar una reserva para el usuario, día y hora especificados
+    component.aniadirReserva(usuario, mes, dia, hora, entrenador)
+  
+    // Verificar si existe una reserva para el usuario, día y hora especificados
+    const exists = component.existeReserva(usuario, dia, hora, mes);
+    console.log("Existe? : " +exists);
+  
+    expect(exists).toBeTruthy();
   });
+  
+
+  
 });

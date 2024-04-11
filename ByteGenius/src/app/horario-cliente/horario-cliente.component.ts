@@ -11,7 +11,6 @@ import {NgbCalendar, NgbDate, NgbDateStruct, NgbModal} from '@ng-bootstrap/ng-bo
 import { HashMapReservas } from '../HashMapReservas';
 import { Dia } from '../Dia';
 import { UsuariosService } from '../services/usuarios.service';
-import { HashMap } from '../HashMap';
 
 
 
@@ -30,11 +29,9 @@ export class HorarioClienteComponent implements OnInit {
   diaElegido: number = 0;
   entrenadoresPorDia: Usuario[]=[];
   horarioEntrenadoresPorDia: Hora[]=[];
-  mostrarReservas: boolean = false;
   public startDateOfWeek: Date = new Date();
   public endDateOfWeek: Date = new Date();
   horas:Hora[]=[];
-  dias:Dia[]=[];
   entrenadores:Usuario[]=[];
   reservas:HashMapReservas={};
   id: number = 0;
@@ -195,21 +192,8 @@ cancelarReserva(idUsuario: number, idMes: number, idDia: number, idHora: number)
   }
 }
 
-
-
-
-
-
-
-
-//comentario
-
-
 }
 
-function extend(arg0: never[], arg1: any, arg2: null, arg3: boolean): Record<string, any>[] {
-  throw new Error('Function not implemented.');
-}
 
 
 

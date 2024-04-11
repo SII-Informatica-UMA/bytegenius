@@ -4,7 +4,7 @@ import { Dia } from "../Dia";
 import { HashMapReservas } from "../HashMapReservas";
 import { HashMap } from "../HashMap";
 import { AppComponentService } from "../app.component.service";
-import { Injectable, OnInit } from "@angular/core";
+import { Injectable} from "@angular/core";
 import { BackendFakeService } from "../services/backend.fake.service";
 import { NgbCalendar, NgbDate, NgbDateStruct } from "@ng-bootstrap/ng-bootstrap";
 
