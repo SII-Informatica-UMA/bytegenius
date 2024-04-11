@@ -29,6 +29,7 @@ body {
   background-color: #5466ca;
   color: white;
   text-align: center;
+  font-size: 20px;
   padding: 5px; /* Ajusta el padding para reducir el tamaño de las celdas */
 }
 
@@ -105,6 +106,7 @@ body {
 .table-container {
   width: 100%;
   margin-left: 5px;
+  justify-content: center; /* Centrar horizontalmente */
 }
 
 button#btnGuardar {
