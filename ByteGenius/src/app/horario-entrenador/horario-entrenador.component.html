@@ -7,11 +7,8 @@
 </head>
 <body>
   <button (click)="mostrarReservas()">Mis Reservas</button>
-  <ngb-datepicker #dp [(ngModel)]="model" (navigate)="date = $event.next" (select)="onDateSelection(date)">
+  <ngb-datepicker #dp [(ngModel)]="model" (navigate)="date = $event.next" (click)="onDateSelection(model)">
   </ngb-datepicker>
-  <div class="form-group">
-    <button class="btn btn-outline-secondary calendar" (click)="onDateSelection(model)" type="button">Aceptar</button>
-    </div>
   <hr />
   
   <button class="btn btn-sm btn-outline-primary me-2" (click)="model = today">Seleccionar hoy</button>
