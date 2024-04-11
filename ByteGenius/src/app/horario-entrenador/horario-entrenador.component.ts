@@ -169,12 +169,6 @@ export class HorarioEntrenadorComponent {
     const diasdelmes:number = this.obtenerCantidadDiasMes(month,this.today.year);
     const nombres:String[] = [];
 
-    for (let day = 1; day <= this.semanaSelected.length; day++) {
-      if(!nombres.includes(this.getDayOfWeek(new NgbDate(this.today.year,month,day)))) {
-        nombres.push(this.getDayOfWeek(new NgbDate(this.today.year,month,day)));
-    }
-  }
-    console.log(nombres);
 */
 
     // Validar que haya días seleccionados y que la hora de inicio sea menor a la hora de fin
