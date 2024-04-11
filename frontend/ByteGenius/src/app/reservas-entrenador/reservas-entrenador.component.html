@@ -1,0 +1,28 @@
+<div class="container text-center">
+  <h1 class="my-4">Mis Reservas</h1>
+  <table class="table table-striped table-hover">
+    <thead class="thead-dark">
+      <tr>
+        <th>Mes</th>
+        <th>Día</th>
+        <th>Hora</th>
+        <th>Usuario</th>
+        <th>Acción</th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngFor="let dia of encontrarReservasPorEntrenador(reservas, id); let i = index">
+        <tr>
+          <td>{{dia.idMes}}</td>
+          <td>{{ dia.idDia }}</td>
+          <td>{{ obtenerFranjaHoraria(dia.idHora) }}</td>
+          <td>{{ obtenerNombre(dia.idUsuario) }}</td>
+          <td>
+            <button type="button" class="btn btn-danger" (click)="cancelarReserva(dia.idUsuario, dia.idMes, dia.idDia, dia.idHora)">Cancelar Reserva</button>
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+</div>
+  
