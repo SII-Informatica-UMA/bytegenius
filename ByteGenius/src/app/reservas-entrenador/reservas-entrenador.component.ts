@@ -51,24 +51,35 @@ obtenerNombre(id: number): string | undefined {
   return usuarioEncontrado ? usuarioEncontrado.nombre : undefined;
 }
 
-cancelarReserva(idUsuario: number,  idMes: number, idDia: number, idHora: number) {
+cancelarReserva(idUsuario: number, idMes: number, idDia: number, idHora: number) {
   if (this.reservas[idUsuario] && this.reservas[idUsuario][idMes] && this.reservas[idUsuario][idMes][idDia] && this.reservas[idUsuario][idMes][idDia][idHora]) {
-  
-      delete this.reservas[idUsuario][idMes][idDia][idHora];
- 
-      if (Object.keys(this.reservas[idUsuario][idMes][idDia]).length === 0) {
-   
-          delete this.reservas[idUsuario][idMes][idDia];
+    delete this.reservas[idUsuario][idMes][idDia][idHora];
+
+    if (Object.keys(this.reservas[idUsuario][idMes][idDia]).length === 0) {
+      delete this.reservas[idUsuario][idMes][idDia];
+    }
+
+    if (Object.keys(this.reservas[idUsuario][idMes]).length === 0) {
+      delete this.reservas[idUsuario][idMes];
+    }
+
+    // Verificar si no quedan más reservas para el usuario en ningún mes
+    let usuarioSinReservas = true;
+    for (const mes in this.reservas[idUsuario]) {
+      if (Object.keys(this.reservas[idUsuario][mes]).length !== 0) {
+        usuarioSinReservas = false;
+        break;
       }
+    }
+    // Si no quedan más reservas para el usuario, eliminar su entrada del hashmap
+    if (usuarioSinReservas) {
+      delete this.reservas[idUsuario];
+    }
 
-      if (Object.keys(this.reservas[idUsuario][idMes]).length === 0) {
-
-          delete this.reservas[idUsuario][idMes];
-      }
-
-      localStorage.setItem('reservasRealizadas', JSON.stringify(this.reservas));
+    localStorage.setItem('reservasRealizadas', JSON.stringify(this.reservas));
   }
 }
+
 
 
 obtenerFranjaHoraria(idHora: number): string {

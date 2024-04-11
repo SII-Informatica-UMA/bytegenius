@@ -1,31 +1,23 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { HorarioClienteComponent } from './horario-cliente.component';
 import { UsuarioServiceCliente } from './horario-cliente.service';
-import { UsuariosService } from '../services/usuarios.service';
 
 describe('HorarioClienteComponent', () => {
   let component: HorarioClienteComponent;
   let fixture: ComponentFixture<HorarioClienteComponent>;
-  let usuarioServiceClienteSpy: jasmine.SpyObj<UsuarioServiceCliente>;
-  let usuariosServiceLoginSpy: jasmine.SpyObj<UsuariosService>;
 
   beforeEach(async () => {
-    const usuarioServiceClienteSpyObj = jasmine.createSpyObj('UsuarioServiceCliente', ['getHoras', 'getReservasUsuarios', 'obtenerSemana']);
-    const usuariosServiceLoginSpyObj = jasmine.createSpyObj('UsuariosService', ['getArrayEntrenadores', 'getSesionID']);
-
     await TestBed.configureTestingModule({
-      declarations: [HorarioClienteComponent],
-      providers: [
-        { provide: UsuarioServiceCliente, useValue: usuarioServiceClienteSpyObj },
-        { provide: UsuariosService, useValue: usuariosServiceLoginSpyObj }
-      ]
+      imports: [FormsModule, CommonModule, HorarioClienteComponent],
+      providers: [UsuarioServiceCliente, NgbModal] // Agrega NgbModal al providers
     })
     .compileComponents();
-
+    
     fixture = TestBed.createComponent(HorarioClienteComponent);
     component = fixture.componentInstance;
-    usuarioServiceClienteSpy = TestBed.inject(UsuarioServiceCliente) as jasmine.SpyObj<UsuarioServiceCliente>;
-    usuariosServiceLoginSpy = TestBed.inject(UsuariosService) as jasmine.SpyObj<UsuariosService>;
     fixture.detectChanges();
   });
 
@@ -33,26 +25,66 @@ describe('HorarioClienteComponent', () => {
     expect(component).toBeTruthy();
   });
 
+  it('should update dates when calling updateDates method', () => {
+    const currentDate = new Date();
+    const startOfWeekExpected = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay() + 1);
+    const endOfWeekExpected = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - currentDate.getDay() + 7);
+    startOfWeekExpected.setHours(0, 0, 0, 0); // Establecer horas en 00:00:00
+    endOfWeekExpected.setHours(0, 0, 0, 0); // Establecer horas en 00:00:00
 
-  // Prueba para el método cancelarReserva
-  it('should cancel reservation', () => {
-    component.aniadirReserva(1, 1, 1, 1, 1);
-    expect(component.reservas[1][1][1][1]).toBeDefined();
+    component.updateDates();
 
-    component.cancelarReserva(1, 1, 1, 1);
-    expect(component.reservas[1][1][1][1]).toBeUndefined();
+    const startOfWeekActual = component.startDateOfWeek;
+    const endOfWeekActual = component.endDateOfWeek;
+    startOfWeekActual.setHours(0, 0, 0, 0); // Establecer horas en 00:00:00
+    endOfWeekActual.setHours(0, 0, 0, 0); // Establecer horas en 00:00:00
+
+    expect(startOfWeekActual).toEqual(startOfWeekExpected);
+    expect(endOfWeekActual).toEqual(endOfWeekExpected);
+});
+
+
+  it('should add a reservation when calling aniadirReserva method', () => {
+    const usuario = 1;
+    const mes = 4;
+    const dia = 11;
+    const hora = 10;
+    const entrenador = 5;
+
+    const initialReservasCount = Object.keys(component.reservas).length;
+    
+    component.aniadirReserva(usuario, mes, dia, hora, entrenador);
+
+    expect(Object.keys(component.reservas).length).toEqual(initialReservasCount + 1);
+    expect(component.reservas[usuario][mes][dia][hora].idEntrenador).toEqual(entrenador);
   });
 
-  // Prueba para el método aniadirReserva
-  it('should add reservation', () => {
-    component.aniadirReserva(1, 1, 1, 1, 1);
-    expect(component.reservas[1][1][1][1]).toBeDefined();
+  it('should cancel a reservation when calling cancelarReserva method', () => {
+    const usuario = 1;
+    const mes = 4;
+    const dia = 11;
+    const hora = 10;
+
+    component.reservas = {
+      [usuario]: {
+        [mes]: {
+          [dia]: {
+            [hora]: { idEntrenador: 5 }
+          }
+        }
+      }
+    };
+
+    const initialReservasCount = Object.keys(component.reservas).length;
+    console.log(initialReservasCount);
+
+    component.cancelarReserva(usuario, mes, dia, hora);
+
+    expect(Object.keys(component.reservas).length).toEqual(initialReservasCount-1 );
   });
 
-  // Prueba para el método existeReserva
-  it('should check if reservation exists', () => {
-    component.aniadirReserva(1, 1, 1, 1, 1);
-    expect(component.existeReserva(1, 1, 1, 1)).toBeTrue();
-    expect(component.existeReserva(1, 1, 1, 2)).toBeFalse();
+  it('should set mostrarReservas to true when calling MostrarReservas method', () => {
+    component.MostrarReservas();
+    expect(component.mostrarReservas).toBeTrue();
   });
 });

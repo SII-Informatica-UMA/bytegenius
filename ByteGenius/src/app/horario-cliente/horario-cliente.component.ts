@@ -165,7 +165,7 @@ onReservaCancelada(eventData: {idUsuario: number, idMes: number, idDia: number, 
   this.cancelarReserva(eventData.idUsuario, eventData.idDia, eventData.idHora, eventData.idMes);
 }
 
-cancelarReserva(idUsuario: number,idMes:number, idDia: number, idHora: number) {
+cancelarReserva(idUsuario: number, idMes: number, idDia: number, idHora: number) {
   if (this.reservas[idUsuario] && this.reservas[idUsuario][idMes] && this.reservas[idUsuario][idMes][idDia] && this.reservas[idUsuario][idMes][idDia][idHora]) {
     // Eliminar la reserva del HashMap
     delete this.reservas[idUsuario][idMes][idDia][idHora];
@@ -173,16 +173,30 @@ cancelarReserva(idUsuario: number,idMes:number, idDia: number, idHora: number) {
     if (Object.keys(this.reservas[idUsuario][idMes][idDia]).length === 0) {
       // Si no hay más horas reservadas para ese día, eliminar el día del HashMap
       delete this.reservas[idUsuario][idMes][idDia];
-    }
-    // Verificar si ya no hay días reservados para ese mes
-    if (Object.keys(this.reservas[idUsuario][idMes]).length === 0) {
-      // Si no hay más días reservados para ese mes, eliminar el mes del HashMap
-      delete this.reservas[idUsuario][idMes];
+      // Verificar si ya no hay días reservados para ese mes
+      if (Object.keys(this.reservas[idUsuario][idMes]).length === 0) {
+        // Si no hay más días reservados para ese mes, eliminar el mes del HashMap
+        delete this.reservas[idUsuario][idMes];
+        // Verificar si ya no hay meses reservados para ese usuario
+        if (Object.keys(this.reservas[idUsuario]).length === 0) {
+          // Si no hay más meses reservados para ese usuario, eliminar la entrada del usuario del HashMap de reservas
+          delete this.reservas[idUsuario];
+          // Verificar si el hashmap de reservas está completamente vacío
+          if (Object.keys(this.reservas).length === 0) {
+            // Si no hay más usuarios haciendo reservas, el hashmap de reservas estará completamente vacío
+            // Guardar los cambios en el almacenamiento local (opcional)
+            localStorage.removeItem('reservasRealizadas');
+          }
+        }
+      }
     }
     // Guardar los cambios en el almacenamiento local (opcional)
     localStorage.setItem('reservasRealizadas', JSON.stringify(this.reservas));
   }
 }
+
+
+
 
 
 

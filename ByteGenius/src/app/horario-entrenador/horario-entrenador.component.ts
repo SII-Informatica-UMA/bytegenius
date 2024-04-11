@@ -374,21 +374,47 @@ export class HorarioEntrenadorComponent {
       if (this.reservas[idUsuario] && this.reservas[idUsuario][idDia] && this.reservas[idUsuario][idDia][idHora]) {
         // Eliminar la reserva del HashMap
         delete this.reservas[idUsuario][idDia][idHora];
+        // Verificar si ya no hay reservas para ese día y hora
+        if (Object.keys(this.reservas[idUsuario][idDia]).length === 0) {
+          // Si no hay más reservas para ese día, eliminar el día del HashMap
+          delete this.reservas[idUsuario][idDia];
+          // Verificar si ya no hay días reservados para ese usuario
+          if (Object.keys(this.reservas[idUsuario]).length === 0) {
+            // Si no hay más días reservados para ese usuario, eliminar la entrada del usuario del HashMap de reservas
+            delete this.reservas[idUsuario];
+          }
+        }
         // Guardar los cambios en el almacenamiento local (opcional)
         localStorage.setItem('reservasRealizadas', JSON.stringify(this.reservas));
       }
     }
-
+    
     cancelarReservaOpcional(idEntrenador: number, idMes: number, idDia: number, idHora: number) {
       for (const idUsuario in this.reservas) {
         if (this.reservas[idUsuario] && this.reservas[idUsuario][idMes] && this.reservas[idUsuario][idMes][idDia] && this.reservas[idUsuario][idMes][idDia][idHora] && this.reservas[idUsuario][idMes][idDia][idHora].idEntrenador === idEntrenador) {
           // Eliminar el idUsuario de la reserva del HashMap
           delete this.reservas[idUsuario][idMes][idDia][idHora];
-          // Guardar los cambios en el almacenamiento local (opcional)
-          localStorage.setItem('reservasRealizadas', JSON.stringify(this.reservas));
+          // Verificar si ya no hay reservas para ese día y hora
+          if (Object.keys(this.reservas[idUsuario][idMes][idDia]).length === 0) {
+            // Si no hay más reservas para ese día, eliminar el día del HashMap
+            delete this.reservas[idUsuario][idMes][idDia];
+            // Verificar si ya no hay días reservados para ese mes
+            if (Object.keys(this.reservas[idUsuario][idMes]).length === 0) {
+              // Si no hay más días reservados para ese mes, eliminar el mes del HashMap
+              delete this.reservas[idUsuario][idMes];
+              // Verificar si ya no hay meses reservados para ese usuario
+              if (Object.keys(this.reservas[idUsuario]).length === 0) {
+                // Si no hay más meses reservados para ese usuario, eliminar la entrada del usuario del HashMap de reservas
+                delete this.reservas[idUsuario];
+              }
+            }
+          }
         }
       }
+      // Guardar los cambios en el almacenamiento local (opcional)
+      localStorage.setItem('reservasRealizadas', JSON.stringify(this.reservas));
     }
+    
     
     
 
