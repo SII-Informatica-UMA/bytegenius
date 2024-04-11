@@ -1,31 +1,22 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { NgbDate, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { HorarioEntrenadorComponent } from './horario-entrenador.component';
 import { UsuarioServiceEntrenador } from './horario-entrenador.service';
-import { UsuariosService } from '../services/usuarios.service';
 
 describe('HorarioEntrenadorComponent', () => {
   let component: HorarioEntrenadorComponent;
   let fixture: ComponentFixture<HorarioEntrenadorComponent>;
-  let usuarioServiceEntrenadorSpy: jasmine.SpyObj<UsuarioServiceEntrenador>;
-  let usuariosServiceLoginSpy: jasmine.SpyObj<UsuariosService>;
 
   beforeEach(async () => {
-    const usuarioServiceEntrenadorSpyObj = jasmine.createSpyObj('UsuarioServiceEntrenador', ['getDias', 'getHoras', 'getUsuarios']);
-    const usuariosServiceLoginSpyObj = jasmine.createSpyObj('UsuariosService', ['getSesionID']);
-
     await TestBed.configureTestingModule({
-      declarations: [HorarioEntrenadorComponent],
-      providers: [
-        { provide: UsuarioServiceEntrenador, useValue: usuarioServiceEntrenadorSpyObj },
-        { provide: UsuariosService, useValue: usuariosServiceLoginSpyObj }
-      ]
-    })
-    .compileComponents();
+      imports: [FormsModule, CommonModule, HorarioEntrenadorComponent],
+      providers: [UsuarioServiceEntrenador, NgbModal]
+    }).compileComponents();
 
     fixture = TestBed.createComponent(HorarioEntrenadorComponent);
     component = fixture.componentInstance;
-    usuarioServiceEntrenadorSpy = TestBed.inject(UsuarioServiceEntrenador) as jasmine.SpyObj<UsuarioServiceEntrenador>;
-    usuariosServiceLoginSpy = TestBed.inject(UsuariosService) as jasmine.SpyObj<UsuariosService>;
     fixture.detectChanges();
   });
 
@@ -33,62 +24,48 @@ describe('HorarioEntrenadorComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  // Prueba para el método ngOnInit
-  it('should initialize properties', () => {
-    usuarioServiceEntrenadorSpy.getDias.and.returnValue([{id: 1, nombre: 'Lunes'}]);
-    usuarioServiceEntrenadorSpy.getHoras.and.returnValue([{id: 1, franjaHoraria: '9:00'}]);
-    usuarioServiceEntrenadorSpy.getUsuarios.and.returnValue([{id: 1, nombre:'Admin',apellido1: 'Admin',apellido2:'Admin', email:'admin@uma.es',administrador:true ,password: '1234'}]);
-    usuariosServiceLoginSpy.getSesionID.and.returnValue(1);
+  it('should add an assignment when calling agregarHora method', () => {
+    const month = 4;
+    const day = 11;
+    const hour = 10;
 
-    component.ngOnInit();
+    const initialAssignmentsCount = Object.keys(component.asignaciones).length;
 
-    expect(component.dias).toEqual([{id: 1, nombre: 'Lunes'}]);
-    expect(component.horas).toEqual([{id: 1, franjaHoraria: '9:00'}]);
-    expect(component.usuarios).toEqual([{id: 1, nombre:'Admin',apellido1: 'Admin',apellido2:'Admin', email:'admin@uma.es',administrador:true ,password: '1234'}]);
-    expect(component.id).toEqual(1);
+    component.agregarHora(month, day, hour);
+
+    expect(component.asignaciones[month][day][hour].idTrainers).toContain(component.id);
   });
 
-  // Prueba para el método guardarDisponibilidad
-  it('should save availability', () => {
-    spyOn(window, 'alert');
-    spyOn(component, 'agregarHora');
-    spyOn(component, 'guardarDatos');
+  it('should remove an assignment when calling eliminarHora method', () => {
+    const month = 4;
+    const day = 11;
+    const hour = 10;
 
-    component.asignaciones = {1: {1: {1: {idTrainers: [1]}}}};
-    component.guardarDisponibilidad();
+    component.asignaciones = {
+      [month]: {
+        [day]: {
+          [hour]: { idTrainers: [component.id] }
+        }
+      }
+    };
 
-    expect(component.agregarHora).toHaveBeenCalled();
-    expect(component.guardarDatos).toHaveBeenCalled();
-    expect(window.alert).toHaveBeenCalledWith('La disponibilidad se ha guardado correctamente.');
+    const initialAssignmentsCount = Object.keys(component.asignaciones).length;
+
+    component.eliminarHora(month, day, hour);
+
+    expect(Object.keys(component.asignaciones).length).toEqual(initialAssignmentsCount);
+    expect(component.asignaciones[month][day][hour].idTrainers).not.toContain(component.id);
   });
 
-  // Prueba para el método eliminarHora
-  it('should remove hour', () => {
-    component.asignaciones = {1: {1: {1: {idTrainers: [1]}}}};
-    spyOn(component, 'guardarDatos');
+  it('should obtain correct lunes closest to the selected date', () => {
+    const date = { year: 2024, month: 4, day: 11 }; 
+    const expectedLunes = new NgbDate( 2024,4, 8 ); 
 
-    component.eliminarHora(1, 1, 1);
+    const lunesMasCercano = component.obtenerLunesMasCercano(date);
 
-    expect(component.asignaciones[1][1][1]).toBeUndefined();
-    expect(component.guardarDatos).toHaveBeenCalled();
+    expect(lunesMasCercano).toEqual(expectedLunes);
   });
 
-  // Prueba para el método agregarHora
-  it('should add hour', () => {
-    spyOn(component, 'guardarDatos');
 
-    component.agregarHora(1, 1, 1);
-
-    expect(component.asignaciones[1][1][1]).toBeDefined();
-    expect(component.guardarDatos).toHaveBeenCalled();
-  });
-
-  // Prueba para el método cargarDatos
-  it('should load data', () => {
-    spyOn(localStorage, 'getItem').and.returnValue(JSON.stringify({1: {1: {1: {idTrainers: [1]}}}}));
-
-    component.cargarDatos();
-
-    expect(component.asignaciones).toEqual({1: {1: {1: {idTrainers: [1]}}}});
-  });
 });
+

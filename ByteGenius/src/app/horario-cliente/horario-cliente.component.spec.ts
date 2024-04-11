@@ -94,7 +94,6 @@ describe('HorarioClienteComponent', () => {
   
     // Verificar si existe una reserva para el usuario, día y hora especificados
     const exists = component.existeReserva(usuario, dia, hora, mes);
-    console.log("Existe? : " +exists);
   
     expect(exists).toBeTruthy();
   });
