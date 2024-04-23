@@ -1,4 +1,4 @@
-package es.uma.informatica.sii.spring.jpa.demo;
+package es.uma.informatica.sii.spring.jpa.ByteGenius;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
