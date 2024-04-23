@@ -1,6 +1,7 @@
 package es.uma.informatica.sii.spring.jpa.ByteGenius.entities;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.Objects;
 
 import jakarta.persistence.Column;
@@ -8,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Cliente {
@@ -33,76 +35,77 @@ public class Cliente {
 
     @Column(name = "SEXO")
     private Sexo sexo;
-    
 
+    @OneToMany(mappedBy = "cliente")
+    private List<Evento> eventos;
 
-    public int getIdUsuario(){
+    public int getIdUsuario() {
         return idUsuario;
     }
 
-    public void setIdUsuario(int idUsuario){
+    public void setIdUsuario(int idUsuario) {
         this.idUsuario = idUsuario;
     }
 
-    public String getTelefono(){
+    public String getTelefono() {
         return telefono;
     }
 
-    public void setTelefono(String telefono){
+    public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
 
-    public String getDireccion(){
+    public String getDireccion() {
         return direccion;
     }
 
-    public void setDireccion(String direccion){
+    public void setDireccion(String direccion) {
         this.direccion = direccion;
     }
 
-    public String getDni(){
+    public String getDni() {
         return dni;
     }
 
-    public void setDni(String dni){
+    public void setDni(String dni) {
         this.dni = dni;
     }
 
-    public Date getFechaNacimiento(){
+    public Date getFechaNacimiento() {
         return fechaNacimiento;
     }
 
-    public void setFechaNacimiento(Date fechaNacimiento){
+    public void setFechaNacimiento(Date fechaNacimiento) {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    public Sexo getSexo(){
+    public Sexo getSexo() {
         return sexo;
     }
 
-    public void setSexo(Sexo sexo){
+    public void setSexo(Sexo sexo) {
         this.sexo = sexo;
     }
 
-    public int getId(){
+    public int getId() {
         return id;
     }
 
-    public void setId(int id){
+    public void setId(int id) {
         this.id = id;
     }
 
     @Override
-    public int hashCode(){
+    public int hashCode() {
         return Objects.hash(id);
     }
 
     @Override
-    public boolean equals(Object obj){
-        if(this == obj){
+    public boolean equals(Object obj) {
+        if (this == obj) {
             return true;
         }
-        if(obj == null || getClass() != obj.getClass()){
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
         Cliente cliente = (Cliente) obj;

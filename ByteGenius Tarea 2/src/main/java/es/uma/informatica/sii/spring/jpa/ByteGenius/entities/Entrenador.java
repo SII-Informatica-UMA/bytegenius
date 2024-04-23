@@ -1,6 +1,7 @@
 package es.uma.informatica.sii.spring.jpa.ByteGenius.entities;
 
 import java.sql.Date;
+import java.util.List;
 import java.util.Objects;
 
 import jakarta.persistence.Column;
@@ -8,6 +9,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 
 @Entity
@@ -50,8 +52,8 @@ public class Entrenador {
     @Column(name="OBSERVACIONES")
     private String observaciones;
 
- 
-
+    @OneToMany(mappedBy = "entrenador")
+    private List<Evento> eventos;
 
     public int getIdUsuario(){
         return idUsuario;

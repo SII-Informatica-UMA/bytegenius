@@ -10,6 +10,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 
 
@@ -46,6 +47,13 @@ public class Evento {
 	@Column(name="TIPO")
 	@Enumerated(EnumType.STRING)
 	private Tipo tipo;
+
+	@ManyToOne
+	private Entrenador entrenador;
+
+	@ManyToOne
+	private Cliente cliente;
+
 
 	public int getId() {
 		return id;
