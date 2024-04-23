@@ -1,0 +1,6 @@
+create table cliente (id integer not null, direccion varchar(255), dni varchar(255), fecha_nacimiento date, id_usuario integer not null, sexo smallint, telefono varchar(255), primary key (id));
+create table entrenador (id integer not null, direccion varchar(255), dni varchar(255), especialidad varchar(255), experiencia varchar(255), fecha_alta date, fecha_baja date, fecha_nacimiento date, id_usuario integer not null, observaciones varchar(255), telefono varchar(255), titulacion varchar(255), primary key (id));
+create table evento (id integer not null, descripcion varchar(255), duracion_minutos integer, id_cliente integer, inicio date, lugar varchar(255), nombre varchar(255) not null, observaciones varchar(255), regla_recurrencia varchar(255), tipo varchar(255), cliente_id integer, entrenador_id integer, primary key (id));
+create table usuario (id integer not null, administrador boolean, apellido1 varchar(255), apellido2 varchar(255), email varchar(255), nombre varchar(255) not null, password varchar(255), primary key (id));
+alter table if exists evento add constraint FK33a21nlfv5po497e5ff33tyst foreign key (cliente_id) references cliente;
+alter table if exists evento add constraint FKso48foj3p9fkepn5o882pko0f foreign key (entrenador_id) references entrenador;
