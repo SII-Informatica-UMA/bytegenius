@@ -1,5 +1,4 @@
-package ByteGenius.tarea2.entities;
-
+package ByteGenius.tarea2.enties;
 import java.sql.Date;
 import java.util.Objects;
 

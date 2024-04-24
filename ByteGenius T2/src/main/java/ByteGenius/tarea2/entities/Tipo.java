@@ -1,4 +1,4 @@
-package ByteGenius.tarea2.entities;
+package ByteGenius.tarea2.enties;
 
 public enum Tipo {
     DISPONIBILIDAD, CITA
