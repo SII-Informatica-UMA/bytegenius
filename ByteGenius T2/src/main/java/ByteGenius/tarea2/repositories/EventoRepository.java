@@ -35,8 +35,6 @@ public interface EventoRepository extends JpaRepository<Evento, Integer> {
                               @Param("reglaRecurrencia") String reglaRecurrencia);
                               
 
-
-
     // Método personalizado para actualizar un evento
     @Query("UPDATE Evento e SET e.nombre = :nombre, e.descripción = :descripcion, e.lugar = :lugar, e.duracionMinutos = :duracionMinutos, e.inicio = :inicio WHERE e.id = :id AND e.idEntrenador = :idEntrenador,:reglaRecurrencia")
     void actualizarEvento(@Param("id") Integer id, 
@@ -52,8 +50,6 @@ public interface EventoRepository extends JpaRepository<Evento, Integer> {
     // Método personalizado para eliminar un evento
     @Query("DELETE FROM Evento e WHERE e.id = :idEvento AND e.idEntrenador = :idEntrenador")
     void eliminarEventoPorIdEntrenadorYIdEvento(@Param("idEvento") Integer idEvento, @Param("idEntrenador") Integer idEntrenador);
-
-
 
 
       // Buscar eventos por descripción

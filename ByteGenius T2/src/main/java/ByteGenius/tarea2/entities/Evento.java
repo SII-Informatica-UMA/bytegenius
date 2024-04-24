@@ -1,6 +1,6 @@
 package ByteGenius.tarea2.entities;
 
-import java.sql.Date;
+import java.util.Date;
 import java.util.Objects;
 
 import jakarta.persistence.Column;
@@ -8,6 +8,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 
 @Entity
 public class Evento {
@@ -37,6 +39,7 @@ public class Evento {
 	private Integer duracionMinutos;
 
 	@Column(name = "INICIO")
+	@Temporal(TemporalType.TIMESTAMP)
 	private Date inicio;
 
 	@Column(name = "REGLA_RECURRENCIA")
