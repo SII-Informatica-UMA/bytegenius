@@ -31,7 +31,7 @@ public class Evento {
 	private String observaciones;
 
 	@Column(name = "LUGAR")
-	private String lugar;
+	private String lugar; 
 
 	@Column(name = "DURACION_MINUTOS")
 	private Integer duracionMinutos;
