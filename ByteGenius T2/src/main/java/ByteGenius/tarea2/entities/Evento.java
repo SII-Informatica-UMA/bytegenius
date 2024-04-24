@@ -37,6 +37,7 @@ public class Evento {
 	private Integer duracionMinutos;
 
 	@Column(name = "INICIO")
+	@JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
 	private Date inicio;
 
 	@Column(name = "REGLA_RECURRENCIA")
