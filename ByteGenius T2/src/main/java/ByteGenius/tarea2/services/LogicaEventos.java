@@ -28,8 +28,6 @@ public class LogicaEventos {
         return eventoRepository.save(evento);
     }
 
-
-
     public Evento getEvento(Integer idEntrenador, Integer idEvento) {
         var Listevento = eventoRepository.findByNombre(idEntrenador);
         boolean esta = false;
@@ -86,6 +84,13 @@ public class LogicaEventos {
             .orElseThrow(() -> new ElementoNoExisteException("Evento no encontrado"));
         eventoRepository.delete(evento);
     }
-    
+
+    public void getDisponibilidad(int idEntrenador){
+        List<Evento> dispoEntrenador = eventoRepository.findByidEntrenadorAndDisponibilidad(idEntrenador);
+        List<Evento> ocuEntrenador = eventoRepository.findByidEntrenadorAndCita(idEntrenador);
+
+        
+
+    }
     
 }

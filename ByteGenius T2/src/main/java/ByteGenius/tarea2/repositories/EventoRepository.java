@@ -70,6 +70,14 @@ public interface EventoRepository extends JpaRepository<Evento, Integer> {
       // Buscar eventos por tipo
       List<Evento> findByTipo(Tipo tipo);
 
+      // Buscar eventos por idEntrenador y con el tipo = "Disponibilidad"
+      @Query("SELECT e FROM Evento e WHERE e.idEntrenador = :idEntrenador AND e.tipo = 'DISPONIBILIDAD'")
+      List<Evento> findByidEntrenadorAndDisponibilidad(@Param("idEntrenador") int idEntrenador);
+
+      // Buscar eventos por idEntrenador y con el tipo = "Disponibilidad"
+      @Query("SELECT e FROM Evento e WHERE e.idEntrenador = :idEntrenador AND e.tipo = 'CITA'")
+      List<Evento> findByidEntrenadorAndCita(@Param("idEntrenador") int idEntrenador);
+
       // Buscar eventos por nombre y fecha de inicio
       @Query("SELECT e FROM Evento e WHERE e.nombre = :nombre AND e.inicio = :inicio")
       List<Evento> findByNameAndDate(@Param("nombre") String nombre, @Param("inicio") Date inicio);
