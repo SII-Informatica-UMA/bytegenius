@@ -85,11 +85,12 @@ public class LogicaEventos {
         eventoRepository.delete(evento);
     }
 
+    //DUDA -> NO SE ENTIENDE EXACTAMENTE QUE HACER CUANDO DICE 
+    //"EN LAS FRANJAS YA OCUPADAS SE INCLUYE EL ID del usuario cuando quien lo consulta es el entrenador o el propio usuario que tiene la franaja ocupada"
+    //El problema es que no se sabe si tenemos que introducir el id del usuario cuando la franja es ocupada en el idCliente aunque sea un entrenador o en el id normal.
     public void getDisponibilidad(int idEntrenador){
         List<Evento> dispoEntrenador = eventoRepository.findByidEntrenadorAndDisponibilidad(idEntrenador);
         List<Evento> ocuEntrenador = eventoRepository.findByidEntrenadorAndCita(idEntrenador);
-
-        
 
     }
     
