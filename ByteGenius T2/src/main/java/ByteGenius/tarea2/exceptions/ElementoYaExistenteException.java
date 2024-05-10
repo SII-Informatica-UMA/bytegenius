@@ -1,4 +1,4 @@
-package es.uma.informatica.sii.nivelesinstituto.exceptions;
+package ByteGenius.tarea2.exceptions;
 
 public class ElementoYaExistenteException extends RuntimeException {
     public ElementoYaExistenteException(String message) {
