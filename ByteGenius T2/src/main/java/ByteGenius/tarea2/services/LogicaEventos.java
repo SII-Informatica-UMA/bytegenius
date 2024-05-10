@@ -30,7 +30,7 @@ public class LogicaEventos {
 
 
 
-    public Evento getEvento(int idEntrenador, int idEvento) {
+    public Evento getEvento(Integer idEntrenador, Integer idEvento) {
         var Listevento = eventoRepository.findByNombre(idEntrenador);
         boolean esta = false;
         int i = 0;
@@ -81,7 +81,11 @@ public class LogicaEventos {
          */
     }
 
-    public void deleteNivel(int idEntrenador,int idEvento) {
-       eventoRepository.eliminarEventoPorIdEntrenadorYIdEvento(idEvento, idEntrenador);
+    public void eliminarEvento(int idEntrenador, int idEvento) {
+        Evento evento = eventoRepository.findById(idEvento)
+            .orElseThrow(() -> new ElementoNoExisteException("Evento no encontrado"));
+        eventoRepository.delete(evento);
     }
+    
+    
 }
