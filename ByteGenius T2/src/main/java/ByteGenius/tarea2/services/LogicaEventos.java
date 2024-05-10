@@ -5,11 +5,11 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import ByteGenius.tarea2.entities.Evento;
+import ByteGenius.tarea2.exceptions.ElementoNoExisteException;
 import ByteGenius.tarea2.repositories.EventoRepository;
 
-import java.util.Collections;
+import java.sql.Date;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Transactional
@@ -20,55 +20,68 @@ public class LogicaEventos {
         this.eventoRepository = repo;
     }
 
-    public List<Evento> getNiveles() {
+    public List<Evento> getEventos() {
         return eventoRepository.findAll();
     }
 
-    public Nivel addNivel(Evento evento) {
-        evento.setId(null);
-        nivel.setGrupos(Collections.EMPTY_LIST);
-        nivelRepo.findByNombre(nivel.getNombre()).ifPresent(n -> {
-            throw new ElementoYaExistenteException("Nivel ya existe");
-        });
-        return nivelRepo.save(nivel);
+    public Evento addEvento(Evento evento) {
+        return eventoRepository.save(evento);
     }
 
-    public Nivel getNivel(Long id) {
-        var nivel = eventoRepository.findByNombre(id);
-        if (nivel.isEmpty()) {
-            throw new ElementoNoExisteException("Nivel no encontrado");
-        } else {
-            return nivel.get();
-        }
-    }
 
-    public Nivel updateNivel(Nivel nivel) {
-        if (nivelRepo.existsById(nivel.getId())) {
-            var opNivel = nivelRepo.findByNombre(nivel.getNombre());
-            if (opNivel.isPresent() && opNivel.get().getId() != nivel.getId()) {
-                throw new ElementoYaExistenteException("Nivel ya existe");
+
+    public Evento getEvento(int idEntrenador, int idEvento) {
+        var Listevento = eventoRepository.findByNombre(idEntrenador);
+        boolean esta = false;
+        int i = 0;
+        Evento evento = null;
+        while(i < Listevento.size() && !esta){
+            if(Listevento.get(i).getId() == idEvento){
+                evento = Listevento.get(i);
+                esta = true;
             }
-            opNivel = nivelRepo.findById(nivel.getId());
-            opNivel.ifPresent(n -> {
-                n.setNombre(nivel.getNombre());
-            });
-            return nivelRepo.save(opNivel.get());
+        }
+        if (!esta) {
+            throw new ElementoNoExisteException("Evento no encontrado");
         } else {
-            throw new ElementoNoExisteException("Nivel no encontrado");
+            return evento;
         }
     }
 
-    public void deleteNivel(Long id) {
-        var nivel = nivelRepo.findById(id);
-        if (nivel.isPresent()) {
-            if (!nivel.get().getGrupos().isEmpty()) {
-                throw new NivelNoVacioException("Nivel no vacío");
+    public void updateEvento(int idEntrenador,int idEvento,Evento cambio) {
+        eventoRepository.actualizarEvento(idEvento, cambio.getNombre(), cambio.getDescripción(), cambio.getLugar(),
+         cambio.getDuracionMinutos(), (Date) cambio.getInicio(), 
+         idEntrenador, cambio.getReglaRecurrencia());
+        /*
+         var ListEvento = eventoRepository.findByNombre(idEntrenador);
+        if(ListEvento != null){
+            boolean esta = false;
+            int i = 0;
+            Evento evento = null;
+            while(i < ListEvento.size() && !esta){
+                if(ListEvento.get(i).getId() == idEvento){
+                    evento = ListEvento.get(i);
+                    esta = true;
+                }
             }
-            nivelRepo.deleteById(id);
-        } else {
-            throw new ElementoNoExisteException("Nivel no encontrado");
+            if(!esta){
+                throw new ElementoNoExisteException("Evento no encontrado");
+            }else{
+                evento.setNombre(cambio.getNombre());
+                evento.setDescripción(cambio.getDescripción());
+                evento.setDuracionMinutos(cambio.getDuracionMinutos());
+                evento.setIdEntrenador(cambio.getIdEntrenador());
+                evento.setIdCliente(cambio.getIdCliente()); 
+                evento.setLugar(cambio.getLugar());
+                return evento;
+            }
+        }else{
+            throw new ElementoNoExisteException("Evento no encontrado");
         }
+         */
     }
 
-    
+    public void deleteNivel(int idEntrenador,int idEvento) {
+       eventoRepository.eliminarEventoPorIdEntrenadorYIdEvento(idEvento, idEntrenador);
+    }
 }
