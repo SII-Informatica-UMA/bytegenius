@@ -50,15 +50,30 @@ public class LogicaEventos {
 
     // Put /calendario/idEntrenador/idElemento
     public void updateEvento(int idEntrenador, int idEvento, Evento cambio) {
-        eventoRepository.actualizarEvento(idEvento, cambio.getNombre(), cambio.getDescripción(), cambio.getLugar(),
-                cambio.getDuracionMinutos(), (Date) cambio.getInicio(),
-                idEntrenador, cambio.getReglaRecurrencia());
-
+        if (eventoRepository.existsById(idEvento)) {
+            var opEvento = eventoRepository.findByIdEntrenadorIdElemento(idEntrenador, idEvento);
+            if (opEvento.isPresent() && opEvento.get().getId() != idEvento) {
+                throw new ElementoYaExistenteException("Evento ya existe");
+            }
+            opEvento = eventoRepository.findById(idEvento);
+            opEvento.ifPresent(e -> {
+                e.setNombre(cambio.getNombre());
+                e.setDescripción(cambio.getDescripción());
+                e.setLugar(cambio.getLugar());
+                e.setDuracionMinutos(cambio.getDuracionMinutos());
+                e.setInicio(cambio.getInicio());
+                e.setIdEntrenador(cambio.getIdEntrenador());
+                e.setReglaRecurrencia(cambio.getReglaRecurrencia());
+            });
+            eventoRepository.save(opEvento.get());
+        } else {
+            throw new ElementoNoExisteException("Evento no encontrado");
+        }
     }
 
     // Delete /calendario/idEntrenador/idElemento
     public void eliminarEvento(int idEntrenador, int idEvento) {
-        var evento = eventoRepository.findByIdEntrenadorIdElemento(null, idEvento);
+        var evento = eventoRepository.findByIdEntrenadorIdElemento(idEntrenador, idEvento);
         if (evento.isPresent()) {
             eventoRepository.deleteById(idEvento);
         } else {

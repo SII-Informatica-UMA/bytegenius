@@ -33,14 +33,19 @@ public class EventoController {
     }
 
     @PutMapping("/{idEntrenador}/{idElemento}")
-    public ResponseEntity<Evento> actualizarEvento(@PathVariable Integer idEntrenador, @PathVariable Integer idElemento,
-            @RequestBody Evento eventoActualizado) {
-        try {
-            logicaEventos.updateEvento(idEntrenador, idElemento, eventoActualizado);
-            return ResponseEntity.noContent().build();
-        } catch (ElementoNoExisteException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public void actualizarEvento(@PathVariable Integer idEntrenador, @PathVariable Integer idElemento,
+            @RequestBody Evento evento) {
+        var eventoEntity = Evento.builder()
+                .nombre(evento.getNombre())
+                .descripción(evento.getDescripción())
+                .lugar(evento.getLugar())
+                .duracionMinutos(evento.getDuracionMinutos())
+                .inicio(evento.getInicio())
+                .IdEntrenador(idEntrenador)
+                .reglaRecurrencia(evento.getReglaRecurrencia())
+                .build();
+        eventoEntity.setId(idElemento);
+        logicaEventos.updateEvento(idEntrenador, idElemento, eventoEntity);
     }
 
     @DeleteMapping("/{idEntrenador}/{idElemento}")
