@@ -33,14 +33,19 @@ public class EventoController {
     }
 
     @PutMapping("/{idEntrenador}/{idElemento}")
-    public ResponseEntity<Evento> actualizarEvento(@PathVariable Integer idEntrenador, @PathVariable Integer idElemento,
-            @RequestBody Evento eventoActualizado) {
-        try {
-            logicaEventos.updateEvento(idEntrenador, idElemento, eventoActualizado);
-            return ResponseEntity.noContent().build();
-        } catch (ElementoNoExisteException e) {
-            return ResponseEntity.notFound().build();
-        }
+    public Evento actualizarEvento(@PathVariable Integer idEntrenador, @PathVariable Integer idElemento,
+            @RequestBody Evento evento) {
+        var eventoEntity = Evento.builder()
+                .nombre(evento.getNombre())
+                .descripción(evento.getDescripción())
+                .lugar(evento.getLugar())
+                .duracionMinutos(evento.getDuracionMinutos())
+                .inicio(evento.getInicio())
+                .IdEntrenador(idEntrenador)
+                .reglaRecurrencia(evento.getReglaRecurrencia())
+                .build();
+        eventoEntity.setId(idElemento);
+        return logicaEventos.updateEvento(idEntrenador, idElemento, eventoEntity);
     }
 
     @DeleteMapping("/{idEntrenador}/{idElemento}")
@@ -54,7 +59,8 @@ public class EventoController {
     }
 
     @PostMapping("/{idEntrenador}")
-    public ResponseEntity<Evento> crearEvento(@PathVariable Integer idEntrenador, @RequestBody Evento evento) {
+    public ResponseEntity<Evento> crearEvento(@PathVariable Integer idEntrenador, @RequestBody Evento evento,
+            UriComponentsBuilder uriBuilder) {
         var eventoEntity = Evento.builder()
                 .descripción(evento.getDescripción())
                 .duracionMinutos(evento.getDuracionMinutos())
@@ -68,6 +74,10 @@ public class EventoController {
                 .IdEntrenador(idEntrenador).build();
 
         eventoEntity = logicaEventos.addEvento(eventoEntity, idEntrenador);
+
+        return ResponseEntity.created(uriBuilder.path("/calendario/{idEntrenador}")
+                .buildAndExpand(idEntrenador, eventoEntity.getId()).toUri()).body(eventoEntity);
+
     }
 
 }
