@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import ByteGenius.tarea2.entities.Evento;
 import ByteGenius.tarea2.exceptions.ElementoNoExisteException;
 import ByteGenius.tarea2.exceptions.ElementoYaExistenteException;
+import ByteGenius.tarea2.exceptions.FranjaOcupadaSinIdClienteException;
 import ByteGenius.tarea2.repositories.EventoRepository;
 
 import java.sql.Date;
@@ -66,16 +67,18 @@ public class LogicaEventos {
         }
     }
 
-    // DUDA -> NO SE ENTIENDE EXACTAMENTE QUE HACER CUANDO DICE
-    // "EN LAS FRANJAS YA OCUPADAS SE INCLUYE EL ID del usuario cuando quien lo
-    // consulta es el entrenador o el propio usuario que tiene la franaja ocupada"
-    // El problema es que no se sabe si tenemos que introducir el id del usuario
-    // cuando la franja es ocupada en el idCliente aunque sea un entrenador o en el
-    // id normal.
-    public void getDisponibilidad(int idEntrenador) {
+    //Comprobar si esta manera va bien, si no hacerlo a través de una clase que se obtengan ambas listas con dos get diferentes aunque las listas sean mutables.    
+    public List<List<Evento>> getDisponibilidad(int idEntrenador) {
         List<Evento> dispoEntrenador = eventoRepository.findByidEntrenadorAndDisponibilidad(idEntrenador);
-        List<Evento> ocuEntrenador = eventoRepository.findByidEntrenadorAndCita(idEntrenador);
+        List<Evento> franjasOcupadas = eventoRepository.findByidEntrenadorAndCita(idEntrenador);
 
+        for (Evento frOcu : franjasOcupadas) {
+            if(frOcu.getIdCliente() == null){
+                throw new FranjaOcupadaSinIdClienteException("Franja ocupada sin Id del cliente");
+            }
+        }
+
+        return List.of(dispoEntrenador, franjasOcupadas); //Listas obtenidas inmutables -> solo puede observarse los datos, no modificarlos.
     }
 
 }
