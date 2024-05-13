@@ -59,7 +59,8 @@ public class EventoController {
     }
 
     @PostMapping("/{idEntrenador}")
-    public ResponseEntity<Evento> crearEvento(@PathVariable Integer idEntrenador, @RequestBody Evento evento) {
+    public ResponseEntity<Evento> crearEvento(@PathVariable Integer idEntrenador, @RequestBody Evento evento,
+            UriComponentsBuilder uriBuilder) {
         var eventoEntity = Evento.builder()
                 .descripción(evento.getDescripción())
                 .duracionMinutos(evento.getDuracionMinutos())
@@ -73,6 +74,10 @@ public class EventoController {
                 .IdEntrenador(idEntrenador).build();
 
         eventoEntity = logicaEventos.addEvento(eventoEntity, idEntrenador);
+
+        return ResponseEntity.created(uriBuilder.path("/calendario/{idEntrenador}")
+                .buildAndExpand(idEntrenador, eventoEntity.getId()).toUri()).body(eventoEntity);
+
     }
 
 }
