@@ -54,7 +54,7 @@ public class EventoController {
     }
 
     @GetMapping("/{idEntrenador}")
-    public List<Evento> getDisponibilidad(@PathVariable Integer idEntrador) {
+    public List<List<Evento>> getDisponibilidad(@PathVariable Integer idEntrador) {
         return logicaEventos.getDisponibilidad(idEntrador);
     }
 
