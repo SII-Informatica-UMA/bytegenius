@@ -2,6 +2,7 @@ package ByteGenius.tarea2.repositories;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -17,40 +18,39 @@ public interface EventoRepository extends JpaRepository<Evento, Integer> {
       // Buscar eventos por idEntrenador
       List<Evento> findByNombre(int idEntrenador);
 
-      // Buscar eventos por id entrenador e id 
+      // Buscar eventos por id entrenador e id
       @Query("SELECT e FROM Evento e WHERE e.idEntrenador = :idEntrenador AND e.id = :id")
-      List<Evento> findByIdClienteAndInicio(@Param("idEntrenador") Integer idEntrenador, @Param("id") Integer id);
+      Optional<Evento> findByIdEntrenadorIdElemento(@Param("idEntrenador") Integer idEntrenador,
+                  @Param("id") Integer id);
 
+      @Query("INSERT INTO Evento(e.nombre, e.descripcion, e.lugar, e.duracionMinutos, e.inicio, e.idCliente, e.tipo, e.idEntrenador, e.reglaRecurrencia) "
+                  +
+                  "VALUES (:nombre, :descripcion, :lugar, :duracionMinutos, :inicio, :idCliente, :tipo, :idEntrenador,:reglaRecurrencia)")
+      void crearEventoParaEntrenador(@Param("nombre") String nombre,
+                  @Param("descripcion") String descripcion,
+                  @Param("lugar") String lugar,
+                  @Param("duracionMinutos") Integer duracionMinutos,
+                  @Param("inicio") Date inicio,
+                  @Param("idCliente") Integer idCliente,
+                  @Param("tipo") Tipo tipo,
+                  @Param("idEntrenador") Integer idEntrenador,
+                  @Param("reglaRecurrencia") String reglaRecurrencia);
 
-      @Query("INSERT INTO Evento(e.nombre, e.descripcion, e.lugar, e.duracionMinutos, e.inicio, e.idCliente, e.tipo, e.idEntrenador, e.reglaRecurrencia) " +
-      "VALUES (:nombre, :descripcion, :lugar, :duracionMinutos, :inicio, :idCliente, :tipo, :idEntrenador,:reglaRecurrencia)")
-      void crearEventoParaEntrenador(@Param("nombre") String nombre, 
-                              @Param("descripcion") String descripcion, 
-                              @Param("lugar") String lugar, 
-                              @Param("duracionMinutos") Integer duracionMinutos, 
-                              @Param("inicio") Date inicio, 
-                              @Param("idCliente") Integer idCliente, 
-                              @Param("tipo") Tipo tipo, 
-                              @Param("idEntrenador") Integer idEntrenador,
-                              @Param("reglaRecurrencia") String reglaRecurrencia);
-                              
+      // Método personalizado para actualizar un evento
+      @Query("UPDATE Evento e SET e.nombre = :nombre, e.descripción = :descripcion, e.lugar = :lugar, e.duracionMinutos = :duracionMinutos, e.inicio = :inicio WHERE e.id = :id AND e.idEntrenador = :idEntrenador,:reglaRecurrencia")
+      void actualizarEvento(@Param("id") Integer id,
+                  @Param("nombre") String nombre,
+                  @Param("descripcion") String descripcion,
+                  @Param("lugar") String lugar,
+                  @Param("duracionMinutos") Integer duracionMinutos,
+                  @Param("inicio") Date inicio,
+                  @Param("idEntrenador") Integer idEntrenador,
+                  @Param("reglaRecurrencia") String reglaRecurrencia);
 
-    // Método personalizado para actualizar un evento
-    @Query("UPDATE Evento e SET e.nombre = :nombre, e.descripción = :descripcion, e.lugar = :lugar, e.duracionMinutos = :duracionMinutos, e.inicio = :inicio WHERE e.id = :id AND e.idEntrenador = :idEntrenador,:reglaRecurrencia")
-    void actualizarEvento(@Param("id") Integer id, 
-                          @Param("nombre") String nombre, 
-                          @Param("descripcion") String descripcion, 
-                          @Param("lugar") String lugar, 
-                          @Param("duracionMinutos") Integer duracionMinutos, 
-                          @Param("inicio") Date inicio, 
-                          @Param("idEntrenador") Integer idEntrenador,
-                          @Param("reglaRecurrencia") String reglaRecurrencia);
-
-
-    // Método personalizado para eliminar un evento
-    @Query("DELETE FROM Evento e WHERE e.id = :idEvento AND e.idEntrenador = :idEntrenador")
-    void eliminarEventoPorIdEntrenadorYIdEvento(@Param("idEvento") Integer idEvento, @Param("idEntrenador") Integer idEntrenador);
-
+      // Método personalizado para eliminar un evento
+      @Query("DELETE FROM Evento e WHERE e.id = :idEvento AND e.idEntrenador = :idEntrenador")
+      void eliminarEventoPorIdEntrenadorYIdEvento(@Param("idEvento") Integer idEvento,
+                  @Param("idEntrenador") Integer idEntrenador);
 
       // Buscar eventos por descripción
       List<Evento> findByDescripcion(String descripcion);

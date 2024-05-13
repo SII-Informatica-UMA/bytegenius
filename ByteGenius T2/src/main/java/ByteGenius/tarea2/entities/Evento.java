@@ -7,13 +7,25 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Builder
 @Entity
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Evento {
 	@Id
+	@GeneratedValue
 	@Column(name = "ID_EVENTO")
 	private Integer id;
 
@@ -33,7 +45,7 @@ public class Evento {
 	private String observaciones;
 
 	@Column(name = "LUGAR")
-	private String lugar; 
+	private String lugar;
 
 	@Column(name = "DURACION_MINUTOS")
 	private Integer duracionMinutos;
@@ -48,94 +60,6 @@ public class Evento {
 	@Column(name = "TIPO")
 	@Enumerated(EnumType.STRING)
 	private Tipo tipo;
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getNombre() {
-		return nombre;
-	}
-
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
-
-	public String getDescripción() {
-		return descripción;
-	}
-
-	public void setDescripción(String descripción) {
-		this.descripción = descripción;
-	}
-
-	public String getObservaciones() {
-		return observaciones;
-	}
-
-	public void setObservaciones(String observaciones) {
-		this.observaciones = observaciones;
-	}
-
-	public String getLugar() {
-		return lugar;
-	}
-
-	public void setLugar(String lugar) {
-		this.lugar = lugar;
-	}
-
-	public Integer getDuracionMinutos() {
-		return duracionMinutos;
-	}
-
-	public void setDuracionMinutos(Integer duracionMinutos) {
-		this.duracionMinutos = duracionMinutos;
-	}
-
-	public Date getInicio() {
-		return inicio;
-	}
-
-	public void setInicio(Date inicio) {
-		this.inicio = inicio;
-	}
-
-	public String getReglaRecurrencia() {
-		return reglaRecurrencia;
-	}
-
-	public void setReglaRecurrencia(String reglaRecurrencia) {
-		this.reglaRecurrencia = reglaRecurrencia;
-	}
-
-	public Integer getIdCliente() {
-		return idCliente;
-	}
-
-	public void setIdCliente(Integer idCliente) {
-		this.idCliente = idCliente;
-	}
-
-	public Integer getIdEntrenador() {
-		return IdEntrenador;
-	}
-
-	public void setIdEntrenador(Integer idEntrenador) {
-		IdEntrenador = idEntrenador;
-	}
-
-	public Tipo getTipo() {
-		return tipo;
-	}
-
-	public void setTipo(Tipo tipo) {
-		this.tipo = tipo;
-	}
 
 	@Override
 	public int hashCode() {
