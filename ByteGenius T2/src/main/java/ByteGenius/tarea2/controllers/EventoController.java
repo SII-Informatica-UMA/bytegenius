@@ -33,7 +33,7 @@ public class EventoController {
     }
 
     @PutMapping("/{idEntrenador}/{idElemento}")
-    public void actualizarEvento(@PathVariable Integer idEntrenador, @PathVariable Integer idElemento,
+    public Evento actualizarEvento(@PathVariable Integer idEntrenador, @PathVariable Integer idElemento,
             @RequestBody Evento evento) {
         var eventoEntity = Evento.builder()
                 .nombre(evento.getNombre())
@@ -45,7 +45,7 @@ public class EventoController {
                 .reglaRecurrencia(evento.getReglaRecurrencia())
                 .build();
         eventoEntity.setId(idElemento);
-        logicaEventos.updateEvento(idEntrenador, idElemento, eventoEntity);
+        return logicaEventos.updateEvento(idEntrenador, idElemento, eventoEntity);
     }
 
     @DeleteMapping("/{idEntrenador}/{idElemento}")

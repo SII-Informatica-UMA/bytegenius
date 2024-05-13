@@ -49,7 +49,7 @@ public class LogicaEventos {
     }
 
     // Put /calendario/idEntrenador/idElemento
-    public void updateEvento(int idEntrenador, int idEvento, Evento cambio) {
+    public Evento updateEvento(int idEntrenador, int idEvento, Evento cambio) {
         if (eventoRepository.existsById(idEvento)) {
             var opEvento = eventoRepository.findByIdEntrenadorIdElemento(idEntrenador, idEvento);
             if (opEvento.isPresent() && opEvento.get().getId() != idEvento) {
@@ -65,7 +65,7 @@ public class LogicaEventos {
                 e.setIdEntrenador(cambio.getIdEntrenador());
                 e.setReglaRecurrencia(cambio.getReglaRecurrencia());
             });
-            eventoRepository.save(opEvento.get());
+            return eventoRepository.save(opEvento.get());
         } else {
             throw new ElementoNoExisteException("Evento no encontrado");
         }
