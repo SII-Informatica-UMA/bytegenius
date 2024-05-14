@@ -26,15 +26,15 @@ public class EventoController {
     }
 
     @GetMapping("/{idEntrenador}/{idElemento}")
-    public Evento getEvento(@PathVariable Integer idEntrenador, @PathVariable Integer idElemento) {
+    public EventoDTO getEvento(@PathVariable Integer idEntrenador, @PathVariable Integer idElemento) {
 
-        return logicaEventos.getEvento(idEntrenador, idElemento);
+        return Mapper.toEventoDTO(logicaEventos.getEvento(idEntrenador, idElemento));
 
     }
 
     @PutMapping("/{idEntrenador}/{idElemento}")
     public Evento actualizarEvento(@PathVariable Integer idEntrenador, @PathVariable Integer idElemento,
-            @RequestBody Evento evento) {
+            @RequestBody EventoDTO evento) {
         var eventoEntity = Evento.builder()
                 .nombre(evento.getNombre())
                 .descripción(evento.getDescripción())
@@ -59,7 +59,7 @@ public class EventoController {
     }
 
     @PostMapping("/{idEntrenador}")
-    public ResponseEntity<Evento> crearEvento(@PathVariable Integer idEntrenador, @RequestBody Evento evento,
+    public ResponseEntity<Evento> crearEvento(@PathVariable Integer idEntrenador, @RequestBody EventoDTO evento,
             UriComponentsBuilder uriBuilder) {
         var eventoEntity = Evento.builder()
                 .descripción(evento.getDescripción())
