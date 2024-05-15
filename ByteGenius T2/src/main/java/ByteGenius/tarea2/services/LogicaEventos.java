@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import ByteGenius.tarea2.entities.Evento;
 import ByteGenius.tarea2.exceptions.ElementoNoExisteException;
 import ByteGenius.tarea2.exceptions.ElementoYaExistenteException;
-import ByteGenius.tarea2.exceptions.FranjaOcupadaSinIdClienteException;
 import ByteGenius.tarea2.repositories.EventoRepository;
 
 import java.sql.Date;
@@ -36,9 +35,9 @@ public class LogicaEventos {
     public Evento addEvento(Evento evento, Integer idEntrenador) {
         List<Evento> eventos = eventoRepository.findByNombre(idEntrenador);
         Evento disponibilidad = Evento.FranjaDisponible(eventos, evento.getInicio(), evento.getDuracionMinutos());
-        if(disponibilidad == null) throw new FranjaOcupadaSinIdClienteException("No existe franja disponible");
+        if(disponibilidad == null) throw new ElementoYaExistenteException("No existe franja disponible");
         List<Evento> franjasCitas = Evento.listaCitasEnFranja(disponibilidad,eventos);
-        if(!Evento.solapar(disponibilidad, franjasCitas,evento)) throw new FranjaOcupadaSinIdClienteException("No existe franja disponible");
+        if(!Evento.solapar(disponibilidad, franjasCitas,evento)) throw new ElementoYaExistenteException("No existe franja disponible");
         
         evento.setId(null);
         
@@ -52,9 +51,9 @@ public class LogicaEventos {
 
         List<Evento> eventos = eventoRepository.findByNombre(idEntrenador);
         Evento disponibilidad = Evento.FranjaDisponible(eventos, cambio.getInicio(), cambio.getDuracionMinutos());
-        if(disponibilidad == null) throw new FranjaOcupadaSinIdClienteException("No existe franja disponible");
+        if(disponibilidad == null) throw new ElementoYaExistenteException("No existe franja disponible");
         List<Evento> franjasCitas = Evento.listaCitasEnFranja(disponibilidad,eventos);
-        if(!Evento.solaparUpdate(disponibilidad, franjasCitas,cambio)) throw new FranjaOcupadaSinIdClienteException("No existe franja disponible");
+        if(!Evento.solaparUpdate(disponibilidad, franjasCitas,cambio)) throw new ElementoYaExistenteException("No existe franja disponible");
 
 
         if (eventoRepository.existsById(idEvento)) {
