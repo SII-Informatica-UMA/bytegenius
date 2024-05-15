@@ -34,23 +34,37 @@ public class LogicaEventos {
 
     // Post /calendario/idEntrenador
     public Evento addEvento(Evento evento, Integer idEntrenador) {
+        List<Evento> eventos = eventoRepository.findByNombre(idEntrenador);
+        Evento disponibilidad = Evento.FranjaDisponible(eventos, evento.getInicio(), evento.getDuracionMinutos());
+        if(disponibilidad == null) throw new FranjaOcupadaSinIdClienteException("No existe franja disponible");
+        List<Evento> franjasCitas = Evento.listaCitasEnFranja(disponibilidad,eventos);
+        if(!Evento.solapar(disponibilidad, franjasCitas,evento)) throw new FranjaOcupadaSinIdClienteException("No existe franja disponible");
+        
         evento.setId(null);
+        
         evento.setIdEntrenador(idEntrenador);
-
-        eventoRepository.findByIdEntrenadorIdElemento(idEntrenador, evento.getId()).ifPresent(n -> {
-            throw new ElementoYaExistenteException("Evento ya existente");
-        });
 
         return eventoRepository.save(evento);
     }
 
     // Put /calendario/idEntrenador/idElemento
     public Evento updateEvento(int idEntrenador, int idEvento, Evento cambio) {
+
+        List<Evento> eventos = eventoRepository.findByNombre(idEntrenador);
+        Evento disponibilidad = Evento.FranjaDisponible(eventos, cambio.getInicio(), cambio.getDuracionMinutos());
+        if(disponibilidad == null) throw new FranjaOcupadaSinIdClienteException("No existe franja disponible");
+        List<Evento> franjasCitas = Evento.listaCitasEnFranja(disponibilidad,eventos);
+        if(!Evento.solaparUpdate(disponibilidad, franjasCitas,cambio)) throw new FranjaOcupadaSinIdClienteException("No existe franja disponible");
+
+
         if (eventoRepository.existsById(idEvento)) {
             var opEvento = eventoRepository.findByIdEntrenadorIdElemento(idEntrenador, idEvento);
             if (opEvento.isPresent() && opEvento.get().getId() != idEvento) {
                 throw new ElementoYaExistenteException("Evento ya existe");
             }
+
+        
+
             opEvento = eventoRepository.findById(idEvento);
             opEvento.ifPresent(e -> {
                 e.setNombre(cambio.getNombre());

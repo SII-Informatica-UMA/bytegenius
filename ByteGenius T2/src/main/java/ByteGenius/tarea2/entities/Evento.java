@@ -115,6 +115,35 @@ public class Evento {
 		return true;
 	}
 
+	public static boolean solaparUpdate(Evento disponibilidad, List<Evento> lista, Evento cita) {
+		// Comprueba si la cita comienza antes del inicio de la disponibilidad
+		if(lista == null) return false;
+		if (cita.getInicio().before(disponibilidad.getInicio())) return false;
+	
+		// Calcula los tiempos de finalización de la disponibilidad
+		long endDisponibilidadMillis = disponibilidad.getInicio().getTime() + disponibilidad.getDuracionMinutos() * 60 * 1000;
+	
+		// Comprueba si la cita comienza después del final de la disponibilidad
+		if (cita.getInicio().after(new Date(endDisponibilidadMillis))) return false;
+	
+		// Comprueba si la cita se solapa con algún evento en la lista
+		for (Evento evento : lista) {
+			// Calcula los tiempos de finalización de los eventos en la lista
+			if(evento.getId() != cita.getId()){
+				long endEventoMillis = evento.getInicio().getTime() + evento.getDuracionMinutos() * 60 * 1000;
+			
+				// Comprueba si la cita se solapa con el evento actual de la lista
+				if (cita.getInicio().before(new Date(endEventoMillis)) && new Date(endDisponibilidadMillis).after(evento.getInicio())) {
+					return false; // Hay solapamiento
+				}
+			}
+
+		}
+	
+		// No hay solapamiento con ningún evento de la lista
+		return true;
+	}
+
 	public static Evento FranjaDisponible(List<Evento> lista,Date inicio,Integer duracionMinutos){
 		 Evento e = null;
 		for(Evento evento : lista){
