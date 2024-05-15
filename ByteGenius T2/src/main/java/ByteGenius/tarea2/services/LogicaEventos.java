@@ -11,6 +11,7 @@ import ByteGenius.tarea2.repositories.EventoRepository;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -26,15 +27,9 @@ public class LogicaEventos {
     }
 
     // get /calendario/idEntrenador/idElemento
-    public Evento getEvento(Integer idEntrenador, Integer idEvento) {
-        var evento = eventoRepository.findByIdEntrenadorIdElemento(idEntrenador, idEvento);
+    public Optional<Evento> getEvento(Integer idEntrenador, Integer idEvento) {
+        return eventoRepository.findByIdEntrenadorIdElemento(idEntrenador, idEvento);
 
-        if (evento.isEmpty()) {
-            throw new ElementoNoExisteException("Evento no existente");
-
-        } else {
-            return evento.get();
-        }
     }
 
     // Post /calendario/idEntrenador
@@ -82,18 +77,10 @@ public class LogicaEventos {
         }
     }
 
-    //Comprobar si esta manera va bien, si no hacerlo a través de una clase que se obtengan ambas listas con dos get diferentes aunque las listas sean mutables.    
-    public List<List<Evento>> getDisponibilidad(int idEntrenador) {
-        List<Evento> dispoEntrenador = eventoRepository.findByidEntrenadorAndDisponibilidad(idEntrenador);
-        List<Evento> franjasOcupadas = eventoRepository.findByidEntrenadorAndCita(idEntrenador);
-
-        for (Evento frOcu : franjasOcupadas) {
-            if(frOcu.getIdCliente() == null){
-                throw new FranjaOcupadaSinIdClienteException("Franja ocupada sin Id del cliente");
-            }
-        }
-
-        return List.of(dispoEntrenador, franjasOcupadas); //Listas obtenidas inmutables -> solo puede observarse los datos, no modificarlos.
+    // Comprobar si esta manera va bien, si no hacerlo a través de una clase que se
+    // obtengan ambas listas con dos get diferentes aunque las listas sean mutables.
+    public Optional<List<Evento>> getDisponibilidad(int idEntrenador) {
+        return eventoRepository.findByIdEntrenador(idEntrenador);
     }
 
 }

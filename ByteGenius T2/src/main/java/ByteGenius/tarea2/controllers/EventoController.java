@@ -3,13 +3,16 @@ package ByteGenius.tarea2.controllers;
 import java.net.URI;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import ByteGenius.tarea2.dtos.EventoDTO;
+import ByteGenius.tarea2.dtos.EventoNuevoDTO;
 import ByteGenius.tarea2.entities.Evento;
 import ByteGenius.tarea2.exceptions.ElementoNoExisteException;
+import ByteGenius.tarea2.exceptions.ElementoYaExistenteException;
 import ByteGenius.tarea2.services.LogicaEventos;
 
 import org.springframework.web.util.UriComponents;
@@ -27,56 +30,51 @@ public class EventoController {
 
     @GetMapping("/{idEntrenador}/{idElemento}")
     public EventoDTO getEvento(@PathVariable Integer idEntrenador, @PathVariable Integer idElemento) {
-
-        return Mapper.toEventoDTO(logicaEventos.getEvento(idEntrenador, idElemento));
-
+        return Mapper.toEventoDTO(logicaEventos.getEvento(idEntrenador, idElemento).get());
     }
 
     @PutMapping("/{idEntrenador}/{idElemento}")
-    public Evento actualizarEvento(@PathVariable Integer idEntrenador, @PathVariable Integer idElemento,
+    public ResponseEntity<EventoDTO> actualizarEvento(@PathVariable Integer idEntrenador,
+            @PathVariable Integer idElemento,
             @RequestBody EventoDTO evento) {
-        var eventoEntity = Evento.builder()
-                .nombre(evento.getNombre())
-                .descripción(evento.getDescripción())
-                .lugar(evento.getLugar())
-                .duracionMinutos(evento.getDuracionMinutos())
-                .inicio(evento.getInicio())
-                .IdEntrenador(idEntrenador)
-                .reglaRecurrencia(evento.getReglaRecurrencia())
-                .build();
-        eventoEntity.setId(idElemento);
-        return logicaEventos.updateEvento(idEntrenador, idElemento, eventoEntity);
+        try {
+            logicaEventos.updateEvento(idEntrenador, idElemento, Mapper.toEventoId(evento));
+            return ResponseEntity.ok().build();
+        } catch (ElementoYaExistenteException e) {
+            return ResponseEntity.badRequest().build();
+        } catch (ElementoNoExisteException e) {
+            return ResponseEntity.notFound().build();
+        }
+
     }
 
     @DeleteMapping("/{idEntrenador}/{idElemento}")
-    public void eliminarEvento(@PathVariable Integer idEntrenador, @PathVariable Integer idElemento) {
-        logicaEventos.eliminarEvento(idEntrenador, idElemento);
+    public ResponseEntity<Void> eliminarEvento(@PathVariable Integer idEntrenador, @PathVariable Integer idElemento) {
+        try {
+            logicaEventos.eliminarEvento(idEntrenador, idElemento);
+            return ResponseEntity.ok().build();
+        } catch (ElementoNoExisteException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @GetMapping("/{idEntrenador}")
-    public List<List<Evento>> getDisponibilidad(@PathVariable Integer idEntrador) {
-        return logicaEventos.getDisponibilidad(idEntrador);
+    public List<EventoDTO> getDisponibilidad(@PathVariable Integer idEntrenador) {
+        List<Evento> disponibilidad = logicaEventos.getDisponibilidad(idEntrenador).get();
+        return disponibilidad.stream().map(Mapper::toEventoDTO).collect(Collectors.toList());
     }
 
     @PostMapping("/{idEntrenador}")
-    public ResponseEntity<Evento> crearEvento(@PathVariable Integer idEntrenador, @RequestBody EventoDTO evento,
+    public ResponseEntity<EventoDTO> crearEvento(@PathVariable Integer idEntrenador,
+            @RequestBody EventoNuevoDTO eventoNuevo,
             UriComponentsBuilder uriBuilder) {
-        var eventoEntity = Evento.builder()
-                .descripción(evento.getDescripción())
-                .duracionMinutos(evento.getDuracionMinutos())
-                .inicio(evento.getInicio())
-                .nombre(evento.getNombre())
-                .observaciones(evento.getObservaciones())
-                .lugar(evento.getLugar())
-                .reglaRecurrencia(evento.getReglaRecurrencia())
-                .tipo(evento.getTipo())
-                .idCliente(evento.getIdCliente())
-                .IdEntrenador(idEntrenador).build();
 
-        eventoEntity = logicaEventos.addEvento(eventoEntity, idEntrenador);
+        Evento evento = Mapper.toEvento(eventoNuevo);
+        evento = logicaEventos.addEvento(evento, idEntrenador);
+        EventoDTO e = Mapper.toEventoDTO(evento);
 
         return ResponseEntity.created(uriBuilder.path("/calendario/{idEntrenador}")
-                .buildAndExpand(idEntrenador, eventoEntity.getId()).toUri()).body(eventoEntity);
+                .buildAndExpand(idEntrenador, e.getId()).toUri()).body(e);
 
     }
 
