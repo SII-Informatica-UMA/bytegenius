@@ -40,7 +40,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
-import es.uma.informatica.sii.fitness.usuarios.entities.Usuario;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -94,10 +93,14 @@ public class JwtUtil {
         return doGenerateToken(claims, userDetails.getUsername());
     }
 
+    // DUDA -> ¿Es necesario mantener esta función sin tener la entindad Usuario en nuestro código
+    // ya que no tenemos que aplicar la Gestión de Usuarios o podemos quitarlo sin problema?
+    /* 
     public String generateToken(Usuario usuario) {
         Map<String, Object> claims = new HashMap<>();
         return doGenerateToken(claims, usuario.getId().toString());
     }
+    */
 
     //while creating the token -
     //1. Define  claims of the token, like Issuer, Expiration, Subject, and the ID
