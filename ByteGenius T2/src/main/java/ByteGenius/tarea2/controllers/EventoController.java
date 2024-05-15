@@ -3,6 +3,7 @@ package ByteGenius.tarea2.controllers;
 import java.net.URI;
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -59,7 +60,8 @@ public class EventoController {
 
     @GetMapping("/{idEntrenador}")
     public List<EventoDTO> getDisponibilidad(@PathVariable Integer idEntrenador) {
-        return logicaEventos.getDisponibilidad(idEntrenador).stream().map(Mapper::toEventoDTO).toList();
+        List<Evento> disponibilidad = logicaEventos.getDisponibilidad(idEntrenador).get();
+        return disponibilidad.stream().map(Mapper::toEventoDTO).collect(Collectors.toList());
     }
 
     @PostMapping("/{idEntrenador}")
@@ -71,11 +73,9 @@ public class EventoController {
         evento = logicaEventos.addEvento(evento, idEntrenador);
         EventoDTO e = Mapper.toEventoDTO(evento);
 
-        return ResponseEntity.created(e
-                .path("/dieta/{id}")
-                .buildAndExpand(String.format("/%d", e.getId()))
-                .toUri())
-                .body(e);
+        return ResponseEntity.created(uriBuilder.path("/calendario/{idEntrenador}")
+                .buildAndExpand(idEntrenador, e.getId()).toUri()).body(e);
+
     }
 
 }
