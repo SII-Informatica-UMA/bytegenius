@@ -6,10 +6,10 @@ import org.springframework.stereotype.Service;
 import ByteGenius.tarea2.entities.Evento;
 import ByteGenius.tarea2.entities.Tipo;
 import ByteGenius.tarea2.exceptions.ElementoNoExisteException;
-import ByteGenius.tarea2.exceptions.ElementoYaExistenteException;
+import ByteGenius.tarea2.exceptions.HaySolapamientoException;
+import ByteGenius.tarea2.exceptions.NoDisponibleException;
 import ByteGenius.tarea2.repositories.EventoRepository;
 
-import java.sql.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -80,8 +80,9 @@ public class LogicaEventos {
         if (evento.getTipo() == Tipo.CITA && getDisponibilidad(evento.getIdEntrenador()).stream()
                 .filter(e -> (((Evento) e).getTipo() == Tipo.CITA))
                 .filter(e -> (evento.getId() == null || !((Evento) e).getId().equals(evento.getId())))
+                .map(e -> (Evento) e)
                 .anyMatch(evento::solapa))
-            throw new SolapamientoException("El evento se solapa con otro evento");
+            throw new HaySolapamientoException("El evento se solapa con otro evento");
     }
 
 }

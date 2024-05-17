@@ -1,39 +1,23 @@
 package ByteGenius.tarea2.controllers;
 
-import java.net.URI;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import ByteGenius.tarea2.dtos.EventoDTO;
 import ByteGenius.tarea2.dtos.EventoNuevoDTO;
 import ByteGenius.tarea2.entities.Evento;
 import ByteGenius.tarea2.exceptions.ElementoNoExisteException;
-import ByteGenius.tarea2.exceptions.ElementoYaExistenteException;
 import ByteGenius.tarea2.services.LogicaEventos;
 
-import java.net.URI;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
