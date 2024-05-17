@@ -18,7 +18,7 @@ public class EventoDTO {
     private Integer duracionMinutos;
     private Date inicio;
     private String reglaRecurrencia;
-    private Integer idCliente;
+    private Long idCliente;
     private Tipo tipo;
-    private Integer id;
+    private Long id;
 }

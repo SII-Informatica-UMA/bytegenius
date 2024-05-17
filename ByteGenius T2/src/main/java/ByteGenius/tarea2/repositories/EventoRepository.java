@@ -12,16 +12,19 @@ import ByteGenius.tarea2.entities.Evento;
 import ByteGenius.tarea2.entities.Tipo;
 
 public interface EventoRepository extends JpaRepository<Evento, Integer> {
+
+      List<Evento> findAllByIdEntrenador(Long paramLong);
+
       // Buscar eventos por nombre
       List<Evento> findByNombre(String nombre);
 
       // Buscar eventos por idEntrenador
-      List<Evento> findByNombre(int idEntrenador);
+      List<Evento> findById(Long idEntrenador);
 
       // Buscar eventos por id entrenador e id
       @Query("SELECT e FROM Evento e WHERE e.idEntrenador = :idEntrenador AND e.id = :id")
-      Optional<Evento> findByIdEntrenadorIdElemento(@Param("idEntrenador") Integer idEntrenador,
-                  @Param("id") Integer id);
+      Optional<Evento> findByIdEntrenadorIdElemento(@Param("idEntrenador") Long idEntrenador,
+                  @Param("id") Long id);
 
       @Query("INSERT INTO Evento(e.nombre, e.descripcion, e.lugar, e.duracionMinutos, e.inicio, e.idCliente, e.tipo, e.idEntrenador, e.reglaRecurrencia) "
                   +
@@ -92,6 +95,6 @@ public interface EventoRepository extends JpaRepository<Evento, Integer> {
       List<Evento> findByIdClienteAndInicio(@Param("idCliente") Integer idCliente, @Param("inicio") Date inicio);
 
       @Query("Select e FROM Evento e WHERE e.idEntrenador = :idEntrenador")
-      Optional<List<Evento>> findByIdEntrenador(@Param("idEntrenador") int idEntrenador);
+      Optional<List<Evento>> findByIdEntrenador(@Param("idEntrenador") Long idEntrenador);
 
 }

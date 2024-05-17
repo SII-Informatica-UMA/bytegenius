@@ -18,6 +18,6 @@ public class EventoNuevoDTO {
     private Integer duracionMinutos;
     private Date inicio;
     private String reglaRecurrencia;
-    private Integer idCliente;
+    private Long idCliente;
     private Tipo tipo;
 }

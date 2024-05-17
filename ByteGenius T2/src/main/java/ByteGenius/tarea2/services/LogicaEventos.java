@@ -4,12 +4,14 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import ByteGenius.tarea2.entities.Evento;
+import ByteGenius.tarea2.entities.Tipo;
 import ByteGenius.tarea2.exceptions.ElementoNoExisteException;
 import ByteGenius.tarea2.exceptions.ElementoYaExistenteException;
 import ByteGenius.tarea2.repositories.EventoRepository;
 
 import java.sql.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -26,74 +28,60 @@ public class LogicaEventos {
     }
 
     // get /calendario/idEntrenador/idElemento
-    public Optional<Evento> getEvento(Integer idEntrenador, Integer idEvento) {
+    public Optional<Evento> getEvento(Long idEntrenador, Long idEvento) {
         return eventoRepository.findByIdEntrenadorIdElemento(idEntrenador, idEvento);
 
     }
 
-    // Post /calendario/idEntrenador
-    public Evento addEvento(Evento evento, Integer idEntrenador) {
-        List<Evento> eventos = eventoRepository.findByNombre(idEntrenador);
-        Evento disponibilidad = Evento.FranjaDisponible(eventos, evento.getInicio(), evento.getDuracionMinutos());
-        if(disponibilidad == null) throw new ElementoYaExistenteException("No existe franja disponible");
-        List<Evento> franjasCitas = Evento.listaCitasEnFranja(disponibilidad,eventos);
-        if(!Evento.solapar(disponibilidad, franjasCitas,evento)) throw new ElementoYaExistenteException("No existe franja disponible");
-        
-        evento.setId(null);
-        
-        evento.setIdEntrenador(idEntrenador);
-
-        return eventoRepository.save(evento);
-    }
-
-    // Put /calendario/idEntrenador/idElemento
-    public Evento updateEvento(int idEntrenador, int idEvento, Evento cambio) {
-
-        List<Evento> eventos = eventoRepository.findByNombre(idEntrenador);
-        Evento disponibilidad = Evento.FranjaDisponible(eventos, cambio.getInicio(), cambio.getDuracionMinutos());
-        if(disponibilidad == null) throw new ElementoYaExistenteException("No existe franja disponible");
-        List<Evento> franjasCitas = Evento.listaCitasEnFranja(disponibilidad,eventos);
-        if(!Evento.solaparUpdate(disponibilidad, franjasCitas,cambio)) throw new ElementoYaExistenteException("No existe franja disponible");
-
-
-        if (eventoRepository.existsById(idEvento)) {
-            var opEvento = eventoRepository.findByIdEntrenadorIdElemento(idEntrenador, idEvento);
-            if (opEvento.isPresent() && opEvento.get().getId() != idEvento) {
-                throw new ElementoYaExistenteException("Evento ya existe");
-            }
-
-        
-
-            opEvento = eventoRepository.findById(idEvento);
-            opEvento.ifPresent(e -> {
-                e.setNombre(cambio.getNombre());
-                e.setDescripción(cambio.getDescripción());
-                e.setLugar(cambio.getLugar());
-                e.setDuracionMinutos(cambio.getDuracionMinutos());
-                e.setInicio(cambio.getInicio());
-                e.setIdEntrenador(cambio.getIdEntrenador());
-                e.setReglaRecurrencia(cambio.getReglaRecurrencia());
-            });
-            return eventoRepository.save(opEvento.get());
-        } else {
-            throw new ElementoNoExisteException("Evento no encontrado");
-        }
+    public Evento Crear_Actualizar_Evento(Evento evento) {
+        validarDatosEvento(evento);
+        comprobarSolapamiento(evento);
+        if (evento.getTipo() == Tipo.CITA)
+            comprobarEventoEnFranjaDisponibilidad(evento);
+        return (Evento) this.eventoRepository.save(evento);
     }
 
     // Delete /calendario/idEntrenador/idElemento
-    public void eliminarEvento(int idEntrenador, int idEvento) {
+    public void eliminarEvento(Long idEntrenador, Long idEvento) {
         var evento = eventoRepository.findByIdEntrenadorIdElemento(idEntrenador, idEvento);
         if (evento.isPresent()) {
-            eventoRepository.deleteById(idEvento);
+            eventoRepository.deleteById(null);
         } else {
             throw new ElementoNoExisteException("Evento no existente");
         }
     }
 
-    // Comprobar si esta manera va bien, si no hacerlo a través de una clase que se
-    // obtengan ambas listas con dos get diferentes aunque las listas sean mutables.
-    public Optional<List<Evento>> getDisponibilidad(int idEntrenador) {
+    public Optional<List<Evento>> getDisponibilidad(Long idEntrenador) {
         return eventoRepository.findByIdEntrenador(idEntrenador);
+    }
+
+    private void validarDatosEvento(Evento evento) {
+        if (evento.getTipo() == null || evento.getInicio() == null || evento.getDuracionMinutos() == null)
+            throw new IllegalArgumentException("Faltan datos al evento");
+        if (evento.getTipo() == Tipo.CITA) {
+            if (evento.getIdCliente() == null)
+                throw new IllegalArgumentException(
+                        "Para una cita, tiene que tener idCliente, duraciy momento de inicio");
+            if (evento.getReglaRecurrencia() != null)
+                throw new IllegalArgumentException("Una cita no puede tener recurrencia");
+        }
+    }
+
+    private void comprobarEventoEnFranjaDisponibilidad(Evento evento) {
+        getDisponibilidad(evento.getIdEntrenador()).stream()
+                .filter(e -> (((Evento) e).getTipo() == Tipo.DISPONIBILIDAD))
+                .filter(e -> ((Evento) e).contiene(evento))
+                .findAny()
+                .orElseThrow(() -> new NoDisponibleException("El evento no estdentro de una franja de disponibilidad"));
+    }
+
+    private void comprobarSolapamiento(Evento evento) {
+        Objects.requireNonNull(evento);
+        if (evento.getTipo() == Tipo.CITA && getDisponibilidad(evento.getIdEntrenador()).stream()
+                .filter(e -> (((Evento) e).getTipo() == Tipo.CITA))
+                .filter(e -> (evento.getId() == null || !((Evento) e).getId().equals(evento.getId())))
+                .anyMatch(evento::solapa))
+            throw new SolapamientoException("El evento se solapa con otro evento");
     }
 
 }
