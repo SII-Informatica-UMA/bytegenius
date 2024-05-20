@@ -9,7 +9,6 @@ public class Mapper {
     public static EventoDTO toEventoDTO(Evento evento) {
         return EventoDTO.builder()
                 .id(evento.getId())
-                .descripción(evento.getDescripción())
                 .duracionMinutos(evento.getDuracionMinutos())
                 .inicio(evento.getInicio())
                 .lugar(evento.getLugar())
@@ -23,7 +22,6 @@ public class Mapper {
     public static Evento toEvento(EventoNuevoDTO eventoNuevoDTO) {
         Evento evento = new Evento();
         evento.setNombre(eventoNuevoDTO.getNombre());
-        evento.setDescripción(eventoNuevoDTO.getDescripción());
         evento.setObservaciones(eventoNuevoDTO.getObservaciones());
         evento.setLugar(eventoNuevoDTO.getLugar());
         evento.setDuracionMinutos(eventoNuevoDTO.getDuracionMinutos());
@@ -38,12 +36,10 @@ public class Mapper {
         Evento nuevoEvento = new Evento();
         nuevoEvento.setId(evento.getId());
         nuevoEvento.setNombre(evento.getNombre());
-        nuevoEvento.setDescripción(evento.getDescripción());
         nuevoEvento.setLugar(evento.getLugar());
         nuevoEvento.setDuracionMinutos(evento.getDuracionMinutos());
         nuevoEvento.setInicio(evento.getInicio());
         nuevoEvento.setReglaRecurrencia(evento.getReglaRecurrencia());
         return nuevoEvento;
-
     }
 }

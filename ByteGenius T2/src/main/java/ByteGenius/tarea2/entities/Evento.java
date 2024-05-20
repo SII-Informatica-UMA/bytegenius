@@ -2,14 +2,17 @@ package ByteGenius.tarea2.entities;
 
 import java.util.Date;
 import java.util.Objects;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,12 +27,12 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Evento {
 	@Id
-	@GeneratedValue
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "ID_EVENTO")
 	private Long id;
 
 	@Column(name = "ID_ENTRENADOR")
-	private Long IdEntrenador;
+	private Long idEntrenador;
 
 	@Column(name = "ID_CLIENTE")
 	private Long idCliente;
@@ -38,7 +41,7 @@ public class Evento {
 	private String nombre;
 
 	@Column(name = "DESCRIPCION")
-	private String descripción;
+	private String descripcion;
 
 	@Column(name = "OBSERVACIONES")
 	private String observaciones;
@@ -79,8 +82,8 @@ public class Evento {
 
 	@Override
 	public String toString() {
-		return "Evento [id=" + id + ", IdEntrenador=" + IdEntrenador + ", idCliente=" + idCliente + ", nombre=" + nombre
-				+ ", descripción=" + descripción + ", observaciones=" + observaciones + ", lugar=" + lugar
+		return "Evento [id=" + id + ", idEntrenador=" + idEntrenador + ", idCliente=" + idCliente + ", nombre=" + nombre
+				+ ", descripcion=" + descripcion + ", observaciones=" + observaciones + ", lugar=" + lugar
 				+ ", duracionMinutos=" + duracionMinutos + ", inicio=" + inicio + ", reglaRecurrencia="
 				+ reglaRecurrencia + ", tipo=" + tipo + "]";
 	}
@@ -96,5 +99,4 @@ public class Evento {
 	public boolean contiene(Evento otroEvento) {
 		return false;
 	}
-
 }

@@ -29,8 +29,8 @@ public class LogicaEventos {
 
     // get /calendario/idEntrenador/idElemento
     public Optional<Evento> getEvento(Long idEntrenador, Long idEvento) {
-        return eventoRepository.findByIdEntrenadorIdElemento(idEntrenador, idEvento);
 
+        return this.eventoRepository.findById(idEntrenador);
     }
 
     public Evento Crear_Actualizar_Evento(Evento evento) {
@@ -43,7 +43,7 @@ public class LogicaEventos {
 
     // Delete /calendario/idEntrenador/idElemento
     public void eliminarEvento(Long idEntrenador, Long idEvento) {
-        var evento = eventoRepository.findByIdEntrenadorIdElemento(idEntrenador, idEvento);
+        var evento = eventoRepository.findById(idEntrenador);
         if (evento.isPresent()) {
             eventoRepository.deleteById(null);
         } else {
@@ -52,7 +52,7 @@ public class LogicaEventos {
     }
 
     public Optional<List<Evento>> getDisponibilidad(Long idEntrenador) {
-        return eventoRepository.findByIdEntrenador(idEntrenador);
+        return eventoRepository.findAllByIdEntrenador(idEntrenador);
     }
 
     private void validarDatosEvento(Evento evento) {
