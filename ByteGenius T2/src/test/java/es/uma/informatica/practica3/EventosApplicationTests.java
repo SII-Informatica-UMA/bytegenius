@@ -11,7 +11,6 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
@@ -20,21 +19,16 @@ import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriBuilderFactory;
 
 import ByteGenius.tarea2.Application;
-import ByteGenius.tarea2.security.JwtUtil;
 import ByteGenius.tarea2.dtos.EventoDTO;
 import ByteGenius.tarea2.repositories.EventoRepository;
+import ByteGenius.tarea2.security.JwtUtil;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SuppressWarnings("unused")
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @DisplayName("En el servicio de calendario")
 @DirtiesContext(classMode = ClassMode.AFTER_EACH_TEST_METHOD)
@@ -50,17 +44,13 @@ public class EventosApplicationTests {
     private JwtUtil jwtUtil;
     private String token;
 
-    public void initialize() {
-        UserDetails userDetails = jwtUtil.createUserDetails("1", "", Collections.emptyList());
-        token = jwtUtil.generateToken(userDetails);
-        eventoRepository.deleteAll();
-    }
-
     @Autowired
     private EventoRepository eventoRepository;
 
     @BeforeEach
-    public void initializeDatabase() {
+    public void initialize() {
+        UserDetails userDetails = jwtUtil.createUserDetails("1", "", Collections.emptyList());
+        token = jwtUtil.generateToken(userDetails);
         eventoRepository.deleteAll();
     }
 
@@ -76,40 +66,34 @@ public class EventosApplicationTests {
     }
 
     private RequestEntity<Void> get(String scheme, String host, int port, String path) {
-
         URI uri = uri(scheme, host, port, path);
-        var peticion = RequestEntity.get(uri)
+        return RequestEntity.get(uri)
                 .accept(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token)
                 .build();
-
-        return peticion;
     }
 
     private RequestEntity<Void> delete(String scheme, String host, int port, String path) {
         URI uri = uri(scheme, host, port, path);
-        var peticion = RequestEntity.delete(uri)
+        return RequestEntity.delete(uri)
                 .header("Authorization", "Bearer " + token)
                 .build();
-        return peticion;
     }
 
     private <T> RequestEntity<T> post(String scheme, String host, int port, String path, T object) {
         URI uri = uri(scheme, host, port, path);
-        var peticion = RequestEntity.post(uri)
+        return RequestEntity.post(uri)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token)
                 .body(object);
-        return peticion;
     }
 
     private <T> RequestEntity<T> put(String scheme, String host, int port, String path, T object) {
         URI uri = uri(scheme, host, port, path);
-        var peticion = RequestEntity.put(uri)
+        return RequestEntity.put(uri)
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", "Bearer " + token)
                 .body(object);
-        return peticion;
     }
 
     @Nested
@@ -129,24 +113,17 @@ public class EventosApplicationTests {
         @DisplayName("Devuelve error al obtener un evento concreto")
         public void errorConEventoConcreto() {
             var peticion = get("http", "localhost", port, "/calendario/1/1");
-
-            var respuesta = restTemplate.exchange(peticion,
-                    new ParameterizedTypeReference<EventoDTO>() {
-                    });
-
-            assertThat(respuesta.getStatusCode().value()).isEqualTo(404); // comprueba el resultado - 404 no encontrado
+            var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<EventoDTO>() {
+            });
+            assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
         }
 
         @Test
         @DisplayName("devuelve error al eliminar un evento que no existe")
         public void eliminarEventoInexistente() {
             var peticion = delete("http", "localhost", port, "/calendario/1/1");
-
             var respuesta = restTemplate.exchange(peticion, Void.class);
-
             assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
         }
-
     }
-
 }
