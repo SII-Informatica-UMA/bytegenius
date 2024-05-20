@@ -14,7 +14,6 @@ import org.springframework.http.RequestEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import org.springframework.test.annotation.DirtiesContext.MethodMode;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 import org.springframework.web.util.UriBuilder;
 import org.springframework.web.util.UriBuilderFactory;
@@ -43,7 +42,6 @@ public class EventosApplicationTests {
 
     @Autowired
     private JwtUtil jwtUtil;
-
     private String token;
 
     @Autowired
