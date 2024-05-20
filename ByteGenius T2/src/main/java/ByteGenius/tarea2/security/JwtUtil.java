@@ -30,7 +30,6 @@ package ByteGenius.tarea2.security;
 //}
 
 import java.security.Key;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -51,7 +50,7 @@ import io.jsonwebtoken.security.Keys;
 public class JwtUtil {
 
     @Value("${jwt.secret}")
-    private String secret = "sistemasinformacioninternet20232024sistemasinformacioninternet20232024";
+    private String secret;
 
     @Value("${jwt.token.validity}")
     private long tokenValidity = 600;
@@ -82,8 +81,12 @@ public class JwtUtil {
         return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody();
     }
 
-    public UserDetails createUserDetails(String username, String password, List<?> roles) {
-        return User.withUsername(username).password(password).authorities(Collections.emptyList()).build();
+    public UserDetails createUserDetails(String username, String password, List<String> roles) {
+        List<SimpleGrantedAuthority> authorities = roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .toList();
+
+        return new User(username, password, authorities);
     }
 
     // check if the token has expired
