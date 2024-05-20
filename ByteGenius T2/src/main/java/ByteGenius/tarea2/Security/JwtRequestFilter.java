@@ -1,4 +1,4 @@
-package ByteGenius.tarea2.Security;
+package ByteGenius.tarea2.security;
 
 import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
