@@ -1,16 +1,7 @@
 package ByteGenius.tarea2.services;
 
 import jakarta.transaction.Transactional;
-
-import org.apache.catalina.connector.Response;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.client.HttpClientErrorException.Unauthorized;
 
 import ByteGenius.tarea2.entities.Evento;
 import ByteGenius.tarea2.entities.Tipo;
@@ -20,7 +11,6 @@ import ByteGenius.tarea2.exceptions.NoDisponibleException;
 import ByteGenius.tarea2.repositories.EventoRepository;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -28,53 +18,6 @@ import java.util.Optional;
 @Transactional
 public class LogicaEventos {
     private EventoRepository eventoRepository;
-
-    @Autowired
-    private RestTemplate restTemplate;
-
-    public boolean existeEntrenador(Long idEntrenador) {
-        try {
-            ResponseEntity<Void> response = restTemplate.getForEntity(
-                "http://localhost:8080/entrenador/" + idEntrenador, Void.class);
-            return response.getStatusCode() == HttpStatus.OK;
-        } catch (HttpClientErrorException.NotFound e) {
-            return false;
-        }catch(HttpClientErrorException.BadRequest e){
-            return false;
-        }
-    }
-
-
-    public boolean existeCliente(Long idCliente) {
-        try {
-            ResponseEntity<Void> response = restTemplate.getForEntity(
-                "http://localhost:8080/cliente/" + idCliente, Void.class);
-            return response.getStatusCode() == HttpStatus.OK;
-        } catch (HttpClientErrorException.NotFound e) {
-            return false;
-        } catch(HttpClientErrorException.BadRequest e){
-            return false;
-        }
-    }
-
-    //Por arreglar --------------------------------------------------------------
-    public boolean existeEntrenadorCliente(Long idEntrenador,Long idCliente) {
-        try {
-            ResponseEntity<Void> response = restTemplate.getForEntity(
-                "http://localhost:8080/entrena/" + idCliente, Void.class);
-            ResponseEntity<Void> response2 = restTemplate.getForEntity(
-                "http://localhost:8080/entrena/" + idEntrenador, Void.class);
-            return response.getStatusCode() == HttpStatus.OK && response2.getStatusCode() == HttpStatus.OK;
-        } catch (HttpClientErrorException.NotFound e) {
-            return false;
-        } catch(HttpClientErrorException.BadRequest e){
-            return false;
-        }catch(HttpClientErrorException.Unauthorized e){
-            return false;
-        }
-    }
-
-
 
     public LogicaEventos(EventoRepository repo) {
         this.eventoRepository = repo;
