@@ -1,5 +1,6 @@
 package ByteGenius.tarea2.exceptions;
 
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -11,6 +12,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ElementoNoExisteException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public void handleElementoNoExisteException(ElementoNoExisteException ex) {
+        // Aquí puedes agregar lógica adicional, como logging, si es necesario
+    }
+
+
+    @ExceptionHandler(BadRequestException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void handleBadRequestException(BadRequestException ex) {
         // Aquí puedes agregar lógica adicional, como logging, si es necesario
     }
 }

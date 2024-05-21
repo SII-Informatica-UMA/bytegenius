@@ -125,5 +125,15 @@ public class EventosApplicationTests {
             var respuesta = restTemplate.exchange(peticion, Void.class);
             assertThat(respuesta.getStatusCode().value()).isEqualTo(404);
         }
+        @Test
+        @DisplayName("devuelve error al intentar borrar un Evento con un IdEntrenador o IDElemento negativos")
+        public void eliminarEventoConMalId() {
+            var peticion = delete("http", "localhost", port, "/calendario/-1/1");
+            var respuesta = restTemplate.exchange(peticion, Void.class);
+            assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
+        }
     }
+
+
 }
+

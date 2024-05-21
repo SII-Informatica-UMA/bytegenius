@@ -45,7 +45,7 @@ public class LogicaEventos {
     public void eliminarEvento(Long idEntrenador, Long idEvento) {
         var evento = eventoRepository.findById(idEntrenador);
         if (evento.isPresent()) {
-            eventoRepository.deleteById(null);
+            eventoRepository.deleteById(idEntrenador);
         } else {
             throw new ElementoNoExisteException("Evento no existente");
         }

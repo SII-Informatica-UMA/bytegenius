@@ -3,6 +3,7 @@ package ByteGenius.tarea2.controllers;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.apache.coyote.BadRequestException;
 import org.springframework.http.ResponseEntity;
 import ByteGenius.tarea2.dtos.EventoDTO;
 import ByteGenius.tarea2.dtos.EventoNuevoDTO;
@@ -50,8 +51,9 @@ public class EventoController {
     }
 
     @DeleteMapping("/{idEntrenador}/{idElemento}")
-    public void eliminarEvento(@PathVariable Long idEntrenador, @PathVariable Long idElemento) {
-        this.logicaEventos.getEvento(idEntrenador, idElemento).orElseThrow(ElementoNoExisteException::new);
+    public void eliminarEvento(@PathVariable Long idEntrenador, @PathVariable Long idElemento) throws BadRequestException {
+        if(idEntrenador  < 0 || idElemento < 0) throw new BadRequestException("ID entrenador o elemento no puede ser negativo");
+        this.logicaEventos.eliminarEvento(idEntrenador, idElemento);
 
     }
 
