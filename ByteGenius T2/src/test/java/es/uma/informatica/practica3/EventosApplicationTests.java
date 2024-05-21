@@ -20,10 +20,13 @@ import org.springframework.web.util.UriBuilderFactory;
 
 import ByteGenius.tarea2.Application;
 import ByteGenius.tarea2.dtos.EventoDTO;
+import ByteGenius.tarea2.entities.Evento;
+import ByteGenius.tarea2.entities.Tipo;
 import ByteGenius.tarea2.repositories.EventoRepository;
 import ByteGenius.tarea2.security.JwtUtil;
 
 import java.net.URI;
+import java.util.Date;
 import java.util.Collections;
 import java.util.List;
 
@@ -132,6 +135,47 @@ public class EventosApplicationTests {
             var respuesta = restTemplate.exchange(peticion, Void.class);
             assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
         }
+    }
+
+    @Nested
+    @DisplayName("cuando hay Eventos")
+    public class EventosNoVacios {
+        @BeforeEach
+        public void insertarDatos(){
+            Evento evento = Evento.builder()
+            .nombre("Reunión de equipo")
+            .inicio(new Date())
+            .tipo(Tipo.CITA)
+            .build();
+            evento.setId(1L);
+            evento.setIdEntrenador(1L);
+            evento.setIdCliente(1L);
+
+
+            Evento evento2 = Evento.builder()
+            .nombre("Entrenamiento de fútbol")
+            .descripcion("Entrenamiento táctico para mejorar la defensa")
+            .lugar("Campo de fútbol municipal")
+            .inicio(new Date())
+            .duracionMinutos(90)
+            .tipo(Tipo.DISPONIBILIDAD)
+            .build();
+
+            eventoRepository.save(evento);
+            eventoRepository.save(evento2);
+        }
+
+        @Test
+        @DisplayName("Devuelve evento concreto")
+        public void obtenerEventoConcreto() {
+            var peticion = get("http", "localhost", port, "/calendario/1L/1L");
+            var respuesta = restTemplate.exchange(peticion, new ParameterizedTypeReference<EventoDTO>() {
+            });
+            assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+        }
+
+        
+
     }
 
 
