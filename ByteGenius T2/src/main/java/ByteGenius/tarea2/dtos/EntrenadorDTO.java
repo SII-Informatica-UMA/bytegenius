@@ -4,6 +4,8 @@ import lombok.*;
 
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class EntrenadorDTO {
     private Long idUsuario;
     private String telefono;
@@ -17,7 +19,6 @@ public class EntrenadorDTO {
     private String experiencia;
     private String observaciones;
     private Long id; 
-    public EntrenadorDTO(long idUsuario){
-        this.idUsuario = idUsuario;
-    }
+
+
 }

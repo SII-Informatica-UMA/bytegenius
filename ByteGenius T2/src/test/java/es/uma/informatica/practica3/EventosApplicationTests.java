@@ -96,7 +96,7 @@ public class EventosApplicationTests {
 
     private RequestEntity<Void> get(String scheme, String host, int port, String path) {
         URI uri = uri(scheme, host, port, path);
-        UserDetails userDetails = jwtUtil.createUserDetails("1", "", Collections.emptyList());
+        UserDetails userDetails = jwtUtil.createUserDetails("2", "", Collections.emptyList());
         String token = jwtUtil.generateToken(userDetails);
         return RequestEntity.get(uri)
                 .accept(MediaType.APPLICATION_JSON)
@@ -174,10 +174,11 @@ public class EventosApplicationTests {
     @Nested
     @DisplayName("cuando hay Eventos")
     public class EventosNoVacios {
-        private Evento evento;
-        private Evento evento2;
+
         @BeforeEach
         public void insertarDatos(){
+             Evento evento;
+             Evento evento2;
               evento = Evento.builder()
             .nombre("Reunión de equipo")
             .inicio(new Date())
@@ -205,7 +206,8 @@ public class EventosApplicationTests {
         @Test
         @DisplayName("Devuelve evento concreto")
         public void obtenerEventoConcreto() {
-            EntrenadorDTO entr = new EntrenadorDTO(2);
+            EntrenadorDTO entr = new EntrenadorDTO();
+            entr.setIdUsuario(2L);
                     try {
                         mockserver.expect(ExpectedCount.once(), requestTo(new URI("http://localhost:8080/entrenador/2")))
               .andExpect(method(HttpMethod.GET))
