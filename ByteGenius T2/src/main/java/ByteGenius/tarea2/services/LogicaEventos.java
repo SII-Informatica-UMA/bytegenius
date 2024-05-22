@@ -1,15 +1,25 @@
 package ByteGenius.tarea2.services;
 
 import jakarta.transaction.Transactional;
-import org.springframework.stereotype.Service;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import ByteGenius.tarea2.dtos.EntrenadorDTO;
 import ByteGenius.tarea2.entities.Evento;
 import ByteGenius.tarea2.entities.Tipo;
 import ByteGenius.tarea2.exceptions.ElementoNoExisteException;
 import ByteGenius.tarea2.exceptions.HaySolapamientoException;
 import ByteGenius.tarea2.exceptions.NoDisponibleException;
 import ByteGenius.tarea2.repositories.EventoRepository;
+import ByteGenius.tarea2.security.JwtUtil;
 
+import java.net.http.HttpHeaders;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -19,6 +29,10 @@ import java.util.Optional;
 public class LogicaEventos {
     private EventoRepository eventoRepository;
 
+@Autowired 
+private RestTemplate rt;
+@Autowired
+private JwtUtil jwt;
     public LogicaEventos(EventoRepository repo) {
         this.eventoRepository = repo;
     }
@@ -28,8 +42,22 @@ public class LogicaEventos {
     }
 
     // get /calendario/idEntrenador/idElemento
-    public Optional<Evento> getEvento(Long idEntrenador, Long idEvento) {
+    public Optional<Evento> getEvento(Long idEntrenador, Long idEvento,String token) {
+        //Llamada al servicio de entrenadores con Rest Template
+        String url = "http://localhost:8080/entrenador/" + idEntrenador;
+        org.springframework.http.HttpHeaders header = new org.springframework.http.HttpHeaders();
+        header.set("Authoritation",token);
+        HttpEntity<String> entity = new HttpEntity<>(header);
+        ResponseEntity<EntrenadorDTO> respuesta = rt.exchange(url, HttpMethod.GET,entity,EntrenadorDTO.class);
+        if(respuesta.getStatusCode() != HttpStatus.OK){
+            throw new ElementoNoExisteException("No existe dicho entrenador");
+        }
+        else{
 
+            if(!jwt.getUsernameFromToken(token).equals(respuesta.getBody().getIdUsuario())){
+                throw new NoDisponibleException("No coincide el id del token con el del entrenador");
+            }
+        }
         return this.eventoRepository.findById(idEntrenador);
     }
 

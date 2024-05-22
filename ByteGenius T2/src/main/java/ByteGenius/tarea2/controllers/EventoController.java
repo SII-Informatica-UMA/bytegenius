@@ -18,7 +18,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -34,16 +36,16 @@ public class EventoController {
     }
 
     @GetMapping("/{idEntrenador}/{idElemento}")
-    public ResponseEntity<EventoDTO> getEvento(@PathVariable Long idEntrenador, @PathVariable Long idElemento) {
-        return ResponseEntity.of(this.logicaEventos.getEvento(idEntrenador, idElemento).map(Mapper::toEventoDTO));
+    public ResponseEntity<EventoDTO> getEvento(@PathVariable Long idEntrenador, @PathVariable Long idElemento,@RequestHeader String token) {
+        return ResponseEntity.of(this.logicaEventos.getEvento(idEntrenador, idElemento,token).map(Mapper::toEventoDTO));
     }
 
     @PutMapping("/{idEntrenador}/{idElemento}")
     public EventoDTO actualizarEvento(@PathVariable Long idEntrenador,
             @PathVariable Long idElemento,
-            @RequestBody EventoDTO evento) {
+            @RequestBody EventoDTO evento,@RequestHeader String token) {
 
-        this.logicaEventos.getEvento(idEntrenador, idElemento).orElseThrow(ElementoNoExisteException::new);
+        this.logicaEventos.getEvento(idEntrenador, idElemento,token).orElseThrow(ElementoNoExisteException::new);
         Evento e = Mapper.toEventoId(evento);
         e.setId(idElemento);
         e.setIdEntrenador(idEntrenador);
