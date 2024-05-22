@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,6 +36,7 @@ import ByteGenius.tarea2.entities.Evento;
 import ByteGenius.tarea2.entities.Tipo;
 import ByteGenius.tarea2.repositories.EventoRepository;
 import ByteGenius.tarea2.security.JwtUtil;
+import ByteGenius.tarea2.services.LogicaEventos;
 
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.*;      
 import static org.springframework.test.web.client.response.MockRestResponseCreators.*;
@@ -69,6 +71,9 @@ public class EventosApplicationTests {
 
     @Autowired
     private EventoRepository eventoRepository;
+
+    @Autowired
+    private LogicaEventos logEv;
 
     @BeforeEach
     public void initialize() {
@@ -169,9 +174,11 @@ public class EventosApplicationTests {
     @Nested
     @DisplayName("cuando hay Eventos")
     public class EventosNoVacios {
+        private Evento evento;
+        private Evento evento2;
         @BeforeEach
         public void insertarDatos(){
-              Evento evento = Evento.builder()
+              evento = Evento.builder()
             .nombre("Reunión de equipo")
             .inicio(new Date())
             .tipo(Tipo.CITA)
@@ -179,7 +186,7 @@ public class EventosApplicationTests {
 
 
 
-            Evento evento2 = Evento.builder()
+            evento2 = Evento.builder()
             .nombre("Entrenamiento de fútbol")
             .descripcion("Entrenamiento táctico para mejorar la defensa")
             .lugar("Campo de fútbol municipal")
