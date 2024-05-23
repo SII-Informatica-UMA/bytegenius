@@ -49,7 +49,7 @@ private JwtUtil jwt;
             HttpEntity<String> entity = new HttpEntity<>(new org.springframework.http.HttpHeaders());
             ResponseEntity<EntrenadorDTO> respuesta = rt.exchange(url, HttpMethod.GET,entity,EntrenadorDTO.class);
             if(respuesta.getBody().getIdUsuario().toString().equals(SecurityConfguration.getAuthenticatedUser().get().getUsername())){
-                return this.eventoRepository.findById(idEntrenador);
+                return this.eventoRepository.findById(idEvento);
            }else{
             throw new AccesoNoAutorizadoException("No coinciden los idUsuarios");
            }

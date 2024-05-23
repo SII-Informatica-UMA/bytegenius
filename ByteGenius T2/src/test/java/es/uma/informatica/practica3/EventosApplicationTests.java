@@ -174,11 +174,10 @@ public class EventosApplicationTests {
     @Nested
     @DisplayName("cuando hay Eventos")
     public class EventosNoVacios {
-
+        private Evento evento;
+        private Evento evento2;
         @BeforeEach
         public void insertarDatos(){
-             Evento evento;
-             Evento evento2;
               evento = Evento.builder()
             .nombre("Reunión de equipo")
             .inicio(new Date())
@@ -199,8 +198,8 @@ public class EventosApplicationTests {
             evento2.setIdEntrenador(2L);
             evento2.setIdCliente(2L);
 
-            eventoRepository.save(evento);
-            eventoRepository.save(evento2);
+            evento=eventoRepository.save(evento);
+            evento2=eventoRepository.save(evento2);
         }
 
         @Test
@@ -209,7 +208,7 @@ public class EventosApplicationTests {
             EntrenadorDTO entr = new EntrenadorDTO();
             entr.setIdUsuario(2L);
                     try {
-                        mockserver.expect(ExpectedCount.once(), requestTo(new URI("http://localhost:8080/entrenador/2")))
+                        mockserver.expect(ExpectedCount.once(), requestTo(new URI("http://localhost:8080/entrenador/" + entr.getIdUsuario())))
               .andExpect(method(HttpMethod.GET))
               .andRespond(withStatus(HttpStatus.OK)
                                    .contentType(MediaType.APPLICATION_JSON)
@@ -219,7 +218,7 @@ public class EventosApplicationTests {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
                     }            
-                    var peticion = get("http", "localhost", port, "/calendario/2/1");
+                    var peticion = get("http", "localhost", port, "/calendario/" + entr.getIdUsuario() + "/" + evento2.getId());
             var respuesta = rt.exchange(peticion, new ParameterizedTypeReference<EventoDTO>() {
             });
             
