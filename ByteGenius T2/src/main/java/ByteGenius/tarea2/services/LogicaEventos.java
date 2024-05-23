@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.*;
-import org.springframework.web.client.RestTemplate;
 
 import ByteGenius.tarea2.dtos.EntrenadorDTO;
 import ByteGenius.tarea2.entities.Evento;
@@ -57,9 +56,6 @@ private JwtUtil jwt;
             throw new HttpError("No existe dicho entrenador");
 
         }
-
-
-        
     }
 
     public Evento Crear_Actualizar_Evento(Evento evento) {
@@ -70,15 +66,28 @@ private JwtUtil jwt;
         return (Evento) this.eventoRepository.save(evento);
     }
 
-    // Delete /calendario/idEntrenador/idElemento
     public void eliminarEvento(Long idEntrenador, Long idEvento) {
-        var evento = eventoRepository.findById(idEntrenador);
-        if (evento.isPresent()) {
-            eventoRepository.deleteById(idEntrenador);
+    try {
+        // Llamada al servicio de entrenadores con Rest Template
+        String url = "http://localhost:8080/entrenador/" + idEntrenador;
+        HttpEntity<String> entity = new HttpEntity<>(new org.springframework.http.HttpHeaders());
+        ResponseEntity<EntrenadorDTO> respuesta = rt.exchange(url, HttpMethod.GET, entity, EntrenadorDTO.class);
+        
+        if (respuesta.getBody().getIdUsuario().toString().equals(SecurityConfguration.getAuthenticatedUser().get().getUsername())) {
+            Optional<Evento> evento = this.eventoRepository.findById(idEvento);
+            if (evento.isPresent()) {
+                this.eventoRepository.deleteById(idEvento);
+            } else {
+                throw new ElementoNoExisteException("Evento no existente");
+            }
         } else {
-            throw new ElementoNoExisteException("Evento no existente");
+            throw new AccesoNoAutorizadoException("No coinciden los idUsuarios");
         }
+    } catch (HttpClientErrorException e) {
+        throw new HttpError("No existe dicho entrenador");
     }
+}
+
 
     public Optional<List<Evento>> getDisponibilidad(Long idEntrenador) {
         return eventoRepository.findAllByIdEntrenador(idEntrenador);

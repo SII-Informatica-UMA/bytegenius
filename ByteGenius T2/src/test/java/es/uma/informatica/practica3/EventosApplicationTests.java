@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.RequestEntity;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.annotation.DirtiesContext.ClassMode;
@@ -46,6 +48,7 @@ import java.net.URISyntaxException;
 import java.util.Date;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -106,7 +109,7 @@ public class EventosApplicationTests {
 
     private RequestEntity<Void> delete(String scheme, String host, int port, String path) {
         URI uri = uri(scheme, host, port, path);
-        UserDetails userDetails = jwtUtil.createUserDetails("1", "", Collections.emptyList());
+        UserDetails userDetails = jwtUtil.createUserDetails("2", "", Collections.emptyList());
         String token = jwtUtil.generateToken(userDetails);
         return RequestEntity.delete(uri)
                 .header("Authorization", "Bearer " + token)
@@ -224,6 +227,38 @@ public class EventosApplicationTests {
             
             assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
         }
+
+        @Test
+        @DisplayName("Elimina evento existente")
+        public void eliminarEventoExistente() {
+            EntrenadorDTO entr = new EntrenadorDTO();
+            entr.setIdUsuario(2L);
+
+            try {
+                mockserver.expect(ExpectedCount.once(), requestTo(new URI("http://localhost:8080/entrenador/" + entr.getIdUsuario())))
+                    .andExpect(method(HttpMethod.GET))
+                    .andRespond(withStatus(HttpStatus.OK)
+                                    .contentType(MediaType.APPLICATION_JSON)
+                                    .body(mapper.writeValueAsString(entr)));
+            } catch (JsonProcessingException | URISyntaxException e) {
+                e.printStackTrace();
+            }
+            var peticion = delete("http", "localhost", port, "/calendario/" + entr.getIdUsuario() + "/" + evento2.getId());
+
+            ResponseEntity<Void> respuesta = rt.exchange(peticion, new ParameterizedTypeReference<Void>() {
+                
+            });
+            System.out.println("Aqui llego: " + respuesta + " Peticion: " + peticion);
+
+            assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+
+            assertThat(eventoRepository.findById(evento2.getId()).isPresent()).isFalse();
+        }
+
+
+
+        
+
 
         
 
