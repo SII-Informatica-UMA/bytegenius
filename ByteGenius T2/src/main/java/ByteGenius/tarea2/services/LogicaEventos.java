@@ -16,8 +16,6 @@ import ByteGenius.tarea2.security.JwtUtil;
 import ByteGenius.tarea2.security.SecurityConfguration;
 import ByteGenius.tarea2.exceptions.*;
 
-
-
 import java.net.http.HttpHeaders;
 import java.util.List;
 import java.util.Objects;
@@ -28,10 +26,11 @@ import java.util.Optional;
 public class LogicaEventos {
     private EventoRepository eventoRepository;
 
-@Autowired 
-private RestTemplate rt;
-@Autowired
-private JwtUtil jwt;
+    @Autowired
+    private RestTemplate rt;
+    @Autowired
+    private JwtUtil jwt;
+
     public LogicaEventos(EventoRepository repo) {
         this.eventoRepository = repo;
     }
@@ -42,17 +41,18 @@ private JwtUtil jwt;
 
     // get /calendario/idEntrenador/idElemento
     public Optional<Evento> getEvento(Long idEntrenador, Long idEvento) {
-        try{
-//Llamada al servicio de entrenadores con Rest Template
+        try {
+            // Llamada al servicio de entrenadores con Rest Template
             String url = "http://localhost:8080/entrenador/" + idEntrenador;
             HttpEntity<String> entity = new HttpEntity<>(new org.springframework.http.HttpHeaders());
-            ResponseEntity<EntrenadorDTO> respuesta = rt.exchange(url, HttpMethod.GET,entity,EntrenadorDTO.class);
-            if(respuesta.getBody().getIdUsuario().toString().equals(SecurityConfguration.getAuthenticatedUser().get().getUsername())){
+            ResponseEntity<EntrenadorDTO> respuesta = rt.exchange(url, HttpMethod.GET, entity, EntrenadorDTO.class);
+            if (respuesta.getBody().getIdUsuario().toString()
+                    .equals(SecurityConfguration.getAuthenticatedUser().get().getUsername())) {
                 return this.eventoRepository.findById(idEvento);
-           }else{
-            throw new AccesoNoAutorizadoException("No coinciden los idUsuarios");
-           }
-        }catch(HttpClientErrorException e){
+            } else {
+                throw new AccesoNoAutorizadoException("No coinciden los idUsuarios");
+            }
+        } catch (HttpClientErrorException e) {
             throw new HttpError("No existe dicho entrenador");
 
         }
@@ -63,34 +63,61 @@ private JwtUtil jwt;
         comprobarSolapamiento(evento);
         if (evento.getTipo() == Tipo.CITA)
             comprobarEventoEnFranjaDisponibilidad(evento);
-        return (Evento) this.eventoRepository.save(evento);
+
+        try {
+            String url = "http://localhost:8080/entrenador/" + evento.getIdEntrenador();
+            HttpEntity<String> entity = new HttpEntity<>(new org.springframework.http.HttpHeaders());
+            ResponseEntity<EntrenadorDTO> respuesta = rt.exchange(url, HttpMethod.GET, entity, EntrenadorDTO.class);
+
+            if (respuesta.getBody().getIdUsuario().toString()
+                    .equals(SecurityConfguration.getAuthenticatedUser().get().getUsername())) {
+                return (Evento) this.eventoRepository.save(evento);
+            } else {
+                throw new AccesoNoAutorizadoException("No coinciden los idUsuarios");
+            }
+        } catch (HttpClientErrorException e) {
+            throw new HttpError("No existe dicho entrenador");
+        }
     }
 
     public void eliminarEvento(Long idEntrenador, Long idEvento) {
-    try {
-        // Llamada al servicio de entrenadores con Rest Template
-        String url = "http://localhost:8080/entrenador/" + idEntrenador;
-        HttpEntity<String> entity = new HttpEntity<>(new org.springframework.http.HttpHeaders());
-        ResponseEntity<EntrenadorDTO> respuesta = rt.exchange(url, HttpMethod.GET, entity, EntrenadorDTO.class);
-        
-        if (respuesta.getBody().getIdUsuario().toString().equals(SecurityConfguration.getAuthenticatedUser().get().getUsername())) {
-            Optional<Evento> evento = this.eventoRepository.findById(idEvento);
-            if (evento.isPresent()) {
-                this.eventoRepository.deleteById(idEvento);
-            } else {
-                throw new ElementoNoExisteException("Evento no existente");
-            }
-        } else {
-            throw new AccesoNoAutorizadoException("No coinciden los idUsuarios");
-        }
-    } catch (HttpClientErrorException e) {
-        throw new HttpError("No existe dicho entrenador");
-    }
-}
+        try {
+            String url = "http://localhost:8080/entrenador/" + idEntrenador;
+            HttpEntity<String> entity = new HttpEntity<>(new org.springframework.http.HttpHeaders());
+            ResponseEntity<EntrenadorDTO> respuesta = rt.exchange(url, HttpMethod.GET, entity, EntrenadorDTO.class);
 
+            if (respuesta.getBody().getIdUsuario().toString()
+                    .equals(SecurityConfguration.getAuthenticatedUser().get().getUsername())) {
+                Optional<Evento> evento = this.eventoRepository.findById(idEvento);
+                if (evento.isPresent()) {
+                    this.eventoRepository.deleteById(idEvento);
+                } else {
+                    throw new ElementoNoExisteException("Evento no existente");
+                }
+            } else {
+                throw new AccesoNoAutorizadoException("No coinciden los idUsuarios");
+            }
+        } catch (HttpClientErrorException e) {
+            throw new HttpError("No existe dicho entrenador");
+        }
+    }
 
     public Optional<List<Evento>> getDisponibilidad(Long idEntrenador) {
-        return eventoRepository.findAllByIdEntrenador(idEntrenador);
+
+        try {
+            String url = "http://localhost:8080/entrenador/" + idEntrenador;
+            HttpEntity<String> entity = new HttpEntity<>(new org.springframework.http.HttpHeaders());
+            ResponseEntity<EntrenadorDTO> respuesta = rt.exchange(url, HttpMethod.GET, entity, EntrenadorDTO.class);
+
+            if (respuesta.getBody().getIdUsuario().toString()
+                    .equals(SecurityConfguration.getAuthenticatedUser().get().getUsername())) {
+                return eventoRepository.findAllByIdEntrenador(idEntrenador);
+            } else {
+                throw new AccesoNoAutorizadoException("No coinciden los idUsuarios");
+            }
+        } catch (HttpClientErrorException e) {
+            throw new HttpError("No existe dicho entrenador");
+        }
     }
 
     private void validarDatosEvento(Evento evento) {
