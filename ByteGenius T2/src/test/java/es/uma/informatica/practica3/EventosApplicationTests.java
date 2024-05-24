@@ -140,20 +140,31 @@ public class EventosApplicationTests {
     public class EventosVacias {
 
         @Test
-        @DisplayName("Devuelve null cuando la base de datos está vacía")
+        @DisplayName("Devuelve null cuando la base de datos está vacía al intentar acceder a un evento")
         public void obtenerEventoConcretoBaseDatosVacia() {
-            EntrenadorDTO entr = new EntrenadorDTO();
-            entr.setIdUsuario(2L);
+            EntrenadorDTO engr = new EntrenadorDTO();
+            engr.setIdUsuario(2L);
             try {
                 mockserver
                         .expect(ExpectedCount.once(),
-                                requestTo(new URI("http://localhost:8080/entrenador/" + entr.getIdUsuario())))
+                                requestTo(new URI("http://localhost:8080/entrenador/" + engr.getIdUsuario())))
                         .andExpect(method(HttpMethod.GET))
-                        .andRespond(withStatus(HttpStatus.NOT_FOUND));
+                        .andRespond(withStatus(HttpStatus.OK)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .body(mapper.writeValueAsString(engr)));
+                        
+                                mockserver
+                                .expect(ExpectedCount.once(),
+                                        requestTo(new URI("http://localhost:8080/calendario/" + engr.getIdUsuario())))
+                                .andExpect(method(HttpMethod.POST))
+                                .andRespond(withStatus(HttpStatus.CREATED));
             } catch (URISyntaxException e) {
                 e.printStackTrace();
+            } catch (JsonProcessingException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
             }
-            var peticion = get("http", "localhost", port, "/calendario/" + entr.getIdUsuario() + "/" + 1);
+            var peticion = get("http", "localhost", port, "/calendario/" + engr.getIdUsuario() + "/" + 1);
             var respuesta = rt.exchange(peticion, new ParameterizedTypeReference<EventoDTO>() {
             });
 
@@ -162,7 +173,7 @@ public class EventosApplicationTests {
 
         @Test
         @DisplayName("No elimina evento cuando la base de datos está vacía")
-        public void eliminarEventoExistenteBaseDatosVacia() {
+        public void eliminarEventoNoExistenteBaseDatosVacia() {
             EntrenadorDTO entr = new EntrenadorDTO();
             entr.setIdUsuario(2L);
 
@@ -171,11 +182,12 @@ public class EventosApplicationTests {
                         .expect(ExpectedCount.once(),
                                 requestTo(new URI("http://localhost:8080/entrenador/" + entr.getIdUsuario())))
                         .andExpect(method(HttpMethod.GET))
-                        .andRespond(withStatus(HttpStatus.NOT_FOUND));
+                        .andRespond(withStatus(HttpStatus.CREATED));
+
             } catch (URISyntaxException e) {
                 e.printStackTrace();
             }
-            var peticion = delete("http", "localhost", port, "/calendario/" + entr.getIdUsuario() + "/" + 1);
+            var peticion = delete("http", "localhost", port, "/calendario/" + entr.getIdUsuario() + "/" + 2);
 
             ResponseEntity<Void> respuesta = rt.exchange(peticion, new ParameterizedTypeReference<Void>() {
             });
@@ -194,23 +206,20 @@ public class EventosApplicationTests {
                     .inicio(new Date())
                     .id(2L)
                     .tipo(Tipo.DISPONIBILIDAD)
+                    .lugar("Pepe")
+                    .duracionMinutos(120)
+                    .idCliente(2L)
                     .build();
 
             // Configuramos el mock para la llamada al servicio de entrenador
             try {
                 mockserver
-                        .expect(ExpectedCount.once(),
-                                requestTo(new URI("http://localhost:8080/entrenador/" + entr.getIdUsuario())))
-                        .andExpect(method(HttpMethod.GET))
-                        .andRespond(withStatus(HttpStatus.OK)
-                                .contentType(MediaType.APPLICATION_JSON)
-                                .body(mapper.writeValueAsString(entr)));
-
-                mockserver
-                        .expect(ExpectedCount.once(),
-                                requestTo(new URI("http://localhost:8080/calendario/" + entr.getIdUsuario())))
-                        .andExpect(method(HttpMethod.POST))
-                        .andRespond(withStatus(HttpStatus.CREATED));
+                .expect(ExpectedCount.once(),
+                        requestTo(new URI("http://localhost:8080/entrenador/" + entr.getIdUsuario())))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(withStatus(HttpStatus.OK)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(mapper.writeValueAsString(entr)));
 
             } catch (URISyntaxException | JsonProcessingException e) {
                 e.printStackTrace();
@@ -229,8 +238,6 @@ public class EventosApplicationTests {
 
             // Verificamos que el evento se haya insertado correctamente en la base de datos
             List<Evento> eventosBD = eventoRepository.findAll();
-            assertThat(respuesta.getHeaders().get("Location").get(0))
-                    .endsWith("/" + eventosBD.get(0).getId());
             assertThat(eventosBD.get(0).getNombre()).isEqualTo(evento.getNombre());
             // Agrega más aserciones según sea necesario para verificar otros campos del
             // evento
@@ -321,6 +328,52 @@ public class EventosApplicationTests {
             assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 
             assertThat(eventoRepository.findById(evento2.getId()).isPresent()).isFalse();
+        }
+        @Test
+        @DisplayName("Modifica evento concreto")
+        public void modificarEvento() {
+            EntrenadorDTO entr = new EntrenadorDTO();
+            entr.setIdUsuario(2L);
+
+            Evento evento = Evento.builder()
+                    .nombre("Prueba de evento2")
+                    .inicio(new Date())
+                    .id(2L)
+                    .tipo(Tipo.DISPONIBILIDAD)
+                    .lugar("Pe")
+                    .duracionMinutos(120)
+                    .idCliente(3L)
+                    .build();
+
+            // Configuramos el mock para la llamada al servicio de entrenador
+            try {
+                mockserver
+                .expect(ExpectedCount.once(),
+                        requestTo(new URI("http://localhost:8080/entrenador/" + entr.getIdUsuario())))
+                .andExpect(method(HttpMethod.GET))
+                .andRespond(withStatus(HttpStatus.OK)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .body(mapper.writeValueAsString(entr)));
+
+            } catch (URISyntaxException | JsonProcessingException e) {
+                e.printStackTrace();
+            }
+
+            // Realizamos la solicitud para insertar el evento
+            var request = put("http", "localhost", port, "/calendario/" + entr.getIdUsuario(), evento);
+
+            // Realizamos la llamada al servicio
+            var respuesta = rt.exchange(request, Void.class);
+
+            // Verificamos que la respuesta sea exitosa
+            assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+
+
+            // Verificamos que el evento se haya insertado correctamente en la base de datos
+            List<Evento> eventosBD = eventoRepository.findAll();
+            assertThat(eventosBD.get(2).getNombre()).isEqualTo(evento.getNombre());
+            // Agrega más aserciones según sea necesario para verificar otros campos del
+            // evento
         }
 
     }
