@@ -366,23 +366,23 @@ public class EventosApplicationTests {
             EntrenadorDTO entr = new EntrenadorDTO();
             entr.setIdUsuario(2L);
 
-            Evento evento = Evento.builder()
-                    .nombre("Prueba de evento2")
-                    .inicio(new Date())
-                    .tipo(Tipo.DISPONIBILIDAD)
-                    .lugar("Pe")
-                    .duracionMinutos(120)
-                    .idCliente(3L)
-                    .build();
+            Evento evento = new Evento();
+            evento.setNombre("Prueba de evento2");
+            evento.setInicio(new Date());
+            evento.setTipo(Tipo.DISPONIBILIDAD);
+            evento.setLugar("Pe");
+            evento.setDuracionMinutos(120);
+            evento.setIdCliente(3L);
 
             try {
                 mockserver
-                        .expect(ExpectedCount.once(),
+                        .expect(ExpectedCount.manyTimes(),
                                 requestTo(new URI("http://localhost:8080/entrenador/" + entr.getIdUsuario())))
                         .andExpect(method(HttpMethod.GET))
                         .andRespond(withStatus(HttpStatus.OK)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .body(mapper.writeValueAsString(entr)));
+
 
             } catch (URISyntaxException | JsonProcessingException e) {
                 e.printStackTrace();

@@ -40,6 +40,7 @@ public class Mapper {
         nuevoEvento.setDuracionMinutos(evento.getDuracionMinutos());
         nuevoEvento.setInicio(evento.getInicio());
         nuevoEvento.setReglaRecurrencia(evento.getReglaRecurrencia());
+        nuevoEvento.setTipo(evento.getTipo());
         return nuevoEvento;
     }
 }
