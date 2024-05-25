@@ -281,6 +281,32 @@ public class EventosApplicationTests {
 
         }
 
+        @Test
+        @DisplayName("error al devolver la disponibilidad del entrenador")
+        public void obtenerDisponibilidadEntrenador() {
+            EntrenadorDTO entr = new EntrenadorDTO();
+            entr.setIdUsuario(2L);
+
+            try {
+                mockserver
+                        .expect(ExpectedCount.once(),
+                                requestTo(new URI("http://localhost:8080/entrenador/" + entr.getIdUsuario())))
+                        .andExpect(method(HttpMethod.GET))
+                        .andRespond(withStatus(HttpStatus.OK)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .body(mapper.writeValueAsString(entr)));
+
+            } catch (URISyntaxException | JsonProcessingException e) {
+                e.printStackTrace();
+            }
+
+            var peticion = get("http", "localhost", port, "/calendario/" + entr.getIdUsuario());
+            var respuesta = rt.exchange(peticion, new ParameterizedTypeReference<List<EventoDTO>>() {
+            });
+
+            assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+        }
+
     }
 
     @Nested
@@ -382,7 +408,6 @@ public class EventosApplicationTests {
                         .andRespond(withStatus(HttpStatus.OK)
                                 .contentType(MediaType.APPLICATION_JSON)
                                 .body(mapper.writeValueAsString(entr)));
-
 
             } catch (URISyntaxException | JsonProcessingException e) {
                 e.printStackTrace();

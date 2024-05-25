@@ -35,10 +35,6 @@ public class LogicaEventos {
         this.eventoRepository = repo;
     }
 
-    public List<Evento> getEventos() {
-        return eventoRepository.findAll();
-    }
-
     // get /calendario/idEntrenador/idElemento
     public Optional<Evento> getEvento(Long idEntrenador, Long idEvento) {
         try {
@@ -68,7 +64,7 @@ public class LogicaEventos {
             String url = "http://localhost:8080/entrenador/" + evento.getIdEntrenador();
             HttpEntity<String> entity = new HttpEntity<>(new org.springframework.http.HttpHeaders());
             ResponseEntity<EntrenadorDTO> respuesta = rt.exchange(url, HttpMethod.GET, entity, EntrenadorDTO.class);
-           
+
             if (respuesta.getBody().getIdUsuario().toString()
                     .equals(SecurityConfguration.getAuthenticatedUser().get().getUsername())) {
                 return (Evento) this.eventoRepository.save(evento);
