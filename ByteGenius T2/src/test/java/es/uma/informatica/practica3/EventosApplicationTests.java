@@ -243,6 +243,78 @@ public class EventosApplicationTests {
         }
 
         @Test
+        @DisplayName("error al insertar cita sin IdCliente")
+        public void insertarCitaSinIdCliente() {
+            EntrenadorDTO entr = new EntrenadorDTO();
+            entr.setIdUsuario(2L);
+
+            Evento evento = Evento.builder()
+                    .nombre("Prueba de evento")
+                    .inicio(new Date())
+                    .id(2L)
+                    .tipo(Tipo.CITA)
+                    .lugar("Pepe")
+                    .duracionMinutos(120)
+                    .build();
+
+            try {
+                mockserver
+                        .expect(ExpectedCount.once(),
+                                requestTo(new URI("http://localhost:8080/entrenador/" + entr.getIdUsuario())))
+                        .andExpect(method(HttpMethod.GET))
+                        .andRespond(withStatus(HttpStatus.OK)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .body(mapper.writeValueAsString(entr)));
+
+            } catch (URISyntaxException | JsonProcessingException e) {
+                e.printStackTrace();
+            }
+
+            var request = post("http", "localhost", port, "/calendario/" + entr.getIdUsuario(), evento);
+
+            var respuesta = rt.exchange(request, Void.class);
+
+            assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
+
+        }
+
+        @Test
+        @DisplayName("error al insertar un evento con falta de datos")
+        public void insertarEventoConFaltaDatos() {
+            EntrenadorDTO entr = new EntrenadorDTO();
+            entr.setIdUsuario(2L);
+
+            Evento evento = Evento.builder()
+                    .nombre("Prueba de evento")
+                    .inicio(new Date())
+                    .id(2L)
+                    .lugar("Pepe")
+                    .duracionMinutos(120)
+                    .idCliente(2L)
+                    .build();
+
+            try {
+                mockserver
+                        .expect(ExpectedCount.once(),
+                                requestTo(new URI("http://localhost:8080/entrenador/" + entr.getIdUsuario())))
+                        .andExpect(method(HttpMethod.GET))
+                        .andRespond(withStatus(HttpStatus.OK)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .body(mapper.writeValueAsString(entr)));
+
+            } catch (URISyntaxException | JsonProcessingException e) {
+                e.printStackTrace();
+            }
+
+            var request = post("http", "localhost", port, "/calendario/" + entr.getIdUsuario(), evento);
+
+            var respuesta = rt.exchange(request, Void.class);
+
+            assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
+
+        }
+
+        @Test
         @DisplayName("error al modificar evento inexistente")
         public void modificarEvento() {
             EntrenadorDTO entr = new EntrenadorDTO();
@@ -313,6 +385,7 @@ public class EventosApplicationTests {
     @DisplayName("cuando hay Eventos")
     public class EventosNoVacios {
         private Evento evento2;
+        private Evento evento1;
 
         @BeforeEach
         public void insertarDatos() {
@@ -327,9 +400,21 @@ public class EventosApplicationTests {
                     .build();
             evento2.setId(2L);
             evento2.setIdEntrenador(2L);
-            evento2.setIdCliente(2L);
+
+            evento1 = Evento.builder()
+                    .nombre("Cita")
+                    .descripcion("prueba cita")
+                    .lugar("Campo de fútbol municipal")
+                    .inicio(new Date())
+                    .duracionMinutos(30)
+                    .tipo(Tipo.CITA)
+                    .build();
+            evento1.setId(1L);
+            evento1.setIdEntrenador(2L);
+            evento1.setIdCliente(2L);
 
             evento2 = eventoRepository.save(evento2);
+            evento1 = eventoRepository.save(evento1);
         }
 
         @Test
@@ -463,7 +548,46 @@ public class EventosApplicationTests {
                     .startsWith("http://localhost:" + port + "/calendario");
 
             List<Evento> eventosBD = eventoRepository.findAll();
-            assertThat(eventosBD.get(1).getNombre()).isEqualTo(evento.getNombre());
+            assertThat(eventosBD.get(2).getNombre()).isEqualTo(evento.getNombre());
+
+        }
+
+        @Test
+        @DisplayName("error al insertar una cita fuera de una disponibilidad")
+        public void insertarCitaSinDisponibilidad() {
+            EntrenadorDTO entr = new EntrenadorDTO();
+            entr.setIdUsuario(2L);
+
+            eventoRepository.delete(evento2);
+
+            Evento evento = Evento.builder()
+                    .nombre("Prueba de evento")
+                    .inicio(new Date())
+                    .id(3L)
+                    .tipo(Tipo.CITA)
+                    .lugar("Pepe")
+                    .duracionMinutos(120)
+                    .idCliente(2L)
+                    .build();
+
+            try {
+                mockserver
+                        .expect(ExpectedCount.once(),
+                                requestTo(new URI("http://localhost:8080/entrenador/" + entr.getIdUsuario())))
+                        .andExpect(method(HttpMethod.GET))
+                        .andRespond(withStatus(HttpStatus.OK)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .body(mapper.writeValueAsString(entr)));
+
+            } catch (URISyntaxException | JsonProcessingException e) {
+                e.printStackTrace();
+            }
+
+            var request = post("http", "localhost", port, "/calendario/" + entr.getIdUsuario(), evento);
+
+            var respuesta = rt.exchange(request, Void.class);
+
+            assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
 
         }
 
@@ -480,7 +604,7 @@ public class EventosApplicationTests {
                     .id(3L)
                     .tipo(Tipo.CITA)
                     .lugar("Pepe")
-                    .duracionMinutos(120)
+                    .duracionMinutos(15)
                     .idCliente(3L)
                     .build();
 

@@ -15,10 +15,27 @@ public class GlobalExceptionHandler {
         // Aquí puedes agregar lógica adicional, como logging, si es necesario
     }
 
-
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public void handleBadRequestException(BadRequestException ex) {
+        // Aquí puedes agregar lógica adicional, como logging, si es necesario
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void handleIllegalArgumentException(IllegalArgumentException ex) {
+        // Aquí puedes agregar lógica adicional, como logging, si es necesario
+    }
+
+    @ExceptionHandler(HaySolapamientoException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void handleHaySolapamientoException(HaySolapamientoException ex) {
+        // Aquí puedes agregar lógica adicional, como logging, si es necesario
+    }
+
+    @ExceptionHandler(NoDisponibleException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public void handleNoDisponibleException(NoDisponibleException ex) {
         // Aquí puedes agregar lógica adicional, como logging, si es necesario
     }
 }

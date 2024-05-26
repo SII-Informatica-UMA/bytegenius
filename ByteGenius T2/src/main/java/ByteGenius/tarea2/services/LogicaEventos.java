@@ -121,10 +121,7 @@ public class LogicaEventos {
             throw new IllegalArgumentException("Faltan datos al evento");
         if (evento.getTipo() == Tipo.CITA) {
             if (evento.getIdCliente() == null)
-                throw new IllegalArgumentException(
-                        "Para una cita, tiene que tener idCliente, duraciy momento de inicio");
-            if (evento.getReglaRecurrencia() != null)
-                throw new IllegalArgumentException("Una cita no puede tener recurrencia");
+                throw new IllegalArgumentException("Para una cita, tiene que tener idCliente");
         }
     }
 
