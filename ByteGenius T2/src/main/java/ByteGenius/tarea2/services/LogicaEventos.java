@@ -55,10 +55,25 @@ public class LogicaEventos {
     }
 
     public Evento Crear_Actualizar_Evento(Evento evento) {
-        validarDatosEvento(evento);
-        comprobarSolapamiento(evento);
-        if (evento.getTipo() == Tipo.CITA)
-            comprobarEventoEnFranjaDisponibilidad(evento);
+        try {
+            validarDatosEvento(evento);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("Los datos del evento no son válidos", e);
+        }
+
+        try {
+            comprobarSolapamiento(evento);
+        } catch (HaySolapamientoException e) {
+            throw new HaySolapamientoException("El evento se solapa con otro evento existente");
+        }
+
+        if (evento.getTipo() == Tipo.CITA) {
+            try {
+                comprobarEventoEnFranjaDisponibilidad(evento);
+            } catch (NoDisponibleException e) {
+                throw new NoDisponibleException("El evento está fuera de la franja de disponibilidad");
+            }
+        }
 
         try {
             String url = "http://localhost:8080/entrenador/" + evento.getIdEntrenador();
