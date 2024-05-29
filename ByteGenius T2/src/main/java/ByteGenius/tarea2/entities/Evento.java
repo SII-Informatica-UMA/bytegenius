@@ -111,7 +111,9 @@ public class Evento {
 		Date finEsteEvento = this.calcularFin();
 		Date finOtroEvento = otroEvento.calcularFin();
 
-		return (this.inicio.before(otroEvento.inicio) || this.inicio.equals(otroEvento.inicio)) &&
-				(finEsteEvento.after(finOtroEvento) || finEsteEvento.equals(finOtroEvento));
+		boolean empiezaAntesOIgual = this.inicio.before(otroEvento.inicio) || this.inicio.equals(otroEvento.inicio);
+		boolean terminaDespuesOIgual = finEsteEvento.after(finOtroEvento) || finEsteEvento.equals(finOtroEvento);
+
+		return empiezaAntesOIgual && terminaDespuesOIgual;
 	}
 }

@@ -652,7 +652,7 @@ public class EventosApplicationTests {
                                         .descripcion("Entrenamiento táctico para mejorar la defensa")
                                         .lugar("Campo de fútbol municipal")
                                         .inicio(new Date())
-                                        .duracionMinutos(90)
+                                        .duracionMinutos(100)
                                         .tipo(Tipo.DISPONIBILIDAD)
                                         .build();
                         evento2.setId(2L);
@@ -815,36 +815,10 @@ public class EventosApplicationTests {
                 }
 
                 @Test
-                @DisplayName("error al insertar una cita fuera de una disponibilidad")
-                public void insertarCitaSinDisponibilidad() {
+                @DisplayName("obtiene correctamente una disponibilidad")
+                public void obtieneDisponibilidad() {
                         EntrenadorDTO entr = new EntrenadorDTO();
                         entr.setIdUsuario(2L);
-
-                        // Obtén la fecha de inicio del evento2
-                        Date inicioEvento2 = evento2.getInicio();
-
-                        // Crea un objeto Calendar y establece su tiempo al inicio del evento2
-                        Calendar calendar = Calendar.getInstance();
-                        calendar.setTime(inicioEvento2);
-
-                        // Añade o resta tiempo para mover la fecha de inicio de la cita fuera del
-                        // inicio del evento2
-                        // En este ejemplo, estamos restando 2 horas
-                        calendar.add(Calendar.HOUR, -2);
-
-                        // Usa la fecha modificada como la fecha de inicio de la cita
-                        Date inicioCita = calendar.getTime();
-
-                        Evento evento = Evento.builder()
-                                        .nombre("Prueba de evento")
-                                        .inicio(inicioCita)
-                                        .id(3L)
-                                        .tipo(Tipo.CITA)
-                                        .lugar("Pepe")
-                                        .duracionMinutos(120)
-                                        .idCliente(2L)
-                                        .build();
-                        ;
 
                         try {
                                 mockserver
@@ -860,12 +834,51 @@ public class EventosApplicationTests {
                                 e.printStackTrace();
                         }
 
+                        var peticion = get("http", "localhost", port, "/calendario/" + entr.getIdUsuario());
+                        var respuesta = rt.exchange(peticion, new ParameterizedTypeReference<List<EventoDTO>>() {
+                        });
+
+                        assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
+                }
+
+                @Test
+                @DisplayName("error al insertar una cita fuera de una disponibilidad")
+                public void insertarCitaSinDisponibilidad() {
+                        EntrenadorDTO entr = new EntrenadorDTO();
+                        entr.setIdUsuario(2L);
+
+                        Calendar cal = Calendar.getInstance();
+                        cal.set(2024, Calendar.DECEMBER, 25, 10, 0, 0); // 25 de diciembre de 2024, 10:00 AM
+                        Date fechaInicio = cal.getTime();
+
+                        Evento evento = Evento.builder()
+                                        .nombre("Prueba de evento")
+                                        .inicio(fechaInicio)
+                                        .idEntrenador(2L)
+                                        .id(3L)
+                                        .tipo(Tipo.CITA)
+                                        .lugar("Pepe")
+                                        .duracionMinutos(200)
+                                        .idCliente(3L)
+                                        .build();
+
+                        try {
+                                mockserver.expect(ExpectedCount.once(),
+                                                requestTo(new URI("http://localhost:8080/entrenador/"
+                                                                + entr.getIdUsuario())))
+                                                .andExpect(method(HttpMethod.GET))
+                                                .andRespond(withStatus(HttpStatus.OK)
+                                                                .contentType(MediaType.APPLICATION_JSON)
+                                                                .body(mapper.writeValueAsString(entr)));
+                        } catch (URISyntaxException | JsonProcessingException e) {
+                                e.printStackTrace();
+                        }
+
                         var request = post("http", "localhost", port, "/calendario/" + entr.getIdUsuario(), evento);
 
                         var respuesta = rt.exchange(request, Void.class);
 
                         assertThat(respuesta.getStatusCode().value()).isEqualTo(400);
-
                 }
 
                 @Test

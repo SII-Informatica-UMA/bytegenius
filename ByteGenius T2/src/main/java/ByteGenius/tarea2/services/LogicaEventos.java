@@ -55,24 +55,25 @@ public class LogicaEventos {
     }
 
     public Evento Crear_Actualizar_Evento(Evento evento) {
+        Evento eventoP = eventoRepository.save(evento);
+
         try {
             validarDatosEvento(evento);
         } catch (IllegalArgumentException e) {
+            eventoRepository.delete(evento);
             throw new IllegalArgumentException("Los datos del evento no son válidos", e);
         }
 
         try {
-            comprobarSolapamiento(evento);
+            comprobarSolapamientoONoDisponibilidad(evento);
         } catch (HaySolapamientoException e) {
-            throw new HaySolapamientoException("El evento se solapa con otro evento existente");
-        }
+            eventoRepository.delete(evento);
 
-        if (evento.getTipo() == Tipo.CITA) {
-            try {
-                comprobarEventoEnFranjaDisponibilidad(evento);
-            } catch (NoDisponibleException e) {
-                throw new NoDisponibleException("El evento está fuera de la franja de disponibilidad");
-            }
+            throw new HaySolapamientoException("El evento se solapa con otro evento existente");
+        } catch (NoDisponibleException e) {
+            eventoRepository.delete(evento);
+
+            throw new NoDisponibleException("El evento está fuera de la franja de disponibilidad");
         }
 
         try {
@@ -82,11 +83,14 @@ public class LogicaEventos {
 
             if (respuesta.getBody().getIdUsuario().toString()
                     .equals(SecurityConfguration.getAuthenticatedUser().get().getUsername())) {
-                return (Evento) this.eventoRepository.save(evento);
+                return eventoP;
             } else {
+                eventoRepository.delete(eventoP);
                 throw new AccesoNoAutorizadoException("No coinciden los idUsuarios");
             }
         } catch (HttpClientErrorException e) {
+            eventoRepository.delete(eventoP);
+
             throw new HttpError("No existe dicho entrenador");
         }
     }
@@ -140,22 +144,19 @@ public class LogicaEventos {
         }
     }
 
-    private void comprobarEventoEnFranjaDisponibilidad(Evento evento) {
-        getDisponibilidad(evento.getIdEntrenador()).stream()
-                .filter(e -> (((Evento) e).getTipo() == Tipo.DISPONIBILIDAD))
-                .filter(e -> ((Evento) e).contiene(evento))
-                .findAny()
-                .orElseThrow(() -> new NoDisponibleException("El evento no estdentro de una franja de disponibilidad"));
-    }
-
-    private void comprobarSolapamiento(Evento evento) {
+    private void comprobarSolapamientoONoDisponibilidad(Evento evento) {
         Objects.requireNonNull(evento);
-        if (evento.getTipo() == Tipo.CITA && getDisponibilidad(evento.getIdEntrenador()).stream()
-                .filter(e -> (((Evento) e).getTipo() == Tipo.CITA))
-                .filter(e -> (evento.getId() == null || !((Evento) e).getId().equals(evento.getId())))
-                .map(e -> (Evento) e)
-                .anyMatch(evento::solapa))
-            throw new HaySolapamientoException("El evento se solapa con otro evento");
+        if (evento.getTipo() == Tipo.CITA) {
+            Optional<List<Evento>> disponibilidad = getDisponibilidad(evento.getIdEntrenador());
+            for (Evento e : disponibilidad.get()) {
+                if (e.getTipo() == Tipo.CITA && !e.getId().equals(evento.getId()) && evento.solapa(e)) {
+                    throw new HaySolapamientoException("El evento se solapa con otro evento");
+                }
+                if (evento.getTipo() == Tipo.CITA && e.getTipo() == Tipo.DISPONIBILIDAD && !e.contiene(evento)) {
+                    throw new NoDisponibleException("Evento no disponbile");
+                }
+            }
+        }
     }
 
 }
