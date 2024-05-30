@@ -543,7 +543,7 @@ public class EventosApplicationTests {
                 }
 
                 @Test
-                @DisplayName("error al devolver la disponibilidad del entrenador")
+                @DisplayName("Devuelve correctamente la disponibilidad del entrenador")
                 public void obtenerDisponibilidadEntrenador() {
                         EntrenadorDTO entr = new EntrenadorDTO();
                         entr.setIdUsuario(2L);
