@@ -227,12 +227,10 @@ public class EventosApplicationTests {
                                 e.printStackTrace();
                         }
 
-                        // Ejecutar la llamada al endpoint
                         var peticion = delete("http", "localhost", port,
                                         "/calendario/" + idEntrenador + "/" + idEvento);
                         ResponseEntity<String> respuesta = rt.exchange(peticion, String.class);
 
-                        // Verificar que el status code es 404
                         assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
                 }
 
@@ -243,7 +241,7 @@ public class EventosApplicationTests {
                         Long idEvento = 1L;
 
                         EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
-                        entrenadorDTO.setIdUsuario(3L); // Un idUsuario diferente al del usuario autenticado
+                        entrenadorDTO.setIdUsuario(3L);
 
                         try {
                                 mockserver
@@ -259,12 +257,10 @@ public class EventosApplicationTests {
                                 e.printStackTrace();
                         }
 
-                        // Ejecutar la llamada al endpoint
                         var peticion = delete("http", "localhost", port,
                                         "/calendario/" + idEntrenador + "/" + idEvento);
                         ResponseEntity<String> respuesta = rt.exchange(peticion, String.class);
 
-                        // Verificar que el status code es 403
                         assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
                 }
 
@@ -355,7 +351,6 @@ public class EventosApplicationTests {
                         Long idEvento = 1L;
 
                         try {
-                                // Simular que la llamada al servicio de entrenadores retorna un 404
                                 mockserver
                                                 .expect(ExpectedCount.once(),
                                                                 requestTo(new URI("http://localhost:8080/entrenador/"
@@ -367,11 +362,9 @@ public class EventosApplicationTests {
                                 e.printStackTrace();
                         }
 
-                        // Ejecutar la llamada al endpoint
                         var peticion = get("http", "localhost", port, "/calendario/" + idEntrenador + "/" + idEvento);
                         ResponseEntity<String> respuesta = rt.exchange(peticion, String.class);
 
-                        // Verificar que el status code es 404
                         assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
 
                 }
@@ -396,7 +389,6 @@ public class EventosApplicationTests {
                                 e.printStackTrace();
                         }
 
-                        // Ejecutar la llamada al endpoint
                         var peticion = get("http", "localhost", port, "/calendario/" + entr.getIdUsuario() + "/" + 1L);
                         ResponseEntity<String> respuesta = rt.exchange(peticion, String.class);
 
@@ -405,7 +397,7 @@ public class EventosApplicationTests {
                 }
 
                 @Test
-                @DisplayName("error al no encontrar el entrenador al crear/actualizar un evento")
+                @DisplayName("error al no encontrar el entrenador al crear un evento")
                 public void crearActualizarEventoEntrenadorNoEncontrado() {
                         Evento evento = Evento.builder()
                                         .nombre("Prueba de evento2")
@@ -429,17 +421,15 @@ public class EventosApplicationTests {
                                 e.printStackTrace();
                         }
 
-                        // Ejecutar la llamada al endpoint
                         var peticion = post("http", "localhost", port, "/calendario/" + evento.getIdEntrenador(),
                                         evento);
                         ResponseEntity<String> respuesta = rt.exchange(peticion, String.class);
 
-                        // Verificar que el status code es 404
                         assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
                 }
 
                 @Test
-                @DisplayName("error al no tener acceso para crear/actualizar un evento")
+                @DisplayName("error al no tener acceso para crear un evento")
                 public void crearActualizarEventoSinAcceso() {
                         Evento evento = Evento.builder()
                                         .nombre("Prueba de evento2")
@@ -453,7 +443,7 @@ public class EventosApplicationTests {
                                         .build();
 
                         EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
-                        entrenadorDTO.setIdUsuario(3L); // Un idUsuario diferente al del usuario autenticado
+                        entrenadorDTO.setIdUsuario(3L);
 
                         try {
                                 mockserver
@@ -468,12 +458,10 @@ public class EventosApplicationTests {
                                 e.printStackTrace();
                         }
 
-                        // Ejecutar la llamada al endpoint
                         var peticion = post("http", "localhost", port, "/calendario/" + evento.getIdEntrenador(),
                                         evento);
                         ResponseEntity<String> respuesta = rt.exchange(peticion, String.class);
 
-                        // Verificar que el status code es 403
                         assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
                 }
 
@@ -598,11 +586,9 @@ public class EventosApplicationTests {
                                 e.printStackTrace();
                         }
 
-                        // Ejecutar la llamada al endpoint
                         var peticion = get("http", "localhost", port, "/calendario/" + idEntrenador);
                         ResponseEntity<String> respuesta = rt.exchange(peticion, String.class);
 
-                        // Verificar que el status code es 404
                         assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
                 }
 
@@ -612,7 +598,7 @@ public class EventosApplicationTests {
                         Long idEntrenador = 1L;
 
                         EntrenadorDTO entrenadorDTO = new EntrenadorDTO();
-                        entrenadorDTO.setIdUsuario(3L); // Un idUsuario diferente al del usuario autenticado
+                        entrenadorDTO.setIdUsuario(3L);
 
                         try {
                                 mockserver
@@ -628,11 +614,9 @@ public class EventosApplicationTests {
                                 e.printStackTrace();
                         }
 
-                        // Ejecutar la llamada al endpoint
                         var peticion = get("http", "localhost", port, "/calendario/" + idEntrenador);
                         ResponseEntity<String> respuesta = rt.exchange(peticion, String.class);
 
-                        // Verificar que el status code es 403
                         assertThat(respuesta.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
                 }
 
@@ -766,7 +750,6 @@ public class EventosApplicationTests {
 
                         assertThat(respuesta.getStatusCode().value()).isEqualTo(200);
 
-                        // Asegúrate de comprobar el primer evento (índice 0) en la lista
                         List<Evento> eventosBD = eventoRepository.findAll();
                         assertThat(eventosBD.get(0).getNombre()).isEqualTo(evento.getNombre());
                 }
@@ -848,7 +831,7 @@ public class EventosApplicationTests {
                         entr.setIdUsuario(2L);
 
                         Calendar cal = Calendar.getInstance();
-                        cal.set(2024, Calendar.DECEMBER, 25, 10, 0, 0); // 25 de diciembre de 2024, 10:00 AM
+                        cal.set(2024, Calendar.DECEMBER, 25, 10, 0, 0);
                         Date fechaInicio = cal.getTime();
 
                         Evento evento = Evento.builder()

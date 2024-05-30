@@ -28,6 +28,7 @@ public class LogicaEventos {
 
     @Autowired
     private RestTemplate rt;
+    @SuppressWarnings("unused")
     @Autowired
     private JwtUtil jwt;
 
@@ -35,10 +36,8 @@ public class LogicaEventos {
         this.eventoRepository = repo;
     }
 
-    // get /calendario/idEntrenador/idElemento
     public Optional<Evento> getEvento(Long idEntrenador, Long idEvento) {
         try {
-            // Llamada al servicio de entrenadores con Rest Template
             String url = "http://localhost:8080/entrenador/" + idEntrenador;
             HttpEntity<String> entity = new HttpEntity<>(new org.springframework.http.HttpHeaders());
             ResponseEntity<EntrenadorDTO> respuesta = rt.exchange(url, HttpMethod.GET, entity, EntrenadorDTO.class);
@@ -95,6 +94,30 @@ public class LogicaEventos {
         }
     }
 
+    private void validarDatosEvento(Evento evento) {
+        if (evento.getTipo() == null || evento.getInicio() == null || evento.getDuracionMinutos() == null)
+            throw new IllegalArgumentException("Faltan datos al evento");
+        if (evento.getTipo() == Tipo.CITA) {
+            if (evento.getIdCliente() == null)
+                throw new IllegalArgumentException("Para una cita, tiene que tener idCliente");
+        }
+    }
+
+    private void comprobarSolapamientoONoDisponibilidad(Evento evento) {
+        Objects.requireNonNull(evento);
+        if (evento.getTipo() == Tipo.CITA) {
+            Optional<List<Evento>> disponibilidad = getDisponibilidad(evento.getIdEntrenador());
+            for (Evento e : disponibilidad.get()) {
+                if (e.getTipo() == Tipo.CITA && !e.getId().equals(evento.getId()) && evento.solapa(e)) {
+                    throw new HaySolapamientoException("El evento se solapa con otro evento");
+                }
+                if (evento.getTipo() == Tipo.CITA && e.getTipo() == Tipo.DISPONIBILIDAD && !e.contiene(evento)) {
+                    throw new NoDisponibleException("Evento no disponbile");
+                }
+            }
+        }
+    }
+
     public void eliminarEvento(Long idEntrenador, Long idEvento) {
         try {
             String url = "http://localhost:8080/entrenador/" + idEntrenador;
@@ -132,30 +155,6 @@ public class LogicaEventos {
             }
         } catch (HttpClientErrorException e) {
             throw new HttpError("No existe dicho entrenador");
-        }
-    }
-
-    private void validarDatosEvento(Evento evento) {
-        if (evento.getTipo() == null || evento.getInicio() == null || evento.getDuracionMinutos() == null)
-            throw new IllegalArgumentException("Faltan datos al evento");
-        if (evento.getTipo() == Tipo.CITA) {
-            if (evento.getIdCliente() == null)
-                throw new IllegalArgumentException("Para una cita, tiene que tener idCliente");
-        }
-    }
-
-    private void comprobarSolapamientoONoDisponibilidad(Evento evento) {
-        Objects.requireNonNull(evento);
-        if (evento.getTipo() == Tipo.CITA) {
-            Optional<List<Evento>> disponibilidad = getDisponibilidad(evento.getIdEntrenador());
-            for (Evento e : disponibilidad.get()) {
-                if (e.getTipo() == Tipo.CITA && !e.getId().equals(evento.getId()) && evento.solapa(e)) {
-                    throw new HaySolapamientoException("El evento se solapa con otro evento");
-                }
-                if (evento.getTipo() == Tipo.CITA && e.getTipo() == Tipo.DISPONIBILIDAD && !e.contiene(evento)) {
-                    throw new NoDisponibleException("Evento no disponbile");
-                }
-            }
         }
     }
 

@@ -47,8 +47,15 @@ public class EventoController {
 
         this.logicaEventos.getEvento(idEntrenador, idElemento).orElseThrow(ElementoNoExisteException::new);
         Evento e = Mapper.toEventoId(evento);
+        e.setDescripcion(evento.getDescripción());
+        e.setDuracionMinutos(evento.getDuracionMinutos());
+        e.setLugar(evento.getLugar());
+        e.setTipo(evento.getTipo());
+        e.setReglaRecurrencia(evento.getReglaRecurrencia());
+        e.setObservaciones(evento.getObservaciones());
         e.setId(idElemento);
         e.setIdEntrenador(idEntrenador);
+
         return Mapper.toEventoDTO(this.logicaEventos.Crear_Actualizar_Evento(e));
     }
 
