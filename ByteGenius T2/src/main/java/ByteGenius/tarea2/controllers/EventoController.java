@@ -42,21 +42,26 @@ public class EventoController {
 
     @PutMapping("/{idEntrenador}/{idElemento}")
     public EventoDTO actualizarEvento(@PathVariable Long idEntrenador,
-                                  @PathVariable Long idElemento,
-                                  @RequestBody EventoDTO evento) {
+            @PathVariable Long idElemento,
+            @RequestBody EventoDTO evento) {
 
-    this.logicaEventos.getEvento(idEntrenador, idElemento).orElseThrow(ElementoNoExisteException::new);
-    Evento e = Mapper.toEventoId(evento);
-    e.setId(idElemento);
-    e.setIdEntrenador(idEntrenador);
-    return Mapper.toEventoDTO(this.logicaEventos.Crear_Actualizar_Evento(e));
-}
+        this.logicaEventos.getEvento(idEntrenador, idElemento).orElseThrow(ElementoNoExisteException::new);
+        Evento e = Mapper.toEventoId(evento);
+        e.setDescripcion(evento.getDescripción());
+        e.setDuracionMinutos(evento.getDuracionMinutos());
+        e.setLugar(evento.getLugar());
+        e.setTipo(evento.getTipo());
+        e.setReglaRecurrencia(evento.getReglaRecurrencia());
+        e.setObservaciones(evento.getObservaciones());
+        e.setId(idElemento);
+        e.setIdEntrenador(idEntrenador);
+
+        return Mapper.toEventoDTO(this.logicaEventos.Crear_Actualizar_Evento(e));
+    }
 
     @DeleteMapping("/{idEntrenador}/{idElemento}")
-    public void eliminarEvento(@PathVariable Long idEntrenador, @PathVariable Long idElemento)
-            throws BadRequestException {
-        if (idEntrenador < 0 || idElemento < 0)
-            throw new BadRequestException("ID entrenador o elemento no puede ser negativo");
+    public void eliminarEvento(@PathVariable Long idEntrenador, @PathVariable Long idElemento) {
+
         this.logicaEventos.eliminarEvento(idEntrenador, idElemento);
 
     }

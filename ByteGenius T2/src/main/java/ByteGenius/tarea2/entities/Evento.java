@@ -1,5 +1,6 @@
 package ByteGenius.tarea2.entities;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Objects;
 
@@ -92,11 +93,27 @@ public class Evento {
 		return this.tipo;
 	}
 
+	private Date calcularFin() {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(inicio);
+		calendar.add(Calendar.MINUTE, duracionMinutos);
+		return calendar.getTime();
+	}
+
 	public boolean solapa(Evento otroEvento) {
-		return false;
+		Date finEsteEvento = this.calcularFin();
+		Date finOtroEvento = otroEvento.calcularFin();
+
+		return (this.inicio.before(finOtroEvento) && finEsteEvento.after(otroEvento.inicio));
 	}
 
 	public boolean contiene(Evento otroEvento) {
-		return false;
+		Date finEsteEvento = this.calcularFin();
+		Date finOtroEvento = otroEvento.calcularFin();
+
+		boolean empiezaAntesOIgual = this.inicio.before(otroEvento.inicio) || this.inicio.equals(otroEvento.inicio);
+		boolean terminaDespuesOIgual = finEsteEvento.after(finOtroEvento) || finEsteEvento.equals(finOtroEvento);
+
+		return empiezaAntesOIgual && terminaDespuesOIgual;
 	}
 }
